@@ -161,7 +161,7 @@ export default function Header() {
                 <div className="flex mt-4 list-none">
                     {profile && (
                         <>
-                            <NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
                                 <NzNavigationMenuLink
                                     asChild
                                     active={location.pathname === "/dashboard"}
@@ -170,7 +170,7 @@ export default function Header() {
                                     <Link to="/dashboard">{t("Server")}</Link>
                                 </NzNavigationMenuLink>
                             </NavigationMenuItem>
-                            <NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
                                 <NzNavigationMenuLink
                                     asChild
                                     active={location.pathname === "/dashboard/service"}
@@ -179,7 +179,7 @@ export default function Header() {
                                     <Link to="/dashboard/service">{t("Service")}</Link>
                                 </NzNavigationMenuLink>
                             </NavigationMenuItem>
-                            <NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
                                 <NzNavigationMenuLink
                                     asChild
                                     active={location.pathname === "/dashboard/cron"}
@@ -188,7 +188,7 @@ export default function Header() {
                                     <Link to="/dashboard/cron">{t("Task")}</Link>
                                 </NzNavigationMenuLink>
                             </NavigationMenuItem>
-                            <NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
                                 <NzNavigationMenuLink
                                     asChild
                                     active={
@@ -200,7 +200,7 @@ export default function Header() {
                                     <Link to="/dashboard/notification">{t("Notification")}</Link>
                                 </NzNavigationMenuLink>
                             </NavigationMenuItem>
-                            <NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
                                 <NzNavigationMenuLink
                                     asChild
                                     active={location.pathname === "/dashboard/ddns"}
@@ -209,7 +209,7 @@ export default function Header() {
                                     <Link to="/dashboard/ddns">{t("DDNS")}</Link>
                                 </NzNavigationMenuLink>
                             </NavigationMenuItem>
-                            <NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
                                 <NzNavigationMenuLink
                                     asChild
                                     active={location.pathname === "/dashboard/nat"}
@@ -218,7 +218,7 @@ export default function Header() {
                                     <Link to="/dashboard/nat">{t("NATT")}</Link>
                                 </NzNavigationMenuLink>
                             </NavigationMenuItem>
-                            <NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
                                 <NzNavigationMenuLink
                                     asChild
                                     active={
