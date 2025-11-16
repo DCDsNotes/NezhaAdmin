@@ -18,7 +18,6 @@ import {
 import { useAuth } from "@/hooks/useAuth"
 import { useMainStore } from "@/hooks/useMainStore"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
-import { cn } from "@/lib/utils"
 import i18next from "i18next"
 import { LogOut, Settings, User2 } from "lucide-react"
 import { DateTime } from "luxon"
