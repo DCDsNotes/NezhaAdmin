@@ -156,10 +156,10 @@ const generateCommand = (
     switch (type) {
         case OSTypes.Linux:
         case OSTypes.macOS: {
-            return `curl -L https://raw.githubusercontent.com/nezhahq/scripts/main/agent/install.sh -o agent.sh && chmod +x agent.sh && env ${env} ./agent.sh`
+            return `curl -L https://raw.githubusercontent.com/DCDsNotes/NezhaScripts/main/linux-install.sh -o nezha-agent.sh && chmod +x nezha-agent.sh && env ${env} ./nezha-agent.sh`
         }
         case OSTypes.Windows: {
-            return `${env_win} [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Ssl3 -bor [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12;set-ExecutionPolicy RemoteSigned;Invoke-WebRequest https://raw.githubusercontent.com/nezhahq/scripts/main/agent/install.ps1 -OutFile C:\install.ps1;powershell.exe C:\install.ps1`
+            return `${env_win} [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Ssl3 -bor [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12;set-ExecutionPolicy RemoteSigned;Invoke-WebRequest https://raw.githubusercontent.com/DCDsNotes/NezhaScripts/main/windows-install.ps1 -OutFile C:\windows-install.ps1;powershell.exe C:\windows-install.ps1`
         }
         default: {
             throw new Error(`Unknown OS: ${type}`)
