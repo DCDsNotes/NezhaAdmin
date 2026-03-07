@@ -1,4 +1,5 @@
 import { Button, ButtonProps } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import {
     BanIcon,
     Check,
@@ -44,15 +45,12 @@ export interface IconButtonProps extends ButtonProps {
 }
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>((props, ref) => {
+    const { className, icon, ...rest } = props
+
     return (
-        <Button
-            className="rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
-            {...props}
-            ref={ref}
-            size="icon"
-        >
+        <Button className={cn("rounded-xl", className)} {...rest} ref={ref} size="icon">
             {(() => {
-                switch (props.icon) {
+                switch (icon) {
                     case "clipboard": {
                         return <Clipboard />
                     }
