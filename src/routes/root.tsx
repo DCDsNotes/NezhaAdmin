@@ -13,7 +13,7 @@ export default function Root() {
     const { data: settingData, error } = useSetting()
 
     useEffect(() => {
-        document.title = settingData?.config?.site_name || "哪吒监控"
+        document.title = settingData?.config?.site_name || "Nezha Dashboard"
     }, [settingData?.config?.site_name])
 
     useEffect(() => {
@@ -36,14 +36,14 @@ export default function Root() {
 
     return (
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-            <section className="text-sm mx-auto h-full flex flex-col justify-between">
-                <div>
+            <section className="mx-auto flex min-h-screen flex-col text-sm">
+                <div className="flex-1">
                     <Header />
-                    <div className="max-w-5xl mx-auto">
+                    <main className="mx-auto w-full max-w-6xl px-4 pb-10 pt-6 sm:px-6 lg:px-8 lg:pt-8">
                         <Outlet />
-                    </div>
+                    </main>
                 </div>
-                <footer className="mx-5 py-5 text-foreground/50 font-light text-xs text-center">
+                <footer className="px-6 pb-8 pt-2 text-center text-xs font-light text-foreground/45">
                     &copy; 2019-{new Date().getFullYear()} {t("nezha")}
                 </footer>
             </section>

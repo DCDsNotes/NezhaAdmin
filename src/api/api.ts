@@ -1,17 +1,4 @@
-interface CommonResponse<T> {
-    success: boolean
-    error: string
-    data: T
-}
-
-function buildUrl(path: string, data?: any): string {
-    if (!data) return path
-    const url = new URL(window.location.origin + path)
-    for (const key in data) {
-        url.searchParams.append(key, data[key])
-    }
-    return url.toString()
-}
+import { handlePocketBaseRequest } from "@/lib/pocketbase/compat"
 
 export enum FetcherMethod {
     GET = "GET",
@@ -21,43 +8,21 @@ export enum FetcherMethod {
     DELETE = "DELETE",
 }
 
-let lastestRefreshTokenAt = 0
-
 export async function fetcher<T>(method: FetcherMethod, path: string, data?: any): Promise<T> {
-    let response
-    if (method === FetcherMethod.GET || method === FetcherMethod.DELETE) {
-        response = await fetch(buildUrl(path, data), {
-            method: "GET",
+    const actualMethod = method || FetcherMethod.GET
+
+    if (actualMethod === FetcherMethod.GET && data && typeof data === "object") {
+        const url = new URL(path, window.location.origin)
+        Object.entries(data).forEach(([key, value]) => {
+            url.searchParams.set(key, String(value))
         })
-    } else {
-        response = await fetch(path, {
-            method: method,
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: data ? JSON.stringify(data) : null,
-        })
-    }
-    if (!response.ok) {
-        throw new Error(response.statusText)
-    }
-    const responseData: CommonResponse<T> = await response.json()
-    if (!responseData.success) {
-        throw new Error(responseData.error)
+        return handlePocketBaseRequest<T>(actualMethod, url.toString())
     }
 
-    // auto refresh token
-    if (
-        document.cookie &&
-        (!lastestRefreshTokenAt || Date.now() - lastestRefreshTokenAt > 1000 * 60 * 60)
-    ) {
-        lastestRefreshTokenAt = Date.now()
-        fetch("/api/v1/refresh-token")
-    }
-
-    return responseData.data
+    return handlePocketBaseRequest<T>(actualMethod, path, data)
 }
 
 export async function swrFetcher<T>(input: string | URL | globalThis.Request, init?: RequestInit) {
-    return fetcher<T>(init?.method as FetcherMethod, input.toString(), init?.body)
+    const method = (init?.method as FetcherMethod) || FetcherMethod.GET
+    return fetcher<T>(method, input.toString(), init?.body)
 }
