@@ -3,7 +3,7 @@ import { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes, forwardRef } from "
 
 const Table = forwardRef<HTMLTableElement, HTMLAttributes<HTMLTableElement>>(
     ({ className, ...props }, ref) => (
-        <div className="relative w-full overflow-auto rounded-2xl border border-border/70 bg-card/60 shadow-[0_20px_60px_-40px_rgba(15,23,42,0.4)] backdrop-blur-xl">
+        <div className="relative w-full overflow-auto">
             <table
                 ref={ref}
                 className={cn("w-full caption-bottom text-sm", className)}
@@ -16,7 +16,7 @@ Table.displayName = "Table"
 
 const TableHeader = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>(
     ({ className, ...props }, ref) => (
-        <thead ref={ref} className={cn("bg-muted/45 [&_tr]:border-b", className)} {...props} />
+        <thead ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />
     ),
 )
 TableHeader.displayName = "TableHeader"
@@ -44,7 +44,7 @@ const TableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElem
         <tr
             ref={ref}
             className={cn(
-                "border-b border-border/60 transition-colors hover:bg-accent/50 data-[state=selected]:bg-accent/70",
+                "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
                 className,
             )}
             {...props}
@@ -58,7 +58,7 @@ const TableHead = forwardRef<HTMLTableCellElement, ThHTMLAttributes<HTMLTableCel
         <th
             ref={ref}
             className={cn(
-                "h-11 px-4 text-left align-middle text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground [&:has([role=checkbox])]:pr-0",
+                "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
                 className,
             )}
             {...props}
