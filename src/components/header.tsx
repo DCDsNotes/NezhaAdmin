@@ -9,10 +9,16 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer"
+import {
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu"
 import { useAuth } from "@/hooks/useAuth"
 import { useMainStore } from "@/hooks/useMainStore"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
-import { cn } from "@/lib/utils"
+import i18next from "i18next"
 import { LogOut, Settings, User2 } from "lucide-react"
 import { DateTime } from "luxon"
 import { useEffect, useRef, useState } from "react"
@@ -28,15 +34,21 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
+    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
 import { IconButton } from "./xui/icon-button"
+import { NzNavigationMenuLink } from "./xui/navigation-menu"
 
-type NavItem = {
-    href: string
-    label: string
-    active: boolean
-}
+const pages = [
+    { href: "/dashboard", label: i18next.t("Server") },
+    { href: "/dashboard/service", label: i18next.t("Service") },
+    { href: "/dashboard/cron", label: i18next.t("Task") },
+    { href: "/dashboard/notification", label: i18next.t("Notification") },
+    { href: "/dashboard/ddns", label: i18next.t("DDNS") },
+    { href: "/dashboard/nat", label: i18next.t("NATT") },
+    { href: "/dashboard/server-group", label: i18next.t("Group") },
+]
 
 export default function Header() {
     const { t } = useTranslation()
@@ -44,139 +56,212 @@ export default function Header() {
     const profile = useMainStore((store) => store.profile)
 
     const location = useLocation()
-    const navigate = useNavigate()
     const isDesktop = useMediaQuery("(min-width: 890px)")
 
     const [open, setOpen] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
 
-    const navItems: NavItem[] = [
-        {
-            href: "/dashboard",
-            label: t("Server"),
-            active: location.pathname === "/dashboard",
-        },
-        {
-            href: "/dashboard/service",
-            label: t("Service"),
-            active: location.pathname === "/dashboard/service",
-        },
-        {
-            href: "/dashboard/cron",
-            label: t("Task"),
-            active: location.pathname === "/dashboard/cron",
-        },
-        {
-            href: "/dashboard/notification",
-            label: t("Notification"),
-            active:
-                location.pathname === "/dashboard/notification" ||
-                location.pathname === "/dashboard/alert-rule",
-        },
-        {
-            href: "/dashboard/ddns",
-            label: t("DDNS"),
-            active: location.pathname === "/dashboard/ddns",
-        },
-        {
-            href: "/dashboard/nat",
-            label: t("NATT"),
-            active: location.pathname === "/dashboard/nat",
-        },
-        {
-            href: "/dashboard/server-group",
-            label: t("Group"),
-            active:
-                location.pathname === "/dashboard/server-group" ||
-                location.pathname === "/dashboard/notification-group",
-        },
-    ]
-
-    const profileMenu = profile ? (
-        <ProfileMenu
-            dropdownOpen={dropdownOpen}
-            logout={logout}
-            navigate={navigate}
-            profile={profile}
-            setDropdownOpen={setDropdownOpen}
-        />
-    ) : null
+    const navigate = useNavigate()
 
     return isDesktop ? (
-        <header className="sticky top-0 z-40 px-4 pt-4 sm:px-6 lg:px-8">
-            <div className="mx-auto flex max-w-6xl flex-col gap-4 rounded-[30px] border border-border/70 bg-card/80 px-4 py-4 shadow-[0_24px_80px_-40px_rgba(15,23,42,0.45)] backdrop-blur-2xl sm:px-5 lg:px-6">
-                <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                    <div className="flex items-center justify-between gap-4 xl:justify-start">
-                        <BrandLink enabled={!!profile} title={t("nezha")} />
-                        <div className="flex items-center gap-2 xl:hidden">
-                            <HomeLink label={t("BackToHome")} />
-                            <ModeToggle />
-                            {profileMenu}
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-end">
-                        <div className="min-w-0">
-                            <Overview />
-                        </div>
-                        <div className="hidden items-center gap-2 xl:flex">
-                            <HomeLink label={t("BackToHome")} />
-                            <ModeToggle />
-                            {profileMenu}
-                        </div>
-                    </div>
-                </div>
-                {profile && (
-                    <nav className="flex flex-wrap gap-2 border-t border-border/60 pt-4">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.href}
-                                className={cn(
-                                    "inline-flex h-10 items-center rounded-full border px-4 text-sm font-medium transition-all duration-200",
-                                    item.active
-                                        ? "border-primary/30 bg-primary text-primary-foreground shadow-md"
-                                        : "border-border/60 bg-background/55 text-muted-foreground hover:border-border hover:bg-accent/80 hover:text-foreground",
-                                )}
-                                to={item.href}
-                            >
-                                {item.label}
+        <header className="flex pt-8 px-4 dark:bg-black/40 bg-muted border-b-[1px] overflow-visible">
+            <NavigationMenu className="flex flex-col items-start relative px-3 max-w-5xl mx-auto">
+
+                <section className="w-full flex items-center  justify-between">
+                    <div className="flex justify-between items-center w-full">
+                        <NavigationMenuLink
+                            asChild
+                            className={
+                                navigationMenuTriggerStyle() +
+                                " !text-foreground hover:opacity-60 transition-opacity"
+                            }
+                        >
+                            <Link to={profile ? "/dashboard" : "#"}>
+                                <img className="h-7 mr-1" src="/dashboard/logo.png" />
+                                {t("nezha")}
                             </Link>
-                        ))}
-                        <div className="ml-auto hidden items-center gap-2 xl:flex">
-                            <HomeLink label={t("BackToHome")} />
+                        </NavigationMenuLink>
+
+                        <div className="flex items-center gap-1">
+                            <a
+                                href={"/"}
+                                rel="noopener noreferrer"
+                                className="flex items-center text-nowrap gap-1 text-sm font-medium opacity-50 transition-opacity hover:opacity-100"
+                            >
+                                {t("BackToHome")}
+                            </a>
                             <ModeToggle />
+                            {profile && (
+                                <>
+                                    <DropdownMenu
+                                        open={dropdownOpen}
+                                        onOpenChange={setDropdownOpen}
+                                    >
+                                        <DropdownMenuTrigger asChild>
+                                            <Avatar className="ml-1 h-8 w-8 cursor-pointer border-foreground border-[1px]">
+                                                <AvatarImage
+                                                    src={
+                                                        "https://gravatar.com/avatar/" +
+                                                        profile.username
+                                                    }
+                                                    alt={profile.username}
+                                                />
+                                                <AvatarFallback>{profile.username}</AvatarFallback>
+                                            </Avatar>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="w-32">
+                                            <DropdownMenuLabel className="break-all">
+                                                {profile.username}
+                                            </DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuGroup>
+                                                <DropdownMenuItem
+                                                    onClick={() => {
+                                                        setDropdownOpen(false)
+                                                        navigate("/dashboard/profile")
+                                                    }}
+                                                    className="cursor-pointer"
+                                                >
+                                                    <div className="flex items-center gap-2 w-full">
+                                                        <User2 />
+                                                        {t("Profile")}
+                                                    </div>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem
+                                                    onClick={() => {
+                                                        setDropdownOpen(false)
+                                                        navigate("/dashboard/settings")
+                                                    }}
+                                                    className="cursor-pointer"
+                                                >
+                                                    <div className="flex items-center gap-2 w-full">
+                                                        <Settings />
+                                                        {t("Settings")}
+                                                    </div>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuGroup>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem
+                                                onClick={logout}
+                                                className="cursor-pointer"
+                                            >
+                                                <LogOut />
+                                                {t("Logout")}
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </>
+                            )}
                         </div>
-                    </nav>
-                )}
-            </div>
+                    </div>
+                </section>
+                <div className="flex mt-4">
+                    <Overview />
+                </div>
+                <div className="flex mt-4 list-none">
+                    {profile && (
+                        <>
+                            <NavigationMenuItem className="mr-6">
+                                <NzNavigationMenuLink
+                                    asChild
+                                    active={location.pathname === "/dashboard"}
+                                    className={navigationMenuTriggerStyle()}
+                                >
+                                    <Link to="/dashboard">{t("Server")}</Link>
+                                </NzNavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
+                                <NzNavigationMenuLink
+                                    asChild
+                                    active={location.pathname === "/dashboard/service"}
+                                    className={navigationMenuTriggerStyle()}
+                                >
+                                    <Link to="/dashboard/service">{t("Service")}</Link>
+                                </NzNavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
+                                <NzNavigationMenuLink
+                                    asChild
+                                    active={location.pathname === "/dashboard/cron"}
+                                    className={navigationMenuTriggerStyle()}
+                                >
+                                    <Link to="/dashboard/cron">{t("Task")}</Link>
+                                </NzNavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
+                                <NzNavigationMenuLink
+                                    asChild
+                                    active={
+                                        location.pathname === "/dashboard/notification" ||
+                                        location.pathname === "/dashboard/alert-rule"
+                                    }
+                                    className={navigationMenuTriggerStyle()}
+                                >
+                                    <Link to="/dashboard/notification">{t("Notification")}</Link>
+                                </NzNavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
+                                <NzNavigationMenuLink
+                                    asChild
+                                    active={location.pathname === "/dashboard/ddns"}
+                                    className={navigationMenuTriggerStyle()}
+                                >
+                                    <Link to="/dashboard/ddns">{t("DDNS")}</Link>
+                                </NzNavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
+                                <NzNavigationMenuLink
+                                    asChild
+                                    active={location.pathname === "/dashboard/nat"}
+                                    className={navigationMenuTriggerStyle()}
+                                >
+                                    <Link to="/dashboard/nat">{t("NATT")}</Link>
+                                </NzNavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="mr-6">
+                                <NzNavigationMenuLink
+                                    asChild
+                                    active={
+                                        location.pathname === "/dashboard/server-group" ||
+                                        location.pathname === "/dashboard/notification-group"
+                                    }
+                                    className={navigationMenuTriggerStyle()}
+                                >
+                                    <Link to="/dashboard/server-group">{t("Group")}</Link>
+                                </NzNavigationMenuLink>
+                            </NavigationMenuItem>
+                        </>
+                    )}
+                </div>
+            </NavigationMenu>
         </header>
     ) : (
-        <header className="sticky top-0 z-40 px-4 pt-4">
-            <div className="mx-auto flex max-w-6xl items-center gap-2 rounded-2xl border border-border/70 bg-card/80 px-3 py-3 shadow-[0_20px_60px_-38px_rgba(15,23,42,0.45)] backdrop-blur-2xl">
+        <header className="flex dark:bg-black/40 bg-muted border-b-[1px] px-4 h-16">
+            <div className="flex max-w-max flex-1 items-center justify-center gap-2">
                 {profile && (
                     <Drawer open={open} onOpenChange={setOpen}>
                         <DrawerTrigger aria-label="Toggle Menu" asChild>
-                            <IconButton icon="menu" variant="outline" />
+                            <IconButton icon="menu" variant="ghost" />
                         </DrawerTrigger>
                         <DrawerContent>
                             <DrawerHeader className="text-left">
                                 <DrawerTitle>{t("NavigateTo")}</DrawerTitle>
-                                <DrawerDescription>{t("SelectAPageToNavigateTo")}</DrawerDescription>
+                                <DrawerDescription>
+                                    {t("SelectAPageToNavigateTo")}
+                                </DrawerDescription>
                             </DrawerHeader>
-                            <div className="grid gap-2 px-4">
-                                {navItems.map((item) => (
-                                    <DrawerClose asChild key={item.href}>
-                                        <Link
-                                            className={cn(
-                                                "inline-flex min-h-11 items-center rounded-2xl border px-4 text-sm font-medium transition-all",
-                                                item.active
-                                                    ? "border-primary/30 bg-primary text-primary-foreground"
-                                                    : "border-border/60 bg-background/60 hover:bg-accent/80",
-                                            )}
-                                            to={item.href}
-                                        >
-                                            {item.label}
-                                        </Link>
-                                    </DrawerClose>
+                            <div className="grid gap-1 px-4">
+                                {pages.slice(0).map((item, index) => (
+                                    <Link
+                                        key={index}
+                                        to={item.href ? item.href : "#"}
+                                        className="py-1 text-sm"
+                                        onClick={() => {
+                                            setOpen(false)
+                                        }}
+                                    >
+                                        {item.label}
+                                    </Link>
                                 ))}
                             </div>
                             <DrawerFooter>
@@ -187,107 +272,78 @@ export default function Header() {
                         </DrawerContent>
                     </Drawer>
                 )}
-                <div className="min-w-0 flex-1">
-                    <BrandLink enabled={!!profile} title={t("nezha")} />
-                </div>
+            </div>
+            <Link
+                className="mx-2 my-2 inline-flex w-full items-center"
+                to={profile ? "/dashboard" : "#"}
+            >
+                <img className="h-7 mr-1" src="/dashboard/logo.png" /> {t("nezha")}
+            </Link>
+            <div className="ml-auto flex items-center gap-1">
+                <a
+                    href={"/"}
+                    rel="noopener noreferrer"
+                    className="flex items-center text-nowrap gap-1 text-sm font-medium opacity-50 transition-opacity hover:opacity-100"
+                >
+                    {t("BackToHome")}
+                </a>
                 <ModeToggle />
-                {profileMenu}
+                {profile && (
+                    <>
+                        <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+                            <DropdownMenuTrigger asChild>
+                                <Avatar className="ml-1 h-8 w-8 cursor-pointer border-foreground border-[1px]">
+                                    <AvatarImage
+                                        src={
+                                            "https://gravatar.com/avatar/" +
+                                            profile.username
+                                        }
+                                        alt={profile.username}
+                                    />
+                                    <AvatarFallback>{profile.username}</AvatarFallback>
+                                </Avatar>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-56">
+                                <DropdownMenuLabel>{profile.username}</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                    <DropdownMenuItem
+                                        onClick={() => {
+                                            setDropdownOpen(false)
+                                            navigate("/dashboard/profile")
+                                        }}
+                                        className="cursor-pointer"
+                                    >
+                                        <div className="flex items-center gap-2 w-full">
+                                            <User2 />
+                                            {t("Profile")}
+                                        </div>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={() => {
+                                            setDropdownOpen(false)
+                                            navigate("/dashboard/settings")
+                                        }}
+                                        className="cursor-pointer"
+                                    >
+                                        <div className="flex items-center gap-2 w-full">
+                                            <Settings />
+                                            {t("Settings")}
+                                        </div>
+                                    </DropdownMenuItem>
+                                </DropdownMenuGroup>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={logout} className="cursor-pointer">
+                                    <LogOut />
+                                    {t("Logout")}
+                                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </>
+                )}
             </div>
         </header>
-    )
-}
-
-function BrandLink({ enabled, title }: { enabled: boolean; title: string }) {
-    return (
-        <Link
-            className="group inline-flex min-w-0 items-center gap-3"
-            to={enabled ? "/dashboard" : "#"}
-        >
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-border/70 bg-background/70 shadow-sm transition-transform duration-200 group-hover:scale-[1.02]">
-                <img className="h-6 w-6" src="/dashboard/logo.png" alt={title} />
-            </div>
-            <div className="min-w-0">
-                <p className="truncate text-base font-semibold tracking-tight">{title}</p>
-            </div>
-        </Link>
-    )
-}
-
-function HomeLink({ label }: { label: string }) {
-    return (
-        <a
-            href="/"
-            rel="noopener noreferrer"
-            className="inline-flex h-10 items-center rounded-full border border-border/60 bg-background/55 px-4 text-sm font-medium text-muted-foreground transition-all hover:border-border hover:bg-accent/80 hover:text-foreground"
-        >
-            {label}
-        </a>
-    )
-}
-
-function ProfileMenu({
-    profile,
-    dropdownOpen,
-    setDropdownOpen,
-    navigate,
-    logout,
-}: {
-    profile: { username: string }
-    dropdownOpen: boolean
-    setDropdownOpen: (open: boolean) => void
-    navigate: ReturnType<typeof useNavigate>
-    logout: () => void
-}) {
-    const { t } = useTranslation()
-
-    return (
-        <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-            <DropdownMenuTrigger asChild>
-                <button
-                    className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                    type="button"
-                >
-                    <Avatar className="h-10 w-10 cursor-pointer border border-border/70 bg-background/70 shadow-sm">
-                        <AvatarImage
-                            src={"https://gravatar.com/avatar/" + profile.username}
-                            alt={profile.username}
-                        />
-                        <AvatarFallback>{profile.username.slice(0, 2).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="break-all">{profile.username}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                    <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => {
-                            setDropdownOpen(false)
-                            navigate("/dashboard/profile")
-                        }}
-                    >
-                        <User2 />
-                        {t("Profile")}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => {
-                            setDropdownOpen(false)
-                            navigate("/dashboard/settings")
-                        }}
-                    >
-                        <Settings />
-                        {t("Settings")}
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer" onClick={logout}>
-                    <LogOut />
-                    {t("Logout")}
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
     )
 }
 
@@ -311,30 +367,28 @@ function Overview() {
     const profile = useMainStore((store) => store.profile)
     const timeOption = DateTime.TIME_SIMPLE
     timeOption.hour12 = true
-
     const [timeString, setTimeString] = useState(
         DateTime.now().setLocale("en-US").toLocaleString(timeOption),
     )
-
     useInterval(() => {
         setTimeString(DateTime.now().setLocale("en-US").toLocaleString(timeOption))
     }, 1000)
-
     return (
-        <section className="flex flex-col gap-1 rounded-2xl border border-border/60 bg-background/50 px-3 py-2 shadow-sm backdrop-blur-sm">
-            {profile ? (
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                    <span className="font-semibold">{profile.username}</span>
-                    {profile.login_ip && (
-                        <span className="text-xs text-muted-foreground">from {profile.login_ip}</span>
-                    )}
+        <section className={"flex flex-col"}>
+            {profile && (
+                <div className="flex items-center gap-1.5">
+                    <div className="flex gap-1.5 text-sm font-semibold">
+                        {profile?.username}
+                        {profile?.login_ip && (
+                            <p className="font-medium opacity-45">from {profile?.login_ip}</p>
+                        )}
+                    </div>
                 </div>
-            ) : (
-                <p className="text-sm font-semibold">{t("LoginFirst")}</p>
             )}
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-                <span>{t("CurrentTime")}</span>
-                <span className="font-medium text-foreground">{timeString}</span>
+            {!profile && <p className="text-sm font-semibold">{t("LoginFirst")}</p>}
+            <div className="flex items-center gap-1.5">
+                <p className="text-[13px] font-medium opacity-50">{t("CurrentTime")}</p>
+                <p className="opacity-100 text-[13px] font-medium">{timeString}</p>
             </div>
         </section>
     )

@@ -1,5 +1,4 @@
 import { getProfile, login as loginRequest } from "@/api/user"
-import { clearPocketBaseAuth } from "@/lib/pocketbase/client"
 import { AuthContextProps } from "@/types"
 import { createContext, useContext, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
@@ -65,7 +64,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const logout = () => {
-        clearPocketBaseAuth()
+        document.cookie.split(";").forEach(function (c) {
+            document.cookie = c
+                .replace(/^ +/, "")
+                .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")
+        })
         setProfile(undefined)
         navigate("/dashboard/login", { replace: true })
     }
