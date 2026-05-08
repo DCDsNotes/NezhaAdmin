@@ -217,6 +217,8 @@
         "Day": "天",
         "Week": "周",
         "Month": "月",
+        "Quarter": "季度",
+        "HalfYear": "半年",
         "Year": "年",
         "NoExpiry": "不过期",
         "SetNoExpiry": "设置为不过期",
@@ -234,7 +236,7 @@
     "Validation": {
         "InvalidDate": "无效的日期格式",
         "MustBe0Or1": "只能为 0 或 1",
-        "MustBeDayWeekMonthYear": "必须为 Day/Week/Month/Year",
+        "MustBeDayWeekMonthYear": "必须为 Day/Week/Month/Quarter/HalfYear/Year",
         "MustBe1Or2": "只能为 1 或 2",
         "DigitsOnly": "仅允许数字",
         "InvalidForm": "表单校验失败",

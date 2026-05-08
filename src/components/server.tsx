@@ -688,6 +688,12 @@ export const ServerCard: React.FC<ServerCardProps> = ({ data, mutate }) => {
                                                                 <SelectItem value="Month">
                                                                     {t("PublicNote.Month")}
                                                                 </SelectItem>
+                                                                <SelectItem value="Quarter">
+                                                                    {t("PublicNote.Quarter")}
+                                                                </SelectItem>
+                                                                <SelectItem value="HalfYear">
+                                                                    {t("PublicNote.HalfYear")}
+                                                                </SelectItem>
                                                                 <SelectItem value="Year">
                                                                     {t("PublicNote.Year")}
                                                                 </SelectItem>

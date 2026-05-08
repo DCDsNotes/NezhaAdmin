@@ -217,6 +217,8 @@
         "Day": "Day",
         "Week": "Week",
         "Month": "Month",
+        "Quarter": "Quarter",
+        "HalfYear": "Half Year",
         "Year": "Year",
         "NoExpiry": "No Expiry",
         "SetNoExpiry": "Set No Expiry",
@@ -234,7 +236,7 @@
     "Validation": {
         "InvalidDate": "Invalid date",
         "MustBe0Or1": "Must be 0 or 1",
-        "MustBeDayWeekMonthYear": "Must be Day/Week/Month/Year",
+        "MustBeDayWeekMonthYear": "Must be Day/Week/Month/Quarter/HalfYear/Year",
         "MustBe1Or2": "Must be 1 or 2",
         "DigitsOnly": "Digits only",
         "InvalidForm": "Invalid form",

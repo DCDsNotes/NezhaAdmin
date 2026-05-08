@@ -7,7 +7,7 @@ import i18n from "./i18n"
  * Conventions:
  * - All fields are strings and may be empty
  * - IPv4/IPv6/autoRenewal must be "0" or "1"
- * - cycle is one of Day/Week/Month/Year
+ * - cycle is one of Day/Week/Month/Quarter/HalfYear/Year
  * - Date fields can be empty, ISO-like, or the special value "0000-00-00T23:59:59+08:00"
  */
 export const PublicNoteSchema = z.object({
@@ -75,7 +75,10 @@ export const validatePublicNote = (pn: PublicNote) => {
     if (pn.billingDataMod?.autoRenewal && !/^(0|1)$/.test(pn.billingDataMod.autoRenewal)) {
         errors["billing.autoRenewal"] = i18n.t("Validation.MustBe0Or1")
     }
-    if (pn.billingDataMod?.cycle && !/^(Day|Week|Month|Year)$/i.test(pn.billingDataMod.cycle)) {
+    if (
+        pn.billingDataMod?.cycle &&
+        !/^(Day|Week|Month|Quarter|HalfYear|Year)$/i.test(pn.billingDataMod.cycle)
+    ) {
         errors["billing.cycle"] = i18n.t("Validation.MustBeDayWeekMonthYear")
     }
     if (pn.planDataMod?.trafficType && !/^(1|2)$/.test(pn.planDataMod.trafficType)) {
