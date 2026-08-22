@@ -1,6 +1,13 @@
 import { Oauth2RequestType, getOauth2RedirectURL } from "@/api/oauth2"
 import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
 import { GitHubIcon } from "@/components/ui/icon"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
@@ -8,161 +15,119 @@ import { useAuth } from "@/hooks/useAuth"
 import useSetting from "@/hooks/useSetting"
 import { zodResolver } from "@hookform/resolvers/zod"
 import i18next from "i18next"
-import { Eye, EyeOff } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { z } from "zod"
 
 const formSchema = z.object({
-    username: z.string().min(2, { message: i18next.t("Results.UsernameMin", { number: 2 }) }),
-    password: z.string().min(1, { message: i18next.t("Results.PasswordRequired") }),
+    username: z.string().min(2, {
+        message: i18next.t("Results.UsernameMin", { number: 2 }),
+    }),
+    password: z.string().min(1, {
+        message: i18next.t("Results.PasswordRequired"),
+    }),
 })
 
 function Login() {
     const { login, loginOauth2 } = useAuth()
     const { data: settingData } = useSetting()
-    const { t } = useTranslation()
-    const [showPassword, setShowPassword] = useState(false)
 
     useEffect(() => {
-        if (new URLSearchParams(window.location.search).get("oauth2")) loginOauth2()
-        // OAuth callback is consumed once on mount; the auth context methods
-        // intentionally change identity after profile publication.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        const oauth2 = new URLSearchParams(window.location.search).get("oauth2")
+        if (oauth2) {
+            loginOauth2()
+        }
+    }, [window.location.search])
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: { username: "", password: "" },
+        defaultValues: {
+            username: "",
+            password: "",
+        },
     })
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        await login(values.username, values.password)
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        login(values.username, values.password)
     }
 
     async function loginWith(provider: string) {
         try {
             const redirectUrl = await getOauth2RedirectURL(provider, Oauth2RequestType.LOGIN)
-            window.location.assign(redirectUrl.redirect!)
+            window.location.href = redirectUrl.redirect!
         } catch (error: any) {
             toast.error(error.message)
         }
     }
 
-    const siteName = settingData?.config?.site_name || t("nezha")
+    const { t } = useTranslation()
 
     return (
-        <div className="grid min-h-dvh bg-background lg:grid-cols-2">
-            <section className="relative hidden overflow-hidden bg-[#0b0d0c] p-10 text-white lg:flex lg:flex-col">
-                <div className="flex items-center gap-3">
-                    <img className="size-9 rounded-md" src="/dashboard/logo.png" alt="" />
-                    <div>
-                        <p className="text-sm font-semibold">{siteName}</p>
-                        <p className="text-[11px] text-white/48">
-                            {t("Navigation.Console", { defaultValue: "Management Console" })}
-                        </p>
-                    </div>
-                </div>
-                <div className="my-auto py-12">
-                    <p className="text-[5rem] font-semibold leading-[0.84] tracking-[0] text-white/92 xl:text-[7rem]">
-                        NEZHA
-                    </p>
-                    <p className="mt-6 text-[5rem] font-semibold leading-[0.84] tracking-[0] text-white/58 xl:text-[7rem]">
-                        MONITOR
-                    </p>
-                    <p className="mt-6 text-[5rem] font-semibold leading-[0.84] tracking-[0] text-white/32 xl:text-[7rem]">
-                        NODE
-                    </p>
-                </div>
-                <p className="max-w-md text-xs leading-6 text-white/42">
-                    {t("Navigation.LoginDescription", {
-                        defaultValue: "A focused workspace for servers, monitoring and automation.",
-                    })}
-                </p>
-            </section>
-
-            <section className="flex items-center justify-center p-6 sm:p-10">
-                <div className="w-full max-w-[420px]">
-                    <header className="mb-6 text-center">
-                        <img className="mx-auto mb-4 size-12 rounded-md" src="/dashboard/logo.png" alt="" />
-                        <h1 className="text-xl font-semibold">{siteName}</h1>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                            {t("Navigation.LoginPrompt", { defaultValue: "Sign in to the management console" })}
-                        </p>
-                    </header>
-
-                    <div className="rounded-md border bg-card p-6 sm:p-8">
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-                                <FormField
-                                    control={form.control}
-                                    name="username"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>{t("Username")}</FormLabel>
-                                            <FormControl>
-                                                <Input autoComplete="username" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="password"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>{t("Password")}</FormLabel>
-                                            <FormControl>
-                                                <div className="relative">
-                                                    <Input
-                                                        type={showPassword ? "text" : "password"}
-                                                        autoComplete="current-password"
-                                                        className="pr-10"
-                                                        {...field}
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-muted-foreground hover:text-foreground"
-                                                        onClick={() => setShowPassword((visible) => !visible)}
-                                                        aria-label={showPassword ? "Hide password" : "Show password"}
-                                                    >
-                                                        {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                                                    </button>
-                                                </div>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                                    {t("Login")}
-                                </Button>
-                            </form>
-                        </Form>
-
-                        {!!settingData?.config?.oauth2_providers?.length && (
-                            <>
-                                <div className="my-5 flex items-center gap-3">
-                                    <Separator className="flex-1" />
-                                    <span className="text-[10px] text-muted-foreground">OAuth2</span>
-                                    <Separator className="flex-1" />
-                                </div>
-                                <div className="grid gap-2">
-                                    {settingData.config.oauth2_providers.map((provider: string) => (
-                                        <Button key={provider} type="button" variant="outline" onClick={() => loginWith(provider)}>
-                                            {provider === "GitHub" && <GitHubIcon className="size-4" />}
-                                            {provider}
-                                        </Button>
-                                    ))}
-                                </div>
-                            </>
+        <div className="mt-28 sm:max-w-sm m-auto max-w-xs">
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <FormField
+                        control={form.control}
+                        name="username"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>{t("Username")}</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="admin" autoComplete="username" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
                         )}
-                    </div>
-                </div>
-            </section>
+                    />
+                    <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>{t("Password")}</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="password"
+                                        placeholder="admin"
+                                        autoComplete="current-password"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button
+                        type="submit"
+                        className="w-full rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
+                    >
+                        {t("Login")}
+                    </Button>
+                </form>
+                {settingData?.config?.oauth2_providers &&
+                    settingData?.config?.oauth2_providers.length > 0 && (
+                        <section className="flex items-center my-3 w-full">
+                            <Separator className="flex-1" />
+                            <div className="flex justify-center text-xs text-muted-foreground w-full max-w-[100px]">
+                                OAuth2
+                            </div>
+                            <Separator className="flex-1" />
+                        </section>
+                    )}
+            </Form>
+            <div className="mt-3 flex flex-col gap-3">
+                {settingData?.config?.oauth2_providers?.map((p: string) => (
+                    <Button
+                        className="w-full rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-muted text-primary hover:bg-muted/80 hover:text-primary/80"
+                        onClick={() => loginWith(p)}
+                    >
+                        {p === "GitHub" && <GitHubIcon className="size-4" />}
+                        {p}
+                    </Button>
+                ))}
+            </div>
         </div>
     )
 }

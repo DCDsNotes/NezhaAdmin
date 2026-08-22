@@ -128,9 +128,9 @@ export default function NATPage() {
     const selectedRows = table.getSelectedRowModel().rows
 
     return (
-        <div className="admin-page">
-            <div className="admin-page__header">
-                <h1 className="admin-page__title flex-1">{t("NATT")}</h1>
+        <div className="px-3">
+            <div className="flex mt-6 mb-4">
+                <h1 className="flex-1 text-3xl font-bold tracking-tight"> {t("NATT")}</h1>
                 <HeaderButtonGroup
                     className="flex ml-auto self-end sm:self-auto gap-2 flex-wrap shrink-0"
                     delete={{

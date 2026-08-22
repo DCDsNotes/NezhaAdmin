@@ -5,15 +5,6 @@
         "dark": "Dark",
         "system": "Follow System"
     },
-    "Navigation": {
-        "Overview": "Operations",
-        "Monitoring": "Monitoring",
-        "Network": "Network",
-        "System": "Control",
-        "Console": "Node Management Console",
-        "LoginPrompt": "Sign in to the management console",
-        "LoginDescription": "Manage servers, monitoring tasks and automation in one focused workspace."
-    },
     "Username": "Username",
     "Password": "Password",
     "InvalidUsernameOrPassword": "Invalid Username Or Password",
