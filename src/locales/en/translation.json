@@ -11,6 +11,13 @@
     "NetworkError": "Network Error",
     "LoginFirst": "Please Log in first",
     "CurrentTime": "Current Time",
+    "Navigation": {
+        "Workspace": "Operations Workspace",
+        "ControlCenter": "Infrastructure Control Center",
+        "Monitoring": "Monitoring & Tasks",
+        "Connectivity": "Network & Connectivity",
+        "Management": "System Management"
+    },
     "Results": {
         "UsernameMin": "Username must be at least {{number}} characters.",
         "PasswordRequired": "Password cannot be empty.",
