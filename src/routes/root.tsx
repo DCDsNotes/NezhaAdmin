@@ -36,14 +36,14 @@ export default function Root() {
 
     return (
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-            <section className="text-sm mx-auto h-full flex flex-col justify-between">
-                <div>
+            <section className="flex min-h-dvh flex-col bg-muted/20 text-sm">
+                <div className="flex-1">
                     <Header />
-                    <div className="max-w-5xl mx-auto">
+                    <main className="mx-auto w-full max-w-6xl px-4 sm:px-6">
                         <Outlet />
-                    </div>
+                    </main>
                 </div>
-                <footer className="mx-5 py-5 text-foreground/50 font-light text-xs text-center">
+                <footer className="border-t py-5 text-center text-xs text-muted-foreground">
                     &copy; 2019-{new Date().getFullYear()} {t("nezha")}
                 </footer>
             </section>

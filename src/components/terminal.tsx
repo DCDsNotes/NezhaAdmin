@@ -186,7 +186,7 @@ export const TerminalPage = () => {
 export const TerminalButton = ({ id, menuItem = false }: { id: number; menuItem?: boolean }) => {
     const { t } = useTranslation()
     const handleOpenNewTab = () => {
-        window.open(`/dashboard/terminal/${id}`, "_blank")
+        window.open(`/dashboard/terminal/${id}`, "_blank", "noopener,noreferrer")
     }
 
     if (menuItem) {

@@ -2,10 +2,8 @@ name: Build and release static export
 
 on:
   push:
-    branches:
-      - main
-    tags:
-      - "v*"
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   release:
@@ -14,12 +12,12 @@ jobs:
       contents: write
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Set up Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: "latest"
 
@@ -36,7 +34,7 @@ jobs:
         id: tag
         run: |
           # 基于时间戳或版本号创建标签
-          TAG_NAME="v$(date +%Y%m%d%H%M%S)"
+          TAG_NAME="v$(date -u +%Y%m%d%H%M%S)"
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
           git tag $TAG_NAME
           git push origin $TAG_NAME
@@ -47,3 +45,14 @@ jobs:
           files: dist.zip
           tag_name: ${{ steps.tag.outputs.tag_name }}
           generate_release_notes: true
+
+      - name: Keep only the five newest releases and tags
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          mapfile -t releases < <(gh release list --repo "$GH_REPO" --limit 100 --json tagName,createdAt --jq 'sort_by(.createdAt) | reverse | .[5:][] | .tagName')
+          for tag in "${releases[@]}"; do
+            gh release delete "$tag" --repo "$GH_REPO" --yes --cleanup-tag || true
+          done

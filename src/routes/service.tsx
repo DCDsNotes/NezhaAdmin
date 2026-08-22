@@ -174,9 +174,9 @@ export default function ServicePage() {
     const selectedRows = table.getSelectedRowModel().rows
 
     return (
-        <div className="px-3 max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-3 mt-6 mb-4">
-                <h1 className="text-3xl font-bold tracking-tight">{t("Service")}</h1>
+        <div className="admin-page">
+            <div className="admin-page__header">
+                <h1 className="admin-page__title">{t("Service")}</h1>
                 <HeaderButtonGroup
                     className="flex gap-2 flex-wrap shrink-0"
                     delete={{

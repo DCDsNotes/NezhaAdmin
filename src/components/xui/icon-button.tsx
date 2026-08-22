@@ -45,12 +45,7 @@ export interface IconButtonProps extends ButtonProps {
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>((props, ref) => {
     return (
-        <Button
-            className="rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
-            {...props}
-            ref={ref}
-            size="icon"
-        >
+        <Button {...props} ref={ref} size="icon">
             {(() => {
                 switch (props.icon) {
                     case "clipboard": {

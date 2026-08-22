@@ -194,9 +194,9 @@ export default function ServerPage() {
     const selectedRows = table.getSelectedRowModel().rows
 
     return (
-        <div className="px-3 max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-3 mt-6 mb-4">
-                <h1 className="text-3xl font-bold tracking-tight">{t("Server")}</h1>
+        <div className="admin-page">
+            <div className="admin-page__header">
+                <h1 className="admin-page__title">{t("Server")}</h1>
                 <HeaderButtonGroup
                     className="flex gap-2 flex-wrap shrink-0"
                     delete={{
@@ -244,12 +244,12 @@ export default function ServerPage() {
                     <BatchMoveServerIcon serverIds={selectedRows.map((r) => r.original.id)} />
                     <ServerConfigCardBatch
                         sid={selectedRows.map((r) => r.original.id)}
-                        className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-yellow-600 text-white hover:bg-yellow-500 dark:hover:bg-yellow-700 rounded-lg"
+                        variant="secondary"
                     />
-                    <InstallCommandsMenu className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-blue-700 text-white hover:bg-blue-600 dark:hover:bg-blue-800 rounded-lg" />
+                    <InstallCommandsMenu />
                 </HeaderButtonGroup>
             </div>
-            <div className="rounded-md border overflow-x-auto">
+            <div className="admin-surface overflow-x-auto">
                 <Table className="min-w-[960px]">
                     <TableHeader className="sticky top-0 bg-background z-10">
                         {table.getHeaderGroups().map((headerGroup) => (
