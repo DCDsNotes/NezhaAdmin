@@ -22,6 +22,9 @@ import {
     LogOut,
     Menu,
     Network,
+    PanelLeftClose,
+    PanelLeftOpen,
+    RefreshCcw,
     Server,
     Settings,
     ShieldCheck,
@@ -76,7 +79,12 @@ function Overview() {
     )
 }
 
-export default function Header() {
+type HeaderProps = {
+    sidebarCollapsed: boolean
+    onToggleSidebar: () => void
+}
+
+export default function Header({ sidebarCollapsed, onToggleSidebar }: HeaderProps) {
     const { t } = useTranslation()
     const { logout } = useAuth()
     const profile = useMainStore((store) => store.profile)
@@ -218,6 +226,17 @@ export default function Header() {
                     type="button"
                     variant="ghost"
                     size="icon"
+                    className="admin-sidebar-toggle"
+                    onClick={onToggleSidebar}
+                    aria-label={sidebarCollapsed ? "展开侧栏" : "收起侧栏"}
+                    title={sidebarCollapsed ? "展开侧栏" : "收起侧栏"}
+                >
+                    {sidebarCollapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
+                </Button>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
                     className="admin-mobile-menu"
                     onClick={() => setMobileOpen((open) => !open)}
                     aria-label={mobileOpen ? t("Close") : t("NavigateTo")}
@@ -237,6 +256,16 @@ export default function Header() {
                 </div>
 
                 <div className="admin-topbar__actions">
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        title="刷新页面"
+                        aria-label="刷新页面"
+                        onClick={() => window.location.reload()}
+                    >
+                        <RefreshCcw />
+                    </Button>
                     <Button variant="ghost" size="icon" asChild title={t("BackToHome")}>
                         <a href="/" aria-label={t("BackToHome")}>
                             <Home />
