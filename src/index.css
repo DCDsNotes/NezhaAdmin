@@ -126,6 +126,8 @@
 }
 
 .admin-shell {
+    --admin-sidebar-width: 244px;
+    --admin-topbar-height: 72px;
     min-height: 100dvh;
     background: var(--background);
     color: var(--foreground);
@@ -136,7 +138,7 @@
     inset: 0 auto 0 0;
     z-index: 50;
     display: flex;
-    width: 232px;
+    width: var(--admin-sidebar-width);
     min-height: 100dvh;
     flex-direction: column;
     border-right: 1px solid rgb(255 255 255 / 8%);
@@ -151,10 +153,10 @@
 
 .admin-brand {
     display: flex;
-    min-height: 76px;
+    min-height: var(--admin-topbar-height);
     align-items: center;
     gap: 11px;
-    padding: 14px 18px;
+    padding: 12px 20px;
     border-bottom: 1px solid rgb(255 255 255 / 8%);
 }
 
@@ -188,7 +190,7 @@
 
 .admin-navigation {
     flex: 1;
-    padding: 15px 11px;
+    padding: 22px 12px;
     overflow-y: auto;
     scrollbar-width: thin;
 }
@@ -198,7 +200,7 @@
 }
 
 .admin-navigation__group h2 {
-    margin: 0 9px 7px;
+    margin: 0 10px 8px;
     color: #71838f;
     font-size: 10px;
     font-weight: 700;
@@ -207,14 +209,14 @@
 
 .admin-navigation__item {
     display: grid;
-    min-height: 40px;
+    min-height: 42px;
     grid-template-columns: 18px minmax(0, 1fr) 15px;
     align-items: center;
     gap: 10px;
     margin: 2px 0;
-    padding: 8px 10px;
+    padding: 9px 11px;
     border: 1px solid transparent;
-    border-radius: 6px;
+    border-radius: 7px;
     color: #aebdc6;
     font-size: 12px;
     font-weight: 600;
@@ -230,9 +232,10 @@
 }
 
 .admin-navigation__item.is-active {
-    border-color: rgb(96 165 250 / 28%);
-    background: rgb(37 99 235 / 22%);
+    border-color: rgb(96 165 250 / 34%);
+    background: linear-gradient(90deg, rgb(37 99 235 / 30%), rgb(37 99 235 / 12%));
     color: #bfdbfe;
+    box-shadow: inset 3px 0 0 #60a5fa;
 }
 
 .admin-navigation__icon,
@@ -287,17 +290,18 @@
 
 .admin-topbar {
     position: fixed;
-    inset: 0 0 auto 232px;
+    inset: 0 0 auto var(--admin-sidebar-width);
     z-index: 40;
     display: flex;
-    min-height: 76px;
+    min-height: var(--admin-topbar-height);
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    padding: 10px 24px;
+    padding: 10px 28px;
     border-bottom: 1px solid var(--border);
-    background: color-mix(in srgb, var(--background) 92%, transparent);
+    background: color-mix(in srgb, var(--card) 94%, transparent);
     backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 rgb(15 23 42 / 5%), 0 8px 24px rgb(15 23 42 / 3%);
 }
 
 .admin-topbar--guest {
@@ -409,8 +413,8 @@
     display: flex;
     min-height: 100dvh;
     flex-direction: column;
-    margin-left: 232px;
-    padding-top: 76px;
+    margin-left: var(--admin-sidebar-width);
+    padding-top: var(--admin-topbar-height);
 }
 
 .admin-shell--guest .admin-workspace {
@@ -418,10 +422,10 @@
 }
 
 .admin-content {
-    width: min(1180px, 100%);
+    width: min(1320px, 100%);
     flex: 1;
     margin: 0 auto;
-    padding: 28px 24px 40px;
+    padding: 30px 30px 46px;
 }
 
 .admin-content > * {
@@ -441,12 +445,34 @@
 
 .admin-content [data-slot="card"],
 .admin-content .rounded-xl {
-    border-radius: 7px;
+    border-radius: 8px;
+    border-color: color-mix(in srgb, var(--border) 88%, transparent);
+    box-shadow: 0 8px 24px rgb(15 23 42 / 4%);
+}
+
+.admin-content table {
+    background: var(--card);
+}
+
+.admin-content thead {
+    background: color-mix(in srgb, var(--muted) 70%, var(--card));
+}
+
+.admin-content thead th {
+    color: var(--muted-foreground);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.admin-content tbody tr:hover {
+    background: color-mix(in srgb, var(--accent) 38%, var(--card));
 }
 
 @media (max-width: 899px) {
     .admin-sidebar {
-        width: min(280px, calc(100vw - 54px));
+        width: min(292px, calc(100vw - 54px));
         transform: translateX(-102%);
         transition: transform 180ms ease;
     }
@@ -475,7 +501,7 @@
     .admin-topbar {
         left: 0;
         min-height: 64px;
-        padding: 8px 14px;
+        padding: 8px 16px;
     }
 
     .admin-mobile-menu {
@@ -508,7 +534,7 @@
     }
 
     .admin-content {
-        padding: 20px 14px 32px;
+        padding: 22px 16px 34px;
     }
 }
 
