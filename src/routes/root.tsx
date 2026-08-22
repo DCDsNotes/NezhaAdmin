@@ -1,9 +1,11 @@
 import Header from "@/components/header"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
+import { useMainStore } from "@/hooks/useMainStore"
 import useSetting from "@/hooks/useSetting"
 import i18n from "@/lib/i18n"
 import { InjectContext } from "@/lib/inject"
+import { cn } from "@/lib/utils"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { Outlet } from "react-router-dom"
@@ -11,6 +13,7 @@ import { Outlet } from "react-router-dom"
 export default function Root() {
     const { t } = useTranslation()
     const { data: settingData, error } = useSetting()
+    const profile = useMainStore((store) => store.profile)
 
     useEffect(() => {
         document.title = settingData?.config?.site_name || "哪吒监控"
@@ -36,16 +39,16 @@ export default function Root() {
 
     return (
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-            <section className="flex min-h-dvh flex-col bg-muted/20 text-sm">
-                <div className="flex-1">
-                    <Header />
-                    <main className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+            <section className={cn("flex min-h-dvh flex-col bg-background text-sm", profile && "lg:pl-60")}>
+                <Header />
+                <div className="flex min-w-0 flex-1 flex-col">
+                    <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 sm:px-6 lg:px-8">
                         <Outlet />
                     </main>
+                    <footer className="border-t py-4 text-center text-xs text-muted-foreground">
+                        &copy; 2019-{new Date().getFullYear()} {t("nezha")}
+                    </footer>
                 </div>
-                <footer className="border-t py-5 text-center text-xs text-muted-foreground">
-                    &copy; 2019-{new Date().getFullYear()} {t("nezha")}
-                </footer>
             </section>
             <Toaster />
         </ThemeProvider>
