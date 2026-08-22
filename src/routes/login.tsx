@@ -54,7 +54,7 @@ function Login() {
     const siteName = settingData?.config?.site_name || t("nezha")
 
     return (
-        <div className="grid min-h-dvh bg-background lg:grid-cols-[minmax(0,1.45fr)_minmax(420px,0.55fr)]">
+        <div className="grid min-h-dvh bg-background lg:grid-cols-2">
             <section className="relative hidden overflow-hidden bg-[#0b0d0c] p-10 text-white lg:flex lg:flex-col">
                 <div className="flex items-center gap-3">
                     <img className="size-9 rounded-md" src="/dashboard/logo.png" alt="" />
@@ -65,12 +65,15 @@ function Login() {
                         </p>
                     </div>
                 </div>
-                <div className="my-auto border-y border-white/12 py-12">
-                    <p className="text-[6rem] font-semibold leading-[0.82] tracking-[0] text-white/92 xl:text-[8rem]">
-                        NODE
+                <div className="my-auto py-12">
+                    <p className="text-[5rem] font-semibold leading-[0.84] tracking-[0] text-white/92 xl:text-[7rem]">
+                        NEZHA
                     </p>
-                    <p className="mt-7 text-[6rem] font-semibold leading-[0.82] tracking-[0] text-white/36 xl:text-[8rem]">
+                    <p className="mt-6 text-[5rem] font-semibold leading-[0.84] tracking-[0] text-white/58 xl:text-[7rem]">
                         MONITOR
+                    </p>
+                    <p className="mt-6 text-[5rem] font-semibold leading-[0.84] tracking-[0] text-white/32 xl:text-[7rem]">
+                        NODE
                     </p>
                 </div>
                 <p className="max-w-md text-xs leading-6 text-white/42">
@@ -81,7 +84,7 @@ function Login() {
             </section>
 
             <section className="flex items-center justify-center p-6 sm:p-10">
-                <div className="w-full max-w-sm">
+                <div className="w-full max-w-[420px]">
                     <header className="mb-6 text-center">
                         <img className="mx-auto mb-4 size-12 rounded-md" src="/dashboard/logo.png" alt="" />
                         <h1 className="text-xl font-semibold">{siteName}</h1>
@@ -90,7 +93,7 @@ function Login() {
                         </p>
                     </header>
 
-                    <div className="rounded-md border bg-card p-6">
+                    <div className="rounded-md border bg-card p-6 sm:p-8">
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                                 <FormField

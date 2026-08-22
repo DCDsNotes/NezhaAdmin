@@ -127,7 +127,7 @@
 
 @layer components {
     .admin-page {
-        @apply w-full py-5 lg:py-7;
+        @apply w-full py-5 lg:py-6;
     }
 
     .admin-page__header {
@@ -144,5 +144,30 @@
 
     .admin-surface {
         @apply overflow-hidden rounded-md border bg-card;
+    }
+
+    .admin-main > .px-3 {
+        @apply w-full px-0 py-5 lg:py-6;
+    }
+
+    .admin-main > .px-3 > :first-child {
+        @apply mt-0;
+    }
+
+    .admin-page > .relative.w-full.overflow-auto,
+    .admin-main > .px-3 > .relative.w-full.overflow-auto {
+        @apply rounded-md border bg-card;
+    }
+
+    .admin-page__header + .relative.w-full.overflow-auto {
+        @apply mt-0;
+    }
+
+    .admin-main table {
+        @apply text-xs;
+    }
+
+    .admin-main thead {
+        @apply bg-muted/45;
     }
 }

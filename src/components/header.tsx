@@ -213,8 +213,8 @@ export default function Header() {
                 </div>
             </aside>
 
-            <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-sm">
-                <div className="flex h-14 items-center gap-3 px-4 sm:px-6 lg:px-8">
+            <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-sm lg:fixed lg:right-8 lg:top-5 lg:border-0 lg:bg-transparent lg:backdrop-blur-none">
+                <div className="flex h-14 items-center gap-3 px-4 sm:px-6 lg:h-auto lg:p-0">
                     <div className="lg:hidden">
                         <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
                             <DrawerTrigger aria-label={t("NavigateTo")} asChild>
@@ -239,7 +239,7 @@ export default function Header() {
                     <div className="lg:hidden">
                         <Brand />
                     </div>
-                    <div className="ml-auto flex items-center gap-0.5 rounded-md border bg-card p-0.5">
+                    <div className="ml-auto flex items-center gap-0.5 rounded-md border bg-card p-0.5 shadow-sm">
                         <Button variant="ghost" size="icon" className="size-8" asChild title={t("BackToHome")}>
                             <a href="/" aria-label={t("BackToHome")}>
                                 <Home />

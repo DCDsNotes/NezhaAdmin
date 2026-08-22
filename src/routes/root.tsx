@@ -49,7 +49,7 @@ export default function Root() {
             >
                 {!isLogin && <Header />}
                 <div className="flex min-w-0 flex-1 flex-col">
-                    <main className={cn("w-full flex-1", !isLogin && "px-4 sm:px-6 lg:px-8")}>
+                    <main className={cn("admin-main w-full flex-1", !isLogin && "px-4 sm:px-6 lg:px-8 lg:pt-14")}>
                         <Outlet />
                     </main>
                     {!isLogin && (
