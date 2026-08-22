@@ -198,7 +198,7 @@ export default function SettingsPage() {
                                                                         {template.author}
                                                                     </span>
                                                                     {!template.is_official ? (
-                                                                        <span className="px-1.5 py-0.5 rounded-md bg-red-100 text-red-800 text-xs">
+                                                                        <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs">
                                                                             {t("Community")}
                                                                         </span>
                                                                     ) : (

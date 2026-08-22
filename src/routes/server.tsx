@@ -244,9 +244,9 @@ export default function ServerPage() {
                     <BatchMoveServerIcon serverIds={selectedRows.map((r) => r.original.id)} />
                     <ServerConfigCardBatch
                         sid={selectedRows.map((r) => r.original.id)}
-                        className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-yellow-600 text-white hover:bg-yellow-500 dark:hover:bg-yellow-700 rounded-lg"
+                        className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-slate-700 text-white hover:bg-slate-800 dark:hover:bg-slate-600 rounded-lg"
                     />
-                    <InstallCommandsMenu className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-blue-700 text-white hover:bg-blue-600 dark:hover:bg-blue-800 rounded-lg" />
+                    <InstallCommandsMenu className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-indigo-600 text-white hover:bg-indigo-700 dark:hover:bg-indigo-500 rounded-lg" />
                 </HeaderButtonGroup>
             </div>
             <div className="rounded-md border overflow-x-auto">

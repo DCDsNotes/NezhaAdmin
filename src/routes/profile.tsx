@@ -118,7 +118,7 @@ export default function ProfilePage() {
                                         </section>
                                         {profile.oauth2_bind?.[provider.toLowerCase()] ? (
                                             <Button
-                                                className="w-fit bg-red-600 hover:bg-red-500 dark:text-white rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] my-1"
+                                                className="w-fit bg-slate-700 hover:bg-slate-800 dark:text-white rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] my-1"
                                                 size="sm"
                                                 onClick={() => unbindO2(provider)}
                                             >
