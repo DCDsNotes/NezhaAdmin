@@ -5,6 +5,15 @@
         "dark": "暗色",
         "system": "跟随系统"
     },
+    "Navigation": {
+        "Overview": "运行",
+        "Monitoring": "监控",
+        "Network": "网络",
+        "System": "控制",
+        "Console": "节点管理控制台",
+        "LoginPrompt": "登录以进入管理控制台",
+        "LoginDescription": "集中管理服务器、监控任务与自动化配置。"
+    },
     "Username": "用户名",
     "Password": "密码",
     "InvalidUsernameOrPassword": "用户名或密码错误",

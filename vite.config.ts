@@ -56,7 +56,10 @@ export default defineConfig({
                         pkg === "clsx" ||
                         pkg === "tailwind-merge"
                     ) {
-                        return "ui"
+                        // Radix primitives share internal helpers with the
+                        // general vendor graph. Keeping them together avoids
+                        // the previous ui <-> vendor circular chunk.
+                        return "vendor"
                     }
 
                     // 3. 表单与校验

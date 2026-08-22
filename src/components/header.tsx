@@ -43,29 +43,53 @@ import {
 } from "./ui/dropdown-menu"
 import { IconButton } from "./xui/icon-button"
 
-type Page = {
-    href: string
-    label: string
-    icon: LucideIcon
-}
+type Page = { href: string; label: string; icon: LucideIcon }
+type NavigationGroup = { label: string; fallback: string; pages: Page[] }
 
-const pages: Page[] = [
-    { href: "/dashboard", label: "Server", icon: Server },
-    { href: "/dashboard/service", label: "Service", icon: Activity },
-    { href: "/dashboard/cron", label: "Task", icon: CalendarClock },
-    { href: "/dashboard/notification", label: "Notification", icon: Bell },
-    { href: "/dashboard/ddns", label: "DDNS", icon: Globe2 },
-    { href: "/dashboard/nat", label: "NATT", icon: Waypoints },
-    { href: "/dashboard/server-group", label: "Group", icon: Boxes },
+const navigationGroups: NavigationGroup[] = [
+    {
+        label: "Navigation.Overview",
+        fallback: "Overview",
+        pages: [
+            { href: "/dashboard", label: "Server", icon: Server },
+            { href: "/dashboard/server-group", label: "Group", icon: Boxes },
+        ],
+    },
+    {
+        label: "Navigation.Monitoring",
+        fallback: "Monitoring",
+        pages: [
+            { href: "/dashboard/service", label: "Service", icon: Activity },
+            { href: "/dashboard/notification", label: "Notification", icon: Bell },
+        ],
+    },
+    {
+        label: "Navigation.Network",
+        fallback: "Network",
+        pages: [
+            { href: "/dashboard/ddns", label: "DDNS", icon: Globe2 },
+            { href: "/dashboard/nat", label: "NATT", icon: Waypoints },
+        ],
+    },
+    {
+        label: "Navigation.System",
+        fallback: "System",
+        pages: [
+            { href: "/dashboard/cron", label: "Task", icon: CalendarClock },
+            { href: "/dashboard/settings", label: "Settings", icon: Settings },
+        ],
+    },
 ]
 
 function isPageActive(pathname: string, href: string) {
+    if (href === "/dashboard") return pathname === href
     if (href === "/dashboard/notification") {
         return pathname === href || pathname === "/dashboard/alert-rule"
     }
     if (href === "/dashboard/server-group") {
         return pathname === href || pathname === "/dashboard/notification-group"
     }
+    if (href === "/dashboard/settings") return pathname.startsWith(href)
     return pathname === href
 }
 
@@ -74,31 +98,41 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
     const { pathname } = useLocation()
 
     return (
-        <nav className="grid gap-1" aria-label={t("NavigateTo")}>
-            {pages.map((item) => {
-                const active = isPageActive(pathname, item.href)
-                const Icon = item.icon
-                return (
-                    <Link
-                        key={item.href}
-                        to={item.href}
-                        aria-current={active ? "page" : undefined}
-                        className={cn(
-                            "flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium text-sidebar-foreground/65 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                            active && "bg-sidebar-primary/12 text-sidebar-primary",
-                        )}
-                        onClick={onNavigate}
-                    >
-                        <Icon className="size-4.5 shrink-0" strokeWidth={1.8} />
-                        <span>{t(item.label)}</span>
-                    </Link>
-                )
-            })}
+        <nav className="space-y-4" aria-label={t("NavigateTo")}>
+            {navigationGroups.map((group) => (
+                <section key={group.label}>
+                    <p className="mb-1.5 px-2.5 text-[10px] font-medium text-sidebar-foreground/45">
+                        {t(group.label, { defaultValue: group.fallback })}
+                    </p>
+                    <div className="grid gap-0.5">
+                        {group.pages.map((item) => {
+                            const active = isPageActive(pathname, item.href)
+                            const Icon = item.icon
+                            return (
+                                <Link
+                                    key={item.href}
+                                    to={item.href}
+                                    aria-current={active ? "page" : undefined}
+                                    className={cn(
+                                        "flex h-9 items-center gap-2.5 rounded-md px-2.5 text-[13px] font-medium text-sidebar-foreground/68 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                                        active &&
+                                            "bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-sidebar-border",
+                                    )}
+                                    onClick={onNavigate}
+                                >
+                                    <Icon className="size-4 shrink-0" strokeWidth={1.75} />
+                                    <span className="truncate">{t(item.label)}</span>
+                                </Link>
+                            )
+                        })}
+                    </div>
+                </section>
+            ))}
         </nav>
     )
 }
 
-function ProfileMenu({ username, logout, expanded = false }: { username: string; logout: () => void; expanded?: boolean }) {
+function ProfileMenu({ username, logout }: { username: string; logout: () => void }) {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const initials = username.slice(0, 2).toUpperCase()
@@ -106,20 +140,14 @@ function ProfileMenu({ username, logout, expanded = false }: { username: string;
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                {expanded ? (
-                    <Button variant="ghost" className="h-11 w-full justify-start gap-3 px-2">
-                        <Avatar className="size-8 border bg-muted">
-                            <AvatarFallback>{initials}</AvatarFallback>
-                        </Avatar>
-                        <span className="min-w-0 flex-1 truncate text-left text-sm">{username}</span>
-                    </Button>
-                ) : (
-                    <Avatar className="size-8 cursor-pointer border bg-muted">
-                        <AvatarFallback>{initials}</AvatarFallback>
+                <Button variant="ghost" className="h-9 gap-2 px-2">
+                    <Avatar className="size-7 border bg-muted">
+                        <AvatarFallback className="text-[11px]">{initials}</AvatarFallback>
                     </Avatar>
-                )}
+                    <span className="hidden max-w-28 truncate text-xs xl:block">{username}</span>
+                </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" side={expanded ? "right" : "bottom"} className="w-48">
+            <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuLabel className="break-all">{username}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
@@ -146,9 +174,14 @@ function Brand() {
     const { t } = useTranslation()
 
     return (
-        <Link className="inline-flex min-w-0 items-center gap-3 font-semibold" to="/dashboard">
+        <Link className="flex min-w-0 items-center gap-2.5" to="/dashboard">
             <img className="size-8 shrink-0 rounded-md" src="/dashboard/logo.png" alt="" />
-            <span className="truncate">{t("nezha")}</span>
+            <span className="min-w-0 leading-tight">
+                <strong className="block truncate text-[13px] font-semibold">{t("nezha")}</strong>
+                <span className="block truncate text-[10px] text-muted-foreground">
+                    {t("Navigation.Console", { defaultValue: "Management Console" })}
+                </span>
+            </span>
         </Link>
     )
 }
@@ -159,34 +192,30 @@ export default function Header() {
     const profile = useMainStore((store) => store.profile)
     const [drawerOpen, setDrawerOpen] = useState(false)
 
+    if (!profile) return null
+
     return (
         <>
-            {profile ? (
-                <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r bg-sidebar lg:flex">
-                    <div className="flex h-16 items-center border-b px-5">
-                        <Brand />
-                    </div>
-                    <div className="flex min-h-0 flex-1 flex-col px-3 py-4">
-                        <p className="mb-2 px-3 text-[11px] font-semibold text-sidebar-foreground/40">{t("NavigateTo")}</p>
-                        <Navigation />
-                    </div>
-                    <div className="space-y-2 border-t p-3">
-                        <div className="flex items-center gap-1">
-                            <Button variant="ghost" size="icon" asChild title={t("BackToHome")}>
-                                <a href="/" aria-label={t("BackToHome")}>
-                                    <Home />
-                                </a>
-                            </Button>
-                            <ModeToggle />
-                        </div>
-                        <ProfileMenu username={profile.username} logout={logout} expanded />
-                    </div>
-                </aside>
-            ) : null}
+            <aside className="fixed inset-y-0 left-0 z-40 hidden w-[216px] flex-col border-r bg-sidebar lg:flex">
+                <div className="flex h-14 items-center border-b px-4">
+                    <Brand />
+                </div>
+                <div className="min-h-0 flex-1 overflow-y-auto px-2.5 py-4">
+                    <Navigation />
+                </div>
+                <div className="flex items-center justify-between border-t px-3 py-2.5">
+                    <span className="text-[10px] text-muted-foreground">&copy; {new Date().getFullYear()}</span>
+                    <Button variant="ghost" size="icon" className="size-8" asChild title={t("BackToHome")}>
+                        <a href="/" aria-label={t("BackToHome")}>
+                            <Home />
+                        </a>
+                    </Button>
+                </div>
+            </aside>
 
-            <header className={cn("sticky top-0 z-40 border-b bg-background/95 backdrop-blur-sm", profile && "lg:hidden")}>
-                <div className="flex h-16 items-center gap-3 px-4 sm:px-6">
-                    {profile ? (
+            <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-sm">
+                <div className="flex h-14 items-center gap-3 px-4 sm:px-6 lg:px-8">
+                    <div className="lg:hidden">
                         <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
                             <DrawerTrigger aria-label={t("NavigateTo")} asChild>
                                 <IconButton icon="menu" variant="ghost" />
@@ -196,7 +225,7 @@ export default function Header() {
                                     <DrawerTitle>{t("NavigateTo")}</DrawerTitle>
                                     <DrawerDescription>{t("SelectAPageToNavigateTo")}</DrawerDescription>
                                 </DrawerHeader>
-                                <div className="px-4">
+                                <div className="max-h-[65dvh] overflow-y-auto px-4">
                                     <Navigation onNavigate={() => setDrawerOpen(false)} />
                                 </div>
                                 <DrawerFooter>
@@ -206,17 +235,18 @@ export default function Header() {
                                 </DrawerFooter>
                             </DrawerContent>
                         </Drawer>
-                    ) : null}
-
-                    <Brand />
-                    <div className="ml-auto flex items-center gap-1">
-                        <Button variant="ghost" size="icon" asChild title={t("BackToHome")}>
+                    </div>
+                    <div className="lg:hidden">
+                        <Brand />
+                    </div>
+                    <div className="ml-auto flex items-center gap-0.5 rounded-md border bg-card p-0.5">
+                        <Button variant="ghost" size="icon" className="size-8" asChild title={t("BackToHome")}>
                             <a href="/" aria-label={t("BackToHome")}>
                                 <Home />
                             </a>
                         </Button>
                         <ModeToggle />
-                        {profile ? <ProfileMenu username={profile.username} logout={logout} /> : null}
+                        <ProfileMenu username={profile.username} logout={logout} />
                     </div>
                 </div>
             </header>

@@ -8,12 +8,14 @@ import { InjectContext } from "@/lib/inject"
 import { cn } from "@/lib/utils"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom"
 
 export default function Root() {
     const { t } = useTranslation()
     const { data: settingData, error } = useSetting()
     const profile = useMainStore((store) => store.profile)
+    const { pathname } = useLocation()
+    const isLogin = pathname === "/dashboard/login"
 
     useEffect(() => {
         document.title = settingData?.config?.site_name || "哪吒监控"
@@ -39,15 +41,22 @@ export default function Root() {
 
     return (
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-            <section className={cn("flex min-h-dvh flex-col bg-background text-sm", profile && "lg:pl-60")}>
-                <Header />
+            <section
+                className={cn(
+                    "flex min-h-dvh flex-col bg-background text-sm",
+                    profile && !isLogin && "lg:pl-[216px]",
+                )}
+            >
+                {!isLogin && <Header />}
                 <div className="flex min-w-0 flex-1 flex-col">
-                    <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 sm:px-6 lg:px-8">
+                    <main className={cn("w-full flex-1", !isLogin && "px-4 sm:px-6 lg:px-8")}>
                         <Outlet />
                     </main>
-                    <footer className="border-t py-4 text-center text-xs text-muted-foreground">
-                        &copy; 2019-{new Date().getFullYear()} {t("nezha")}
-                    </footer>
+                    {!isLogin && (
+                        <footer className="border-t py-3 text-center text-[11px] text-muted-foreground">
+                            &copy; 2019-{new Date().getFullYear()} {t("nezha")}
+                        </footer>
+                    )}
                 </div>
             </section>
             <Toaster />
