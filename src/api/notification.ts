@@ -13,6 +13,10 @@ export const updateNotification = async (
     return fetcher<void>(FetcherMethod.PATCH, `/api/v1/notification/${id}`, data)
 }
 
+export const getNotificationDetail = async (id: number): Promise<ModelNotification> => {
+    return fetcher<ModelNotification>(FetcherMethod.GET, `/api/v1/notification/${id}`, null)
+}
+
 export const deleteNotification = async (id: number[]): Promise<void> => {
     return fetcher<void>(FetcherMethod.POST, "/api/v1/batch-delete/notification", id)
 }

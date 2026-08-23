@@ -1,4 +1,4 @@
-import { createNotification, updateNotification } from "@/api/notification"
+import { createNotification, getNotificationDetail, updateNotification } from "@/api/notification"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -63,35 +63,64 @@ export const NotifierCard: React.FC<NotifierCardProps> = ({ data, mutate }) => {
     const { t } = useTranslation()
     type notificationFormData = z.infer<typeof notificationFormSchema>
 
+    const emptyValues = {
+        name: "",
+        url: "",
+        request_method: 1,
+        request_type: 1,
+        request_header: "",
+        request_body: "",
+        verify_tls: false,
+        skip_check: false,
+    }
+
+    const toFormValues = (value?: Partial<ModelNotification>) =>
+        value
+            ? {
+                  name: value.name ?? "",
+                  url: value.url ?? "",
+                  request_method: value.request_method ?? 1,
+                  request_type: value.request_type ?? 1,
+                  request_header: value.request_header ?? "",
+                  request_body: value.request_body ?? "",
+                  verify_tls: value.verify_tls ?? false,
+                  skip_check: false,
+              }
+            : emptyValues
+
     const form = useForm({
         resolver: zodResolver(notificationFormSchema) as any,
-        defaultValues: data
-            ? {
-                  name: data.name ?? "",
-                  url: data.url ?? "",
-                  request_method: data.request_method ?? 1,
-                  request_type: data.request_type ?? 1,
-                  request_header: data.request_header ?? "",
-                  request_body: data.request_body ?? "",
-                  verify_tls: (data as any).verify_tls ?? false,
-                  skip_check: (data as any).skip_check ?? false,
-              }
-            : {
-                  name: "",
-                  url: "",
-                  request_method: 1,
-                  request_type: 1,
-                  request_header: "",
-                  request_body: "",
-                  verify_tls: false,
-                  skip_check: false,
-              },
+        defaultValues: toFormValues(data),
         resetOptions: {
             keepDefaultValues: false,
         },
     })
 
     const [open, setOpen] = useState(false)
+    const [loadingDetails, setLoadingDetails] = useState(false)
+
+    const handleOpenChange = async (nextOpen: boolean) => {
+        setOpen(nextOpen)
+        if (!nextOpen) {
+            form.reset(toFormValues(data))
+            return
+        }
+        if (!data?.id) {
+            form.reset(emptyValues)
+            return
+        }
+        setLoadingDetails(true)
+        try {
+            const fullNotification = await getNotificationDetail(data.id)
+            form.reset(toFormValues(fullNotification))
+        } catch (e) {
+            console.error(e)
+            toast(t("Error"), { description: t("Results.UnExpectedError") })
+            setOpen(false)
+        } finally {
+            setLoadingDetails(false)
+        }
+    }
 
     const onSubmit = async (values: notificationFormData) => {
         try {
@@ -109,7 +138,7 @@ export const NotifierCard: React.FC<NotifierCardProps> = ({ data, mutate }) => {
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
                 {data ? <IconButton variant="outline" icon="edit" /> : <IconButton icon="plus" />}
             </DialogTrigger>
@@ -160,8 +189,8 @@ export const NotifierCard: React.FC<NotifierCardProps> = ({ data, mutate }) => {
                                         <FormItem>
                                             <FormLabel>{t("RequestMethod")}</FormLabel>
                                             <Select
+                                                value={`${field.value}`}
                                                 onValueChange={field.onChange}
-                                                defaultValue={`${field.value}`}
                                             >
                                                 <FormControl>
                                                     <SelectTrigger>
@@ -189,8 +218,8 @@ export const NotifierCard: React.FC<NotifierCardProps> = ({ data, mutate }) => {
                                         <FormItem>
                                             <FormLabel>{t("Type")}</FormLabel>
                                             <Select
+                                                value={`${field.value}`}
                                                 onValueChange={field.onChange}
-                                                defaultValue={`${field.value}`}
                                             >
                                                 <FormControl>
                                                     <SelectTrigger>
@@ -289,7 +318,7 @@ export const NotifierCard: React.FC<NotifierCardProps> = ({ data, mutate }) => {
                                             {t("Close")}
                                         </Button>
                                     </DialogClose>
-                                    <Button type="submit" className="my-2">
+                                    <Button type="submit" className="my-2" disabled={loadingDetails}>
                                         {t("Confirm")}
                                     </Button>
                                 </DialogFooter>

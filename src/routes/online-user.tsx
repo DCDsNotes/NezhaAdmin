@@ -190,7 +190,7 @@ export default function OnlineUserPage() {
 
         return (
             <div className="flex items-center justify-between px-2 py-4">
-                <div className="text-sm text-muted-foreground">
+                <div className="shrink-0 whitespace-nowrap text-sm text-muted-foreground">
                     {t("Total")}: {total}
                 </div>
                 <Pagination>
