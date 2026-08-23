@@ -23,18 +23,32 @@ export enum FetcherMethod {
 
 let lastestRefreshTokenAt = 0
 
+function readCookie(name: string): string | undefined {
+    if (typeof document === "undefined") return undefined
+    const prefix = `${encodeURIComponent(name)}=`
+    const cookie = document.cookie
+        .split(";")
+        .map((part) => part.trim())
+        .find((part) => part.startsWith(prefix))
+    return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : undefined
+}
+
 export async function fetcher<T>(method: FetcherMethod, path: string, data?: any): Promise<T> {
+    const actualMethod = method || FetcherMethod.GET
     let response
-    if (method === FetcherMethod.GET || method === FetcherMethod.DELETE) {
+    if (actualMethod === FetcherMethod.GET) {
         response = await fetch(buildUrl(path, data), {
-            method: "GET",
+            method: actualMethod,
         })
     } else {
+        const csrfToken = readCookie("nz-csrf")
+        const headers: Record<string, string> = {
+            "Content-Type": "application/json",
+        }
+        if (csrfToken) headers["X-CSRF-Token"] = csrfToken
         response = await fetch(path, {
-            method: method,
-            headers: {
-                "Content-Type": "application/json",
-            },
+            method: actualMethod,
+            headers,
             body: data ? JSON.stringify(data) : null,
         })
     }
@@ -59,5 +73,5 @@ export async function fetcher<T>(method: FetcherMethod, path: string, data?: any
 }
 
 export async function swrFetcher<T>(input: string | URL | globalThis.Request, init?: RequestInit) {
-    return fetcher<T>(init?.method as FetcherMethod, input.toString(), init?.body)
+    return fetcher<T>((init?.method as FetcherMethod) || FetcherMethod.GET, input.toString(), init?.body)
 }
