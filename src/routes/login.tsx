@@ -65,7 +65,7 @@ function Login() {
     const { t } = useTranslation()
 
     return (
-        <div className="mt-28 sm:max-w-sm m-auto max-w-xs">
+        <div className="admin-login">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <FormField

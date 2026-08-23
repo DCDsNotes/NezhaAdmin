@@ -212,6 +212,7 @@
 .admin-shell--guest .admin-workspace { margin-left: 0; }
 .admin-content { width: 100%; max-width: none; flex: 1; margin: 0; padding: 64px 58px 92px; }
 .admin-content > * { width: 100%; max-width: none !important; margin-right: 0 !important; margin-left: 0 !important; }
+.admin-content > .admin-login { width: 30vw !important; max-width: 700px !important; min-width: 320px; margin: 128px auto 0 !important; }
 .admin-footer { padding: 18px 24px 26px; color: #a4aab2; font-size: 10px; text-align: center; }
 .admin-sidebar-backdrop { display: none; }
 .admin-content [data-slot="card"], .admin-content .rounded-xl, .admin-content .rounded-lg, .admin-content .rounded-md { border-radius: 18px; border-color: #e5e8eb; box-shadow: 0 10px 30px rgb(33 38 45 / 3%); }
@@ -221,7 +222,16 @@
 .admin-content tbody tr:hover { background: #fafbfc; }
 .admin-content input, .admin-content textarea, .admin-content [role="combobox"] { min-height: 44px; border-radius: 15px; }
 .admin-content textarea { min-height: 120px; }
-.admin-content button { min-height: 42px; border-radius: 15px; }
+.admin-content button:not([role="checkbox"]):not([role="radio"]):not([role="switch"]) { min-height: 42px; border-radius: 15px; }
+.admin-content button[role="checkbox"], .admin-content button[role="radio"] { box-sizing: border-box; width: 18px; height: 18px; min-height: 18px; flex: 0 0 18px; padding: 0; }
+.admin-content button[role="checkbox"] { border-radius: 5px; }
+.admin-content button[role="radio"] { border-radius: 50%; }
+.admin-content button[role="switch"] { min-height: 24px; height: 24px; border-radius: 999px; padding: 0; }
+.admin-content input[type="radio"], .admin-content input[type="checkbox"] { width: 18px; height: 18px; min-height: 18px; flex: 0 0 18px; padding: 0; appearance: none; }
+.admin-content input[type="radio"] { border-radius: 50%; }
+.admin-content input[type="checkbox"] { border-radius: 5px; }
+.admin-content input[type="radio"]:checked { background: radial-gradient(circle, currentColor 0 38%, transparent 42%); }
+.admin-content input[type="checkbox"]:checked { background: var(--primary); }
 .admin-content [data-slot="card"] { padding: 4px; }
 .admin-content [role="tablist"] { min-height: 48px; padding: 4px; border-radius: 15px; background: #eef1f4; }
 .admin-content [role="tab"] { min-height: 40px; border-radius: 12px; padding: 0 22px; }
@@ -229,11 +239,31 @@
 .admin-content table th, .admin-content table td { padding: 16px 14px; }
 .admin-content .rounded-md.border { border-radius: 18px; }
 
-@media (prefers-color-scheme: dark) {
-    .admin-shell { background: #151719; color: #f1f3f5; }
-}
+.dark .admin-shell { background: #151719; color: #f1f3f5; }
+.dark .admin-sidebar,
+.dark .admin-topbar,
+.dark .admin-topbar__actions,
+.dark .admin-profile-trigger { border-color: #30343a; background: #1d2024; color: #d8dde3; }
+.dark .admin-brand { border-color: #30343a; }
+.dark .admin-brand strong,
+.dark .admin-sidebar__account strong,
+.dark .admin-topbar__title > span,
+.dark .admin-profile-trigger { color: #f1f3f5; }
+.dark .admin-navigation__item { color: #aeb6c0; }
+.dark .admin-navigation__item:hover,
+.dark .admin-navigation__item.is-active { background: #2a2f35; color: #fff; }
+.dark .admin-content [data-slot="card"],
+.dark .admin-content table,
+.dark .admin-content .rounded-md.border { border-color: #30343a; background: #1d2024; color: #e7ebef; }
+.dark .admin-content thead { background: #252a30; }
+.dark .admin-content tbody tr:hover { background: #252a30; }
+.dark .admin-content [role="tablist"] { background: #252a30; }
+.dark .admin-content input,
+.dark .admin-content textarea,
+.dark .admin-content [role="combobox"] { border-color: #3a4149; background: #1a1d21; color: #f1f3f5; }
 
 @media (max-width: 899px) {
+    .admin-content > .admin-login { width: min(100%, calc(100vw - 32px)) !important; min-width: 0; margin-top: 72px !important; }
     .admin-sidebar {
         width: min(292px, calc(100vw - 54px));
         transform: translateX(-102%);
