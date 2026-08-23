@@ -53,7 +53,7 @@ export default function Root() {
     return (
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <section
-                className={`admin-shell ${profile ? "admin-shell--authenticated" : "admin-shell--guest"}`}
+                className={`admin-shell ${profile ? "admin-shell--authenticated" : "admin-shell--guest"} ${sidebarCollapsed ? "admin-shell--collapsed" : ""}`}
             >
                 <Header
                     sidebarCollapsed={sidebarCollapsed}

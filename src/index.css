@@ -126,8 +126,8 @@
 }
 
 .admin-shell {
-    --admin-sidebar-width: 244px;
-    --admin-topbar-height: 76px;
+    --admin-sidebar-width: 216px;
+    --admin-topbar-height: 82px;
     min-height: 100dvh;
     background: #fbfcfd;
     color: #23272f;
@@ -210,17 +210,24 @@
 
 .admin-workspace { display: flex; min-height: 100dvh; flex-direction: column; margin-left: var(--admin-sidebar-width); padding-top: var(--admin-topbar-height); transition: margin-left 180ms ease; }
 .admin-shell--guest .admin-workspace { margin-left: 0; }
-.admin-content { width: min(1480px, 100%); flex: 1; margin: 0 auto; padding: 52px 46px 72px; }
-.admin-content > * { width: 100%; }
+.admin-content { width: 100%; max-width: none; flex: 1; margin: 0; padding: 64px 58px 92px; }
+.admin-content > * { width: 100%; max-width: none !important; margin-right: 0 !important; margin-left: 0 !important; }
 .admin-footer { padding: 18px 24px 26px; color: #a4aab2; font-size: 10px; text-align: center; }
 .admin-sidebar-backdrop { display: none; }
-.admin-content [data-slot="card"], .admin-content .rounded-xl { border-radius: 14px; border-color: #e5e8eb; box-shadow: 0 10px 30px rgb(33 38 45 / 3%); }
+.admin-content [data-slot="card"], .admin-content .rounded-xl, .admin-content .rounded-lg, .admin-content .rounded-md { border-radius: 18px; border-color: #e5e8eb; box-shadow: 0 10px 30px rgb(33 38 45 / 3%); }
 .admin-content table { background: #fff; }
 .admin-content thead { background: #fafbfc; }
 .admin-content thead th { color: #8b929b; font-size: .72rem; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; }
 .admin-content tbody tr:hover { background: #fafbfc; }
-.admin-content input, .admin-content textarea, .admin-content [role="combobox"] { border-radius: 11px; }
-.admin-content button { border-radius: 11px; }
+.admin-content input, .admin-content textarea, .admin-content [role="combobox"] { min-height: 44px; border-radius: 15px; }
+.admin-content textarea { min-height: 120px; }
+.admin-content button { min-height: 42px; border-radius: 15px; }
+.admin-content [data-slot="card"] { padding: 4px; }
+.admin-content [role="tablist"] { min-height: 48px; padding: 4px; border-radius: 15px; background: #eef1f4; }
+.admin-content [role="tab"] { min-height: 40px; border-radius: 12px; padding: 0 22px; }
+.admin-content table { border-collapse: separate; border-spacing: 0; }
+.admin-content table th, .admin-content table td { padding: 16px 14px; }
+.admin-content .rounded-md.border { border-radius: 18px; }
 
 @media (prefers-color-scheme: dark) {
     .admin-shell { background: #151719; color: #f1f3f5; }
@@ -294,7 +301,7 @@
     }
 
     .admin-content {
-        padding: 22px 16px 34px;
+        padding: 32px 18px 50px;
     }
 }
 
