@@ -113,6 +113,7 @@
 
 @layer base {
     html {
+        overflow-y: scroll;
         scrollbar-gutter: stable;
     }
     * {
@@ -125,6 +126,14 @@
         letter-spacing: 0;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
+    }
+
+    /* The dialog scroll-lock library compensates for a removed scrollbar with
+       body margin/padding. The root already reserves that scrollbar gutter,
+       so applying the compensation a second time shifts the whole workspace. */
+    html body[data-scroll-locked] {
+        margin-right: 0 !important;
+        padding-right: 0 !important;
     }
 }
 
