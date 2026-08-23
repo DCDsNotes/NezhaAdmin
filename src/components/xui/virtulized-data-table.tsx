@@ -131,7 +131,12 @@ export function DataTable<TData, TValue>({
     }, [isDesktop])
 
     return (
-        <div className="rounded-md border" ref={ref} style={{ height: heightState }}>
+        <div
+            data-slot="table-frame"
+            className="overflow-hidden rounded-[18px] border bg-card"
+            ref={ref}
+            style={{ height: heightState }}
+        >
             <TableVirtuoso
                 totalCount={rows.length}
                 components={{
@@ -158,9 +163,9 @@ export function DataTable<TData, TValue>({
                                                 {...{
                                                     style: header.column.getCanSort()
                                                         ? {
-                                                              cursor: "pointer",
-                                                              userSelect: "none",
-                                                          }
+                                                            cursor: "pointer",
+                                                            userSelect: "none",
+                                                        }
                                                         : {},
                                                     onClick:
                                                         header.column.getToggleSortingHandler(),

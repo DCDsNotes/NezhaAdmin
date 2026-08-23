@@ -3,12 +3,18 @@ import { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes, forwardRef } from "
 
 const Table = forwardRef<HTMLTableElement, HTMLAttributes<HTMLTableElement>>(
     ({ className, ...props }, ref) => (
-        <div className="relative w-full overflow-auto">
-            <table
-                ref={ref}
-                className={cn("w-full caption-bottom text-sm", className)}
-                {...props}
-            />
+        <div
+            data-slot="table-frame"
+            className="relative w-full overflow-hidden rounded-[18px] border bg-card"
+        >
+            <div data-slot="table-scroll" className="w-full overflow-auto">
+                <table
+                    ref={ref}
+                    data-slot="table"
+                    className={cn("w-full caption-bottom text-sm", className)}
+                    {...props}
+                />
+            </div>
         </div>
     ),
 )
