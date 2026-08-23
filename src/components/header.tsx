@@ -245,11 +245,6 @@ export default function Header({ sidebarCollapsed, onToggleSidebar }: HeaderProp
                     {mobileOpen ? <X /> : <Menu />}
                 </Button>
 
-                <Link to="/dashboard" className="admin-mobile-brand">
-                    <img src="/dashboard/logo.png" alt="" />
-                    <span>{t("nezha")}</span>
-                </Link>
-
                 <div className="admin-topbar__title">
                     <span>{currentItem?.label || t("Navigation.Workspace")}</span>
                     <Overview />

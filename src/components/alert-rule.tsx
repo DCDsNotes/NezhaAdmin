@@ -113,6 +113,7 @@ export const AlertRuleCard: React.FC<AlertRuleCardProps> = ({ data, mutate }) =>
                   recover_trigger_tasks_raw: "",
                   notification_group_id: 0,
                   trigger_mode: 0,
+                  enable: true,
               },
         resetOptions: {
             keepDefaultValues: false,
