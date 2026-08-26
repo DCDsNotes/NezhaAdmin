@@ -40,6 +40,10 @@ function annotateResponsiveCells(table: HTMLTableElement) {
                     normalizedLabel === "actions" ||
                     normalizedLabel === "操作",
             )
+            cell.toggleAttribute(
+                "data-table-primary",
+                normalizedLabel === "name" || label.endsWith("名称"),
+            )
         })
     })
 }
