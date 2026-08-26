@@ -142,6 +142,8 @@ export default function OnlineUserPage() {
         const { total } = data.pagination
         const totalPages = Math.ceil(total / pageSize)
 
+        if (totalPages <= 1) return null
+
         const handlePageChange = (newPage: number) => {
             if (newPage < 1 || newPage > totalPages) return
             setSearchParams({ page: newPage.toString(), pageSize: pageSize.toString() })
@@ -189,7 +191,10 @@ export default function OnlineUserPage() {
         }
 
         return (
-            <div className="flex items-center justify-between px-2 py-4">
+            <div
+                data-slot="data-pagination"
+                className="flex items-center justify-between px-2 py-4"
+            >
                 <div className="shrink-0 whitespace-nowrap text-sm text-muted-foreground">
                     {t("Total")}: {total}
                 </div>

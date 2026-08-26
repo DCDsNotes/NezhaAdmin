@@ -1,7 +1,14 @@
 "use client"
 
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { TableCell, TableHead, TableRow } from "@/components/ui/table"
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { cn } from "@/lib/utils"
 import {
@@ -21,7 +28,12 @@ import { TableVirtuoso } from "react-virtuoso"
 // but here we don't want it, so let's use a new component with only <table> tag
 const TableComponent = forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
     ({ className, ...props }, ref) => (
-        <table ref={ref} className={cn("w-full caption-bottom text-sm", className)} {...props} />
+        <table
+            ref={ref}
+            data-slot="table"
+            className={cn("w-full caption-bottom text-sm", className)}
+            {...props}
+        />
     ),
 )
 TableComponent.displayName = "TableComponent"
@@ -98,7 +110,46 @@ export function DataTable<TData, TValue>({
 
     const [heightState, setHeight] = useState(0)
     const ref = useRef(null)
-    const isDesktop = useMediaQuery("(min-width: 640px)")
+    const isDesktop = useMediaQuery("(min-width: 900px)")
+    const renderResponsiveRow = rowComponent ? rowComponent(rows) : TableRowComponent(rows)
+
+    const renderHeaderRows = () =>
+        table.getHeaderGroups().map((headerGroup) => (
+            <TableRow className="bg-card hover:bg-muted" key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                    return (
+                        <TableHead
+                            key={header.id}
+                            colSpan={header.colSpan}
+                            style={{
+                                width: header.getSize(),
+                            }}
+                        >
+                            {header.isPlaceholder ? null : (
+                                <div
+                                    className="flex items-center"
+                                    {...{
+                                        style: header.column.getCanSort()
+                                            ? {
+                                                cursor: "pointer",
+                                                userSelect: "none",
+                                            }
+                                            : {},
+                                        onClick: header.column.getToggleSortingHandler(),
+                                    }}
+                                >
+                                    {flexRender(
+                                        header.column.columnDef.header,
+                                        header.getContext(),
+                                    )}
+                                    <SortingIndicator isSorted={header.column.getIsSorted()} />
+                                </div>
+                            )}
+                        </TableHead>
+                    )
+                })}
+            </TableRow>
+        ))
 
     useEffect(() => {
         const calculateHeight = () => {
@@ -130,6 +181,21 @@ export function DataTable<TData, TValue>({
         }
     }, [isDesktop])
 
+    if (!isDesktop) {
+        return (
+            <Table>
+                <TableHeader>{renderHeaderRows()}</TableHeader>
+                <TableBody>
+                    {rows.map((_, index) =>
+                        renderResponsiveRow({
+                            "data-index": index,
+                        } as HTMLAttributes<HTMLTableRowElement>),
+                    )}
+                </TableBody>
+            </Table>
+        )
+    }
+
     return (
         <div
             data-slot="table-frame"
@@ -144,48 +210,7 @@ export function DataTable<TData, TValue>({
                     TableRow: rowComponent ? rowComponent(rows) : TableRowComponent(rows),
                     Scroller: ScrollArea,
                 }}
-                fixedHeaderContent={() =>
-                    table.getHeaderGroups().map((headerGroup) => (
-                        // Change header background color to non-transparent
-                        <TableRow className="bg-card hover:bg-muted" key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead
-                                        key={header.id}
-                                        colSpan={header.colSpan}
-                                        style={{
-                                            width: header.getSize(),
-                                        }}
-                                    >
-                                        {header.isPlaceholder ? null : (
-                                            <div
-                                                className="flex items-center"
-                                                {...{
-                                                    style: header.column.getCanSort()
-                                                        ? {
-                                                            cursor: "pointer",
-                                                            userSelect: "none",
-                                                        }
-                                                        : {},
-                                                    onClick:
-                                                        header.column.getToggleSortingHandler(),
-                                                }}
-                                            >
-                                                {flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext(),
-                                                )}
-                                                <SortingIndicator
-                                                    isSorted={header.column.getIsSorted()}
-                                                />
-                                            </div>
-                                        )}
-                                    </TableHead>
-                                )
-                            })}
-                        </TableRow>
-                    ))
-                }
+                fixedHeaderContent={renderHeaderRows}
             />
         </div>
     )

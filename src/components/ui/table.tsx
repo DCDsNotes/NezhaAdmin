@@ -1,22 +1,80 @@
 import { cn } from "@/lib/utils"
-import { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes, forwardRef } from "react"
+import {
+    ForwardedRef,
+    HTMLAttributes,
+    TdHTMLAttributes,
+    ThHTMLAttributes,
+    forwardRef,
+    useCallback,
+    useLayoutEffect,
+    useRef,
+} from "react"
+
+function updateForwardedRef<T>(ref: ForwardedRef<T>, value: T | null) {
+    if (typeof ref === "function") {
+        ref(value)
+    } else if (ref) {
+        ref.current = value
+    }
+}
+
+function annotateResponsiveCells(table: HTMLTableElement) {
+    const labels = Array.from(table.querySelectorAll("thead th"), (header) =>
+        (header.textContent ?? "").replace(/\s+/g, " ").trim(),
+    )
+
+    table.querySelectorAll<HTMLTableRowElement>("tbody tr").forEach((row) => {
+        Array.from(row.cells).forEach((cell, index) => {
+            const label = labels[index] ?? ""
+            const normalizedLabel = label.toLocaleLowerCase()
+
+            cell.dataset.label = label
+            cell.toggleAttribute("data-table-message", cell.colSpan > 1)
+            cell.toggleAttribute(
+                "data-table-select",
+                !label && cell.querySelector('[role="checkbox"]') !== null,
+            )
+            cell.toggleAttribute(
+                "data-table-actions",
+                normalizedLabel === "action" ||
+                    normalizedLabel === "actions" ||
+                    normalizedLabel === "操作",
+            )
+        })
+    })
+}
 
 const Table = forwardRef<HTMLTableElement, HTMLAttributes<HTMLTableElement>>(
-    ({ className, ...props }, ref) => (
-        <div
-            data-slot="table-frame"
-            className="relative w-full overflow-hidden rounded-[18px] border bg-card"
-        >
-            <div data-slot="table-scroll" className="w-full overflow-auto">
-                <table
-                    ref={ref}
-                    data-slot="table"
-                    className={cn("w-full caption-bottom text-sm", className)}
-                    {...props}
-                />
+    ({ className, ...props }, forwardedRef) => {
+        const tableRef = useRef<HTMLTableElement | null>(null)
+        const setTableRef = useCallback(
+            (node: HTMLTableElement | null) => {
+                tableRef.current = node
+                updateForwardedRef(forwardedRef, node)
+            },
+            [forwardedRef],
+        )
+
+        useLayoutEffect(() => {
+            if (tableRef.current) annotateResponsiveCells(tableRef.current)
+        })
+
+        return (
+            <div
+                data-slot="table-frame"
+                className="relative w-full overflow-hidden rounded-[18px] border bg-card"
+            >
+                <div data-slot="table-scroll" className="w-full overflow-auto">
+                    <table
+                        ref={setTableRef}
+                        data-slot="table"
+                        className={cn("w-full caption-bottom text-sm", className)}
+                        {...props}
+                    />
+                </div>
             </div>
-        </div>
-    ),
+        )
+    },
 )
 Table.displayName = "Table"
 
