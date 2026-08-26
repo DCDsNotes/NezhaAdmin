@@ -253,8 +253,8 @@
 
 @media (min-width: 900px) {
     .admin-content [data-slot="table-frame"] {
-        width: calc(100% - 32px);
-        margin: 16px;
+        width: 100%;
+        margin: 16px 0 20px;
     }
 
     .admin-content [data-slot="table"] th,
@@ -506,7 +506,8 @@
     }
 
     .admin-content [data-slot="data-pagination"] {
-        flex-wrap: wrap;
+        min-height: 48px;
+        flex-wrap: nowrap;
         gap: 12px;
         padding-right: 0;
         padding-left: 0;
@@ -515,7 +516,14 @@
     .admin-content [data-slot="data-pagination"] nav {
         width: auto;
         min-width: 0;
+        flex: 0 1 auto;
+        margin-left: auto;
         margin-right: 0;
+    }
+
+    .admin-content [data-slot="data-pagination"] nav ul {
+        flex-wrap: nowrap;
+        justify-content: flex-end;
     }
 
     .dark .admin-content [data-slot="table"] tbody tr {
@@ -550,12 +558,13 @@
         padding-inline: 14px;
     }
 
-    .admin-content [data-slot="data-pagination"] nav {
-        width: 100%;
-    }
-
     .admin-content [data-slot="data-pagination"] nav li:first-child span,
     .admin-content [data-slot="data-pagination"] nav li:last-child span {
+        display: none;
+    }
+
+    .admin-content [data-slot="data-pagination"] nav li:has([aria-hidden="true"]),
+    .admin-content [data-slot="data-pagination"] nav li:not(:first-child):not(:last-child):has(a:not([aria-current="page"])) {
         display: none;
     }
 }

@@ -158,10 +158,10 @@ export default function WAFPage() {
     const renderPagination = () => {
         if (!data?.pagination) return null
 
-        const { total } = data.pagination
+        const total = Number(data.pagination.total ?? dataCache.length)
         const totalPages = Math.ceil(total / pageSize)
 
-        if (totalPages <= 1) return null
+        if (!Number.isFinite(totalPages) || totalPages <= 1) return null
 
         const handlePageChange = (newPage: number) => {
             if (newPage < 1 || newPage > totalPages) return
