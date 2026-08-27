@@ -266,12 +266,19 @@
         grid-column: 1 / -1;
     }
 
+    .admin-content [data-slot="settings-form"] .space-y-2:not(.flex) > label:first-child {
+        padding-left: 15px;
+    }
+
     .admin-content [data-slot="table-frame"] {
         width: 100%;
         margin: 16px 0 20px;
     }
 
-    .admin-content [data-slot="table"] th,
+    .admin-content [data-slot="table"] th {
+        padding: 25px 18px;
+    }
+
     .admin-content [data-slot="table"] td {
         padding: 18px;
     }
