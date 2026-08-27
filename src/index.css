@@ -140,6 +140,7 @@
 .admin-shell {
     --admin-sidebar-width: 216px;
     --admin-topbar-height: 82px;
+    --admin-mobile-gutter: 16px;
     min-height: 100dvh;
     background: #fbfcfd;
     color: #23272f;
@@ -341,7 +342,7 @@
     .admin-topbar {
         left: 0;
         min-height: 64px;
-        padding: 8px 16px;
+        padding: 8px var(--admin-mobile-gutter);
     }
 
     .admin-mobile-menu {
@@ -378,7 +379,12 @@
     }
 
     .admin-content {
-        padding: 32px 18px 50px;
+        padding: 32px var(--admin-mobile-gutter) 50px;
+    }
+
+    .admin-content > :not(.admin-login) {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
     }
 
     .admin-content [data-slot="table-frame"] {
