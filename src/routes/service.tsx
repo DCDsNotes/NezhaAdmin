@@ -189,7 +189,7 @@ export default function ServicePage() {
                 </HeaderButtonGroup>
             </div>
 
-            <Table data-mobile-identity-layout="true">
+            <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>

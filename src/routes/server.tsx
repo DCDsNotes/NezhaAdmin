@@ -249,7 +249,7 @@ export default function ServerPage() {
                     <InstallCommandsMenu className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-indigo-600 text-white hover:bg-indigo-700 dark:hover:bg-indigo-500 rounded-lg" />
                 </HeaderButtonGroup>
             </div>
-            <Table data-mobile-identity-layout="true" className="min-w-[960px]">
+            <Table className="min-w-[960px]">
                 <TableHeader className="sticky top-0 bg-background z-10">
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>

@@ -425,14 +425,15 @@
     }
 
     .admin-content [data-slot="table"] tbody td {
+        position: relative;
         display: flex;
         min-width: 0;
         min-height: 58px;
         align-items: flex-start;
-        justify-content: center;
+        justify-content: flex-start;
         flex-direction: column;
         gap: 5px;
-        padding: 10px 11px;
+        padding: 28px 11px 10px;
         border: 1px solid #eef1f3;
         border-radius: 11px;
         background: #fafbfc;
@@ -441,6 +442,9 @@
     }
 
     .admin-content [data-slot="table"] tbody td::before {
+        position: absolute;
+        top: 10px;
+        left: 11px;
         content: attr(data-label);
         min-width: 0;
         color: #9299a2;
@@ -455,29 +459,17 @@
         display: none;
     }
 
+    .admin-content [data-slot="table"] tbody td[data-label=""] {
+        padding-top: 10px;
+    }
+
     .admin-content [data-slot="table"] tbody td[data-table-select] {
-        position: static;
-        display: flex;
-        width: 100%;
-        min-height: 18px;
-        grid-column: 1 / -1;
-        align-items: center;
-        justify-content: flex-end;
-        padding: 0;
-        border: 0;
-        background: transparent;
-    }
-
-    .admin-content [data-slot="table"] tbody td[data-table-primary] {
-        grid-column: 1 / -1;
-    }
-
-    .admin-content [data-slot="table"][data-mobile-identity-layout="true"] tbody td[data-table-select] {
         display: none;
     }
 
-    .admin-content [data-slot="table"][data-mobile-identity-layout="true"] tbody td[data-table-primary] {
-        grid-column: auto;
+    .admin-content [data-slot="table"] tbody td[data-table-primary] {
+        order: -1;
+        grid-column: 1 / -1;
     }
 
     .admin-content [data-slot="table"] tbody td[data-table-actions] {
@@ -555,10 +547,6 @@
         background: #202429;
     }
 
-    .dark .admin-content [data-slot="table"] tbody td[data-table-select] {
-        background: transparent;
-    }
-
     .dark .admin-content [data-slot="table"] tbody td::before {
         color: #929ba6;
     }
@@ -577,13 +565,6 @@
         grid-column: 1;
     }
 
-    .admin-content [data-slot="table"][data-mobile-identity-layout="true"] tbody tr {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .admin-content [data-slot="table"][data-mobile-identity-layout="true"] tbody td[data-table-primary] {
-        grid-column: auto;
-    }
 }
 
 @media (max-width: 520px) {
