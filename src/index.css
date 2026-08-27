@@ -492,8 +492,7 @@
     }
 
     .admin-content [data-slot="table"] tbody td[data-table-actions]::before {
-        display: block;
-        margin-right: auto;
+        display: none;
     }
 
     .admin-content [data-slot="table"] tbody td[data-table-actions] > * {
