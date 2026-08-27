@@ -120,7 +120,7 @@ export default function SettingsPage() {
                     <form
                         data-slot="settings-form"
                         onSubmit={form.handleSubmit(onSubmit)}
-                        className="my-4 space-y-5"
+                        className="my-4 flex flex-col gap-5"
                     >
                         <FormField
                             control={form.control}
@@ -165,7 +165,7 @@ export default function SettingsPage() {
                             control={form.control}
                             name="user_template"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem data-settings-span="full">
                                     <FormLabel>{t("Theme")}</FormLabel>
                                     <FormControl>
                                         <Select
@@ -305,7 +305,7 @@ export default function SettingsPage() {
                             control={form.control}
                             name="dns_servers"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem data-settings-span="full">
                                     <FormLabel>
                                         {t("CustomPublicDNSNameserversforDDNS") +
                                             " " +
@@ -396,7 +396,7 @@ export default function SettingsPage() {
                                 </FormItem>
                             )}
                         />
-                        <FormItem>
+                        <FormItem data-settings-span="full">
                             <FormLabel>{t("IPChangeNotification")}</FormLabel>
                             <Card className="w-full">
                                 <CardContent>
@@ -492,7 +492,10 @@ export default function SettingsPage() {
                             control={form.control}
                             name="enable_plain_ip_in_notification"
                             render={({ field }) => (
-                                <FormItem className="flex items-center space-x-2">
+                                <FormItem
+                                    data-settings-span="full"
+                                    className="flex items-center space-x-2"
+                                >
                                     <FormControl>
                                         <div className="flex items-center gap-2">
                                             <Checkbox
@@ -508,7 +511,13 @@ export default function SettingsPage() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">{t("Confirm")}</Button>
+                        <Button
+                            type="submit"
+                            data-settings-span="full"
+                            className="justify-self-start"
+                        >
+                            {t("Confirm")}
+                        </Button>
                     </form>
                 </Form>
             </div>
