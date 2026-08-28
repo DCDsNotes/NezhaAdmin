@@ -1,19 +1,12 @@
 import { swrFetcher } from "@/api/api"
 import { deleteNAT } from "@/api/nat"
 import { ActionButtonGroup } from "@/components/action-button-group"
+import { DataTable } from "@/components/data-table"
+import { createSelectionColumn } from "@/components/selection-column"
 import { HeaderButtonGroup } from "@/components/header-button-group"
 import { NATCard } from "@/components/nat"
-import { Checkbox } from "@/components/ui/checkbox"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
 import { ModelNAT } from "@/types"
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
@@ -34,28 +27,7 @@ export default function NATPage() {
     }, [error])
 
     const columns: ColumnDef<ModelNAT>[] = [
-        {
-            id: "select",
-            header: ({ table }) => (
-                <Checkbox
-                    checked={
-                        table.getIsAllPageRowsSelected() ||
-                        (table.getIsSomePageRowsSelected() && "indeterminate")
-                    }
-                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                    aria-label="Select all"
-                />
-            ),
-            cell: ({ row }) => (
-                <Checkbox
-                    checked={row.getIsSelected()}
-                    onCheckedChange={(value) => row.toggleSelected(!!value)}
-                    aria-label="Select row"
-                />
-            ),
-            enableSorting: false,
-            enableHiding: false,
-        },
+        createSelectionColumn<ModelNAT>(),
         {
             header: "ID",
             accessorKey: "id",
@@ -143,51 +115,7 @@ export default function NATPage() {
                 </HeaderButtonGroup>
             </div>
 
-            <Table>
-                <TableHeader>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead key={header.id} className="text-sm">
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                  header.column.columnDef.header,
-                                                  header.getContext(),
-                                              )}
-                                    </TableHead>
-                                )
-                            })}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {isLoading ? (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                {t("Loading")}...
-                            </TableCell>
-                        </TableRow>
-                    ) : table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id} className="text-xsm">
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                {t("NoResults")}
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+            <DataTable table={table} isLoading={isLoading} />
         </div>
     )
 }

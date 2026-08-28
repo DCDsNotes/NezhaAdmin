@@ -236,7 +236,7 @@
 .admin-content tbody tr:hover { background: #fafbfc; }
 .admin-content input, .admin-content textarea, .admin-content [role="combobox"] { min-height: 44px; border-radius: var(--admin-control-radius); }
 .admin-content textarea { min-height: 120px; }
-.admin-content button:not([role="checkbox"]):not([role="radio"]):not([role="switch"]) { min-height: 42px; border-radius: 15px; }
+.admin-content button:not([role="checkbox"]):not([role="radio"]):not([role="switch"]) { min-height: 42px; border-radius: var(--admin-control-radius); }
 .admin-content button[role="checkbox"], .admin-content button[role="radio"] { box-sizing: border-box; width: 18px; height: 18px; min-height: 18px; flex: 0 0 18px; padding: 0; }
 .admin-content button[role="checkbox"] { border-radius: 5px; }
 .admin-content button[role="radio"] { border-radius: 50%; }
@@ -247,11 +247,15 @@
 .admin-content input[type="radio"]:checked { background: radial-gradient(circle, currentColor 0 38%, transparent 42%); }
 .admin-content input[type="checkbox"]:checked { background: var(--primary); }
 .admin-content [data-slot="card"] { padding: 4px; }
-.admin-content [role="tablist"] { min-height: 48px; padding: 4px; border-radius: 15px; background: #eef1f4; }
+.admin-content [role="tablist"] { min-height: 48px; padding: 4px; border-radius: var(--admin-control-radius); background: #eef1f4; }
 .admin-content [role="tab"] { min-height: 40px; border-radius: 12px; padding: 0 22px; }
 .admin-content table { border-collapse: separate; border-spacing: 0; }
 .admin-content table th, .admin-content table td { padding: 16px 14px; }
 .admin-content .rounded-md.border { border-radius: 18px; }
+
+.admin-content [data-slot="settings-form"] .space-y-2:not(.flex) > label:first-child {
+    padding-left: var(--admin-control-radius);
+}
 
 @media (min-width: 900px) {
     .admin-content [data-slot="settings-form"] {
@@ -265,10 +269,6 @@
 
     .admin-content [data-slot="settings-form"] > [data-settings-span="full"] {
         grid-column: 1 / -1;
-    }
-
-    .admin-content [data-slot="settings-form"] .space-y-2:not(.flex) > label:first-child {
-        padding-left: var(--admin-control-radius);
     }
 
     .admin-content [data-slot="table-frame"] {
@@ -393,10 +393,6 @@
     .admin-content > :not(.admin-login) {
         padding-right: 0 !important;
         padding-left: 0 !important;
-    }
-
-    .admin-content [data-slot="settings-form"] .space-y-2:not(.flex) > label:first-child {
-        padding-left: var(--admin-control-radius);
     }
 
     .admin-content button[data-mobile-icon-only="true"] {

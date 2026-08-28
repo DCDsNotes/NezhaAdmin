@@ -3,33 +3,26 @@ import { deleteServer, forceUpdateServer } from "@/api/server"
 import { ActionButtonGroup } from "@/components/action-button-group"
 import { BatchMoveServerIcon } from "@/components/batch-move-server-icon"
 import { CopyButton } from "@/components/copy-button"
-import { HeaderButtonGroup } from "@/components/header-button-group"
+import { DataTable } from "@/components/data-table"
+import { createSelectionColumn } from "@/components/selection-column"
 import { InstallCommandsMenu } from "@/components/install-commands"
 import { NoteMenu } from "@/components/note-menu"
 import { ServerCard } from "@/components/server"
 import { ServerConfigCard } from "@/components/server-config"
 import { ServerConfigCardBatch } from "@/components/server-config-batch"
+import { TablePageHeader } from "@/components/table-page-header"
 import { TerminalButton } from "@/components/terminal"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
 import { IconButton } from "@/components/xui/icon-button"
 import { useServer } from "@/hooks/useServer"
 import { joinIP } from "@/lib/utils"
 import { ModelServerTaskResponse, ModelServer as Server } from "@/types"
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
@@ -52,28 +45,7 @@ export default function ServerPage() {
     }, [error])
 
     const columns: ColumnDef<Server>[] = [
-        {
-            id: "select",
-            header: ({ table }) => (
-                <Checkbox
-                    checked={
-                        table.getIsAllPageRowsSelected() ||
-                        (table.getIsSomePageRowsSelected() && "indeterminate")
-                    }
-                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                    aria-label="Select all"
-                />
-            ),
-            cell: ({ row }) => (
-                <Checkbox
-                    checked={row.getIsSelected()}
-                    onCheckedChange={(value) => row.toggleSelected(!!value)}
-                    aria-label="Select row"
-                />
-            ),
-            enableSorting: false,
-            enableHiding: false,
-        },
+        createSelectionColumn<Server>(),
         {
             header: "ID",
             accessorKey: "id",
@@ -195,105 +167,63 @@ export default function ServerPage() {
 
     return (
         <div className="px-3 max-w-7xl mx-auto">
-            <div className="flex items-center justify-between w-full gap-3 mt-6 mb-4">
-                <h1 className="text-3xl font-bold tracking-tight">{t("Server")}</h1>
-                <HeaderButtonGroup
-                    className="ml-auto flex items-center justify-end gap-2 flex-nowrap shrink-0"
-                    delete={{
-                        fn: deleteServer,
-                        id: selectedRows.map((r) => r.original.id),
-                        mutate: mutate,
-                    }}
-                >
-                    <IconButton
-                        icon="update"
-                        onClick={async () => {
-                            const id = selectedRows.map((r) => r.original.id)
-                            if (id.length < 1) {
-                                toast(t("Error"), {
-                                    description: t("Results.SelectAtLeastOneServer"),
-                                })
-                                return
-                            }
-
-                            let resp: ModelServerTaskResponse = {}
-                            try {
-                                resp = await forceUpdateServer(id)
-                            } catch (e) {
-                                console.error(e)
-                                toast(t("Error"), {
-                                    description: t("Results.UnExpectedError"),
-                                })
-                                return
-                            }
-                            toast(t("Done"), {
-                                description:
-                                    t("Results.ForceUpdate") +
-                                    (resp.success?.length
-                                        ? t(`Success`) + ` [${resp.success.join(",")}]`
-                                        : "") +
-                                    (resp.failure?.length
-                                        ? t(`Failure`) + ` [${resp.failure.join(",")}]`
-                                        : "") +
-                                    (resp.offline?.length
-                                        ? t(`Offline`) + ` [${resp.offline.join(",")}]`
-                                        : ""),
+            <TablePageHeader
+                title={t("Server")}
+                deleteAction={{
+                    fn: deleteServer,
+                    id: selectedRows.map((r) => r.original.id),
+                    mutate: mutate,
+                }}
+            >
+                <IconButton
+                    icon="update"
+                    onClick={async () => {
+                        const id = selectedRows.map((r) => r.original.id)
+                        if (id.length < 1) {
+                            toast(t("Error"), {
+                                description: t("Results.SelectAtLeastOneServer"),
                             })
-                        }}
-                    />
-                    <BatchMoveServerIcon serverIds={selectedRows.map((r) => r.original.id)} />
-                    <ServerConfigCardBatch
-                        sid={selectedRows.map((r) => r.original.id)}
-                        className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-slate-700 text-white hover:bg-slate-800 dark:hover:bg-slate-600 rounded-lg"
-                    />
-                    <InstallCommandsMenu className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-indigo-600 text-white hover:bg-indigo-700 dark:hover:bg-indigo-500 rounded-lg" />
-                </HeaderButtonGroup>
-            </div>
-            <Table className="min-w-[960px]">
-                <TableHeader className="sticky top-0 bg-background z-10">
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead key={header.id} className="text-sm">
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext(),
-                                            )}
-                                    </TableHead>
-                                )
-                            })}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {isLoading ? (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                {t("Loading")}...
-                            </TableCell>
-                        </TableRow>
-                    ) : table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id} className="text-xsm">
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                {t("NoResults")}
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+                            return
+                        }
+
+                        let resp: ModelServerTaskResponse = {}
+                        try {
+                            resp = await forceUpdateServer(id)
+                        } catch (e) {
+                            console.error(e)
+                            toast(t("Error"), {
+                                description: t("Results.UnExpectedError"),
+                            })
+                            return
+                        }
+                        toast(t("Done"), {
+                            description:
+                                t("Results.ForceUpdate") +
+                                (resp.success?.length
+                                    ? t(`Success`) + ` [${resp.success.join(",")}]`
+                                    : "") +
+                                (resp.failure?.length
+                                    ? t(`Failure`) + ` [${resp.failure.join(",")}]`
+                                    : "") +
+                                (resp.offline?.length
+                                    ? t(`Offline`) + ` [${resp.offline.join(",")}]`
+                                    : ""),
+                        })
+                    }}
+                />
+                <BatchMoveServerIcon serverIds={selectedRows.map((r) => r.original.id)} />
+                <ServerConfigCardBatch
+                    sid={selectedRows.map((r) => r.original.id)}
+                    className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-slate-700 text-white hover:bg-slate-800 dark:hover:bg-slate-600 rounded-lg"
+                />
+                <InstallCommandsMenu className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-indigo-600 text-white hover:bg-indigo-700 dark:hover:bg-indigo-500 rounded-lg" />
+            </TablePageHeader>
+            <DataTable
+                table={table}
+                isLoading={isLoading}
+                className="min-w-[960px]"
+                headerClassName="sticky top-0 bg-background z-10"
+            />
         </div>
     )
 }

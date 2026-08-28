@@ -3,20 +3,13 @@ import { deleteCron, runCron } from "@/api/cron"
 import { ActionButtonGroup } from "@/components/action-button-group"
 import { CopyButton } from "@/components/copy-button"
 import { CronCard } from "@/components/cron"
-import { HeaderButtonGroup } from "@/components/header-button-group"
-import { Checkbox } from "@/components/ui/checkbox"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
+import { DataTable } from "@/components/data-table"
+import { createSelectionColumn } from "@/components/selection-column"
+import { TablePageHeader } from "@/components/table-page-header"
 import { IconButton } from "@/components/xui/icon-button"
 import { ModelCron } from "@/types"
 import { cronTypes } from "@/types"
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
+import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
@@ -37,28 +30,7 @@ export default function CronPage() {
     }, [error])
 
     const columns: ColumnDef<ModelCron>[] = [
-        {
-            id: "select",
-            header: ({ table }) => (
-                <Checkbox
-                    checked={
-                        table.getIsAllPageRowsSelected() ||
-                        (table.getIsSomePageRowsSelected() && "indeterminate")
-                    }
-                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                    aria-label="Select all"
-                />
-            ),
-            cell: ({ row }) => (
-                <Checkbox
-                    checked={row.getIsSelected()}
-                    onCheckedChange={(value) => row.toggleSelected(!!value)}
-                    aria-label="Select row"
-                />
-            ),
-            enableSorting: false,
-            enableHiding: false,
-        },
+        createSelectionColumn<ModelCron>(),
         {
             header: "ID",
             accessorKey: "id",
@@ -209,65 +181,18 @@ export default function CronPage() {
 
     return (
         <div className="px-3 max-w-7xl mx-auto">
-            <div className="flex items-center justify-between w-full gap-3 mt-6 mb-4">
-                <h1 className="text-3xl font-bold tracking-tight">{t("Task")}</h1>
-                <HeaderButtonGroup
-                    className="ml-auto flex items-center justify-end gap-2 flex-nowrap shrink-0"
-                    delete={{
-                        fn: deleteCron,
-                        id: selectedRows.map((r) => r.original.id),
-                        mutate: mutate,
-                    }}
-                >
-                    <CronCard mutate={mutate} />
-                </HeaderButtonGroup>
-            </div>
+            <TablePageHeader
+                title={t("Task")}
+                deleteAction={{
+                    fn: deleteCron,
+                    id: selectedRows.map((r) => r.original.id),
+                    mutate: mutate,
+                }}
+            >
+                <CronCard mutate={mutate} />
+            </TablePageHeader>
 
-            <Table>
-                <TableHeader>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead key={header.id} className="text-sm">
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                  header.column.columnDef.header,
-                                                  header.getContext(),
-                                              )}
-                                    </TableHead>
-                                )
-                            })}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {isLoading ? (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                {t("Loading")}...
-                            </TableCell>
-                        </TableRow>
-                    ) : table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id} className="text-xsm">
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                {t("NoResults")}
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+            <DataTable table={table} isLoading={isLoading} />
         </div>
     )
 }
