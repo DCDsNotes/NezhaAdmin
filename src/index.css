@@ -141,6 +141,7 @@
     --admin-sidebar-width: 216px;
     --admin-topbar-height: 82px;
     --admin-mobile-gutter: 16px;
+    --admin-control-radius: 15px;
     min-height: 100dvh;
     background: #fbfcfd;
     color: #23272f;
@@ -233,7 +234,7 @@
 .admin-content thead { background: #fafbfc; }
 .admin-content thead th { color: #8b929b; font-size: .72rem; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; }
 .admin-content tbody tr:hover { background: #fafbfc; }
-.admin-content input, .admin-content textarea, .admin-content [role="combobox"] { min-height: 44px; border-radius: 15px; }
+.admin-content input, .admin-content textarea, .admin-content [role="combobox"] { min-height: 44px; border-radius: var(--admin-control-radius); }
 .admin-content textarea { min-height: 120px; }
 .admin-content button:not([role="checkbox"]):not([role="radio"]):not([role="switch"]) { min-height: 42px; border-radius: 15px; }
 .admin-content button[role="checkbox"], .admin-content button[role="radio"] { box-sizing: border-box; width: 18px; height: 18px; min-height: 18px; flex: 0 0 18px; padding: 0; }
@@ -267,7 +268,7 @@
     }
 
     .admin-content [data-slot="settings-form"] .space-y-2:not(.flex) > label:first-child {
-        padding-left: 15px;
+        padding-left: var(--admin-control-radius);
     }
 
     .admin-content [data-slot="table-frame"] {
@@ -392,6 +393,21 @@
     .admin-content > :not(.admin-login) {
         padding-right: 0 !important;
         padding-left: 0 !important;
+    }
+
+    .admin-content [data-slot="settings-form"] .space-y-2:not(.flex) > label:first-child {
+        padding-left: var(--admin-control-radius);
+    }
+
+    .admin-content button[data-mobile-icon-only="true"] {
+        width: 42px;
+        min-width: 42px;
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .admin-content button[data-mobile-icon-only="true"] [data-mobile-label] {
+        display: none;
     }
 
     .admin-content [data-slot="table-frame"] {

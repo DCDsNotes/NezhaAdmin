@@ -87,9 +87,16 @@ export const InstallCommandsMenu = forwardRef<HTMLButtonElement, InstallCommands
                             )}
                         </Button>
                     ) : (
-                        <Button ref={ref} title={i18next.t("InstallCommands")} {...props}>
+                        <Button
+                            ref={ref}
+                            title={i18next.t("InstallCommands")}
+                            {...props}
+                            data-mobile-icon-only="true"
+                        >
                             {copy ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                            <span className="ml-2">{i18next.t("InstallCommands")}</span>
+                            <span className="ml-2" data-mobile-label>
+                                {i18next.t("InstallCommands")}
+                            </span>
                         </Button>
                     )}
                 </DropdownMenuTrigger>
