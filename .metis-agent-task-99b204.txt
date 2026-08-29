@@ -1,0 +1,34 @@
+你是本次 Performance 运行的 useful-first roadmap 作者（scope 作者）。RUN-ID: perf-3cb047bf-25f0-43aa-81db-616679657d35；RUN-NONCE: e4088a31b1daa80d7b55860a34c411dd。请按以下步骤执行并回报（不要 spawn 子代理）：
+
+【第 0 步：重建 frontier（冷恢复检查）】
+读取以下文件（用小范围 read）：
+- 治理根 C:\Users\Administrator\.metis\agent\performance-runs\perf-3cb047bf-25f0-43aa-81db-616679657d35 下的 PROMPTS.txt、ROADMAP.md、GATELOG.md、run.json
+- 工作区 D:\Documents\Github\dcdsnotes\NezhaAdmin 下的 .metis-agent-task-5b749d.txt 与 .metis-agent-task-7791b4.txt
+判断：现有 ROADMAP.md 是否对应本次 mission（5b749d 任务文件），还是属于另一运行/已过期。若已过期或不匹配，需要重写 ROADMAP.md 以本任务为准。核验任务文件 .metis-agent-task-5b749d.txt 的 UTF-8 字节内容与下文本 mission 一致（SHA-256 自行计算并记录）。
+
+【Mission（以 .metis-agent-task-5b749d.txt 为准，中文）】
+参考 https://github.com/wang4386/CDT-Monitor/tree/main/web 的布局/风格/样式，对当前仓库 NezhaAdmin（D:/Documents/Github/dcdsnotes/NezhaAdmin）的页面样式、风格进行优化，可小幅调整布局，不要大改动。
+
+已完成的调查（可复核，引用为证据）：
+- 参考仓库 CDT-Monitor/web（真实 styles.css 与 App.tsx）：浅色 #f1f3f5 背景、毛玻璃半透明卡片 rgba(252,253,253,.82)+backdrop blur(22px)、外描边 0 0 0 1px rgba(163,169,177,.34)+内高光 inset 0 1px 0 rgba(255,255,255,.9)、柔和深投影 0 26px 60px -34px rgba(20,27,38,.38)、圆角 24px/28px/12px、墨色主按钮 #181a1d、eyebrow 小标签(10px/800/uppercase)、muted #6d727b、stage-in 入场动画与 ease-out 曲线、语义色 green/blue/cyan/red/amber+soft 背景。浅色 only，无深色模式。
+- 本地 NezhaAdmin：React 19 + Vite + Tailwind 4 + shadcn/ui + react-router 7 + i18next。admin-shell 侧边栏(216px 可折叠)+固定顶栏(82px)+workspace；浅色 #fbfcfd、白色卡片、18px 圆角、0 10px 30px rgb(33 38 45/3%) 阴影；OKLCH 令牌；支持 .dark。关键文件 src/index.css(636行,含全部 admin-* 布局)、src/routes/root.tsx、src/components/header.tsx、src/routes/server.tsx、src/components/table-page-header.tsx、src/components/data-table.tsx、src/components/group-tab.tsx、src/components/ui/*。页面：dashboard/server、service、cron、ddns、nat、notification、notification-group、server-group、alert-rule、online-user、profile、settings、user、waf、login。构建 npm run build（tsc -b && vite build）、npm run lint。node_modules 已装。
+
+【硬约束】
+1. 小幅样式/风格优化，可小幅布局调整；保留侧边栏/顶栏结构；不做大改动。
+2. 必须保留深色模式（.dark）支持，参考风格需适配深色变体。
+3. 以 Tailwind 令牌 + 对 index.css 的局部修改为主，避免逐页大规模重写。
+4. 功能与 i18n 行为不变。
+
+【第 1 步：真实仓库核实与分类】
+在 D:\Documents\Github\dcdsnotes\NezhaAdmin 内用小范围 grep/find/read 核实上述调查（src/index.css 的 admin-* 布局、root.tsx/header.tsx 结构、table-page-header/data-table/group-tab 等共享组件、ui/* 令牌、.dark 支持、login 页），记录证据（文件路径+行号或片段）。基于证据将 mission 分类为 bounded / multi-surface / unusually-large，并给出具体理由与证据。
+
+【第 2 步：产出 ROADMAP.md】
+写单一可执行 ROADMAP.md 到治理根目录（覆盖整个交付物 100%）。每个 Item 必须含：稳定 id（如 RM-1）、category、tag、tier、framework、owned boundary、dependency IDs、launch group、integration lane、implementation、acceptance、unhappy paths、tests-first、verification、requiresDetailedPlan。至少覆盖：令牌层（index.css 变量/语义色/圆角/阴影/毛玻璃/动画与 .dark 适配）、布局层（admin-shell 背景/卡片/侧边栏/顶栏微调）、共享组件层（table-page-header、data-table、group-tab、button/card 等 ui 组件样式对齐）、关键页面层（dashboard/server、service、cron、ddns、nat、notification、login 等，按证据决定分组与优先级）、回归验证（npm run build + npm run lint + 深色模式检查 + i18n/功能不变）。不得出现时间估算。若存在历史 ROADMAP.md，仅在被本任务判定过期时重写，并保留/引用仍有效的证据。
+同时更新 PROMPTS.txt（记录本次 mission 原文与指针、SHA-256、UTF-8 字节长度、RUN-NONCE）并在 GATELOG.md 追加本次范围条目（append-only）。
+
+【回报格式（≤250 词）】
+- frontier 重建结论：历史 ROADMAP.md 是否匹配本 mission
+- mission 分类 + 证据要点
+- ROADMAP.md 路径与 Item 清单（id + 一句话边界）
+- 覆盖确认（100% 交付物面）
+- 遇到的 blocker（如有，给出具体 unblock 路径）

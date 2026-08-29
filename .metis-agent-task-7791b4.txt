@@ -1,0 +1,38 @@
+生成并冻结 ROADMAP.md（mission：参考 CDT-Monitor web 风格优化 NezhaAdmin 当前页面样式）。
+
+## 任务背景（已由 L0 完成的初步调查，可复核）
+用户请求（中文）："参考 https://github.com/wang4386/CDT-Monitor/tree/main/web 里面代码的布局、风格、样式对当前页面的样式、风格进行优化，可以小幅调整页面布局，不要有太大的改动。"
+
+### 参考仓库 CDT-Monitor/web（已抓取真实文件）设计语言
+- 浅色背景 #f1f3f5；半透明毛玻璃卡片 rgba(252,253,253,.82) + backdrop-filter: blur(22px) saturate(118%)
+- 边框：0 0 0 1px rgba(163,169,177,.34) 外描边 + inset 0 1px 0 rgba(255,255,255,.9) 内高光
+- 投影：0 26px 60px -34px rgba(20,27,38,.38)（大卡片）/ 0 14px 30px -24px（小卡片）
+- 圆角：卡片 24px、auth 28px、控件 12px、小控件 10px/8px
+- 主按钮：墨色 #181a1d 背景、白色文字、hover 上浮 1px
+- 文字：--ink #181a1d、--muted #6d727b；eyebrow 小标签（10px、800 字重、uppercase）
+- 动效：stage-in 入场（translateY(14px)）、ease-out cubic-bezier(.22,1,.36,1)、160ms/320ms 时长
+- 语义色：--green #147a55 / --blue #2563b8 / --cyan #0d7188 / --red #bd3645 / --amber #a86608 及对应 soft 背景
+- 布局：app-shell 居中 1320px、topbar、overview-head、metric-strip、卡片网格
+- 浅色为主，无深色模式
+
+### 本地 NezhaAdmin（D:/Documents/Github/dcdsnotes/NezhaAdmin）
+- React 19 + Vite 7 + Tailwind 4 + shadcn/ui（Radix）+ zustand + react-router 7，多语言（i18next）
+- 现设计：admin-shell 侧边栏(216px 可折叠) + 固定顶栏(82px) + workspace；浅色 #fbfcfd 背景、白色卡片、18px 圆角、0 10px 30px rgb(33 38 45 / 3%) 阴影；OKLCH 设计令牌；支持 .dark 深色模式
+- 关键文件：src/index.css（636 行，含全部 admin-* 布局与组件覆盖样式）、src/routes/root.tsx（布局）、src/components/header.tsx（317 行）、src/routes/server.tsx（仪表盘主页，229 行）、src/components/table-page-header.tsx、src/components/data-table.tsx、src/components/group-tab.tsx、src/components/ui/*（shadcn 组件）
+- 页面：/dashboard（server）、service、cron、ddns、nat、notification、notification-group、server-group、alert-rule、online-user、profile、settings、user、waf、login
+- 构建：npm run build（tsc -b && vite build）、npm run lint（eslint）；node_modules 已安装
+
+## 必须遵守的约束
+1. 尊重用户意图：小幅优化样式与风格、可小幅调整布局，不做大改动。侧边栏/顶栏整体结构保留。
+2. 必须保留深色模式支持（CDT-Monitor 是浅色-only，需适配 .dark 变体）。
+3. 参考 CDT-Monitor 的玻璃拟态/柔和阴影/大圆角/墨色按钮/eyebrow 排版语言，但落地方式以 Tailwind 令牌 + 对 index.css 的局部修改为主，避免逐页大规模重写（保持改动面可控）。
+4. 保持全部现有功能与 i18n 行为不变。
+
+## 交付物要求
+1. 打开真实仓库核实（grep/find/read 相关文件），分类 mission 为 bounded / multi-surface / unusually-large 并给出证据。
+2. 产出单一可执行 ROADMAP.md（位于工作区或治理根目录下合适位置，遵循性能运行约定），覆盖整个交付物 100%；每个 Item 必须含稳定 id、category、tag、tier、framework、owned boundary、dependency IDs、launch group、integration lane、implementation、acceptance、unhappy paths、tests-first、verification、requiresDetailedPlan。
+3. 依赖排序、启动组、集成通道、验收标准（正/反路径）、tests-first（先写失败的复现/快照测试再实现）、真实验证（npm run build / lint 真实运行）与 >=95% 变更行覆盖率要求。
+4. 文档化产出（README/变更说明）归本框架所有。
+5. 按 G2 关闭顺序：scope-coordinator 先以 gate=G2 调 performance_gate（先写非空 receipt 到治理根 artifacts/ 下，如 artifacts/g2-receipt.md），之后 reviewer 调 G2-review、fresh-verifier 调 G2-verify（负向 verdict 需指明被拒 item 并修复后重跑）。
+6. 若分类为 multi-surface：派两名互补 scout 并发取证并折叠进 roadmap；unusually-large 需记录具体升级理由。bounded 直接进入 assurance。
+7. 最后以中文向 L0 汇报：mission 分类、ROADMAP.md 路径、item 清单、验收要点、G2 各关口 verdict 与证据路径。
