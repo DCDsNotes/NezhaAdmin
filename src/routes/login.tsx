@@ -101,7 +101,7 @@ function Login() {
                     />
                     <Button
                         type="submit"
-                        className="w-full rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]"
+                        className="w-full rounded-lg shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)]"
                     >
                         {t("Login")}
                     </Button>
@@ -110,7 +110,7 @@ function Login() {
                     settingData?.config?.oauth2_providers.length > 0 && (
                         <section className="flex items-center my-3 w-full">
                             <Separator className="flex-1" />
-                            <div className="flex justify-center text-xs text-muted-foreground w-full max-w-[100px]">
+                            <div className="flex justify-center text-xs text-muted-foreground w-full max-w-[6.25rem]">
                                 OAuth2
                             </div>
                             <Separator className="flex-1" />
@@ -120,7 +120,7 @@ function Login() {
             <div className="mt-3 flex flex-col gap-3">
                 {settingData?.config?.oauth2_providers?.map((p: string) => (
                     <Button
-                        className="w-full rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-muted text-primary hover:bg-muted/80 hover:text-primary/80"
+                        className="w-full rounded-lg shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)] bg-muted text-primary hover:bg-muted/80 hover:text-primary/80"
                         onClick={() => loginWith(p)}
                     >
                         {p === "GitHub" && <GitHubIcon className="size-4" />}

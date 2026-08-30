@@ -4,9 +4,9 @@ import { ActionButtonGroup } from "@/components/action-button-group"
 import { BatchMoveServerIcon } from "@/components/batch-move-server-icon"
 import { CopyButton } from "@/components/copy-button"
 import { DataTable } from "@/components/data-table"
-import { createSelectionColumn } from "@/components/selection-column"
 import { InstallCommandsMenu } from "@/components/install-commands"
 import { NoteMenu } from "@/components/note-menu"
+import { createSelectionColumn } from "@/components/selection-column"
 import { ServerCard } from "@/components/server"
 import { ServerConfigCard } from "@/components/server-config"
 import { ServerConfigCardBatch } from "@/components/server-config-batch"
@@ -214,14 +214,14 @@ export default function ServerPage() {
                 <BatchMoveServerIcon serverIds={selectedRows.map((r) => r.original.id)} />
                 <ServerConfigCardBatch
                     sid={selectedRows.map((r) => r.original.id)}
-                    className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-slate-700 text-white hover:bg-slate-800 dark:hover:bg-slate-600 rounded-lg"
+                    className="shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)] bg-slate-700 text-white hover:bg-slate-800 dark:hover:bg-slate-600 rounded-lg"
                 />
-                <InstallCommandsMenu className="shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] bg-indigo-600 text-white hover:bg-indigo-700 dark:hover:bg-indigo-500 rounded-lg" />
+                <InstallCommandsMenu className="shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)] bg-indigo-600 text-white hover:bg-indigo-700 dark:hover:bg-indigo-500 rounded-lg" />
             </TablePageHeader>
             <DataTable
                 table={table}
                 isLoading={isLoading}
-                className="min-w-[960px]"
+                className="min-w-[60rem]"
                 headerClassName="sticky top-0 bg-background z-10"
             />
         </div>

@@ -16,7 +16,7 @@ export default function ProfilePage() {
     const { profile, setProfile } = useMainStore()
     const { servers, serverGroups } = useServer()
     const { data: settingData } = useSetting()
-    const isDesktop = useMediaQuery("(min-width: 890px)")
+    const isDesktop = useMediaQuery("(min-width: 55.625rem)")
 
     useEffect(() => {
         const oauth2 = new URLSearchParams(window.location.search).get("oauth2")
@@ -54,13 +54,10 @@ export default function ProfilePage() {
                     className={`flex ${isDesktop ? "flex-col mr-6" : "gap-4 w-full items-center"}`}
                 >
                     <Avatar
-                        className={`${isDesktop ? "h-[300px] w-[300px]" : "h-[150px] w-[150px]"} border-foreground border-[1px]`}
+                        className={`${isDesktop ? "h-[18.75rem] w-[18.75rem]" : "h-[9.375rem] w-[9.375rem]"} border-foreground border-[0.0625rem]`}
                     >
                         <AvatarImage
-                            src={
-                                "https://gravatar.com/avatar/" +
-                                profile.username
-                            }
+                            src={"https://gravatar.com/avatar/" + profile.username}
                             alt={profile.username}
                         />
                         <AvatarFallback>{profile.username}</AvatarFallback>
@@ -70,7 +67,7 @@ export default function ProfilePage() {
                         <p className="text-gray-400">IP: {profile.login_ip || "Unknown"}</p>
                     </div>
                     {isDesktop && (
-                        <ProfileCard className="flex mt-4 justify-center items-center max-w-[300px] rounded-lg" />
+                        <ProfileCard className="flex mt-4 justify-center items-center max-w-[18.75rem] rounded-lg" />
                     )}
                 </div>
                 {!isDesktop && (
@@ -118,7 +115,7 @@ export default function ProfilePage() {
                                         </section>
                                         {profile.oauth2_bind?.[provider.toLowerCase()] ? (
                                             <Button
-                                                className="w-fit bg-slate-700 hover:bg-slate-800 dark:text-white rounded-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] my-1"
+                                                className="w-fit bg-slate-700 hover:bg-slate-800 dark:text-white rounded-lg shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)] my-1"
                                                 size="sm"
                                                 onClick={() => unbindO2(provider)}
                                             >

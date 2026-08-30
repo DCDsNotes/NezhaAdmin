@@ -38,13 +38,24 @@ function annotateResponsiveCells(table: HTMLTableElement) {
                 "data-table-actions",
                 normalizedLabel === "action" ||
                     normalizedLabel === "actions" ||
-                    normalizedLabel === "操作",
+                    normalizedLabel === "操作" ||
+                    (index === row.cells.length - 1 &&
+                        cell.querySelector("button, a, [role='menu']") !== null),
             )
             cell.toggleAttribute(
                 "data-table-primary",
                 normalizedLabel === "name" || label.endsWith("名称"),
             )
         })
+
+        row.toggleAttribute(
+            "data-table-has-select",
+            row.querySelector("td[data-table-select]") !== null,
+        )
+        row.toggleAttribute(
+            "data-table-has-actions",
+            row.querySelector("td[data-table-actions]") !== null,
+        )
     })
 }
 
@@ -66,7 +77,7 @@ const Table = forwardRef<HTMLTableElement, HTMLAttributes<HTMLTableElement>>(
         return (
             <div
                 data-slot="table-frame"
-                className="relative w-full overflow-hidden rounded-[18px] border bg-card"
+                className="relative w-full overflow-hidden rounded-[0.9375rem] border bg-card"
             >
                 <div data-slot="table-scroll" className="w-full overflow-auto">
                     <table

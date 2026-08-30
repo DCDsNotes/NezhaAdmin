@@ -110,7 +110,7 @@ export function DataTable<TData, TValue>({
 
     const [heightState, setHeight] = useState(0)
     const ref = useRef(null)
-    const isDesktop = useMediaQuery("(min-width: 900px)")
+    const isDesktop = useMediaQuery("(min-width: 56.25rem)")
     const renderResponsiveRow = rowComponent ? rowComponent(rows) : TableRowComponent(rows)
 
     const renderHeaderRows = () =>
@@ -131,9 +131,9 @@ export function DataTable<TData, TValue>({
                                     {...{
                                         style: header.column.getCanSort()
                                             ? {
-                                                cursor: "pointer",
-                                                userSelect: "none",
-                                            }
+                                                  cursor: "pointer",
+                                                  userSelect: "none",
+                                              }
                                             : {},
                                         onClick: header.column.getToggleSortingHandler(),
                                     }}
@@ -199,7 +199,7 @@ export function DataTable<TData, TValue>({
     return (
         <div
             data-slot="table-frame"
-            className="overflow-hidden rounded-[18px] border bg-card"
+            className="overflow-hidden rounded-[0.9375rem] border bg-card"
             ref={ref}
             style={{ height: heightState }}
         >

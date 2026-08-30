@@ -1,7 +1,6 @@
 import { updateSettings } from "@/api/settings"
 import { SettingsTab } from "@/components/settings-tab"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
     Form,
@@ -122,402 +121,447 @@ export default function SettingsPage() {
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="my-4 flex flex-col gap-5"
                     >
-                        <FormField
-                            control={form.control}
-                            name="site_name"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t("SiteName")}</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="language"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t("Language")}</FormLabel>
-                                    <FormControl>
-                                        <Select onValueChange={field.onChange} value={field.value}>
+                        <section data-settings-section data-settings-span="full">
+                            <header data-settings-section-header>
+                                <h2>{t("Settings")}</h2>
+                            </header>
+                            <div data-settings-grid>
+                                <FormField
+                                    control={form.control}
+                                    name="site_name"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{t("SiteName")}</FormLabel>
                                             <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue />
-                                                </SelectTrigger>
+                                                <Input {...field} />
                                             </FormControl>
-                                            <SelectContent>
-                                                {Object.entries(nezhaLang).map(([k, v]) => (
-                                                    <SelectItem key={k} value={k}>
-                                                        {v}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="user_template"
-                            render={({ field }) => (
-                                <FormItem data-settings-span="full">
-                                    <FormLabel>{t("Theme")}</FormLabel>
-                                    <FormControl>
-                                        <Select
-                                            value={field.value}
-                                            onValueChange={(value) => {
-                                                const template = config?.frontend_templates?.find(
-                                                    (t) => t.path === value,
-                                                )
-                                                if (template) {
-                                                    form.setValue("user_template", template!.path!)
-                                                }
-                                            }}
-                                        >
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="language"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{t("Language")}</FormLabel>
                                             <FormControl>
-                                                <SelectTrigger className="py-8">
-                                                    <SelectValue placeholder={t("SelectTheme")} />
-                                                </SelectTrigger>
+                                                <Select
+                                                    onValueChange={field.onChange}
+                                                    value={field.value}
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {Object.entries(nezhaLang).map(([k, v]) => (
+                                                            <SelectItem key={k} value={k}>
+                                                                {v}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
                                             </FormControl>
-                                            <SelectContent>
-                                                {(
-                                                    config?.frontend_templates?.filter(
-                                                        (t) => !t.is_admin,
-                                                    ) || []
-                                                ).map((template) => (
-                                                    <div key={template.path}>
-                                                        <SelectItem value={template.path!}>
-                                                            <div className="flex flex-col items-start gap-1">
-                                                                <div className="font-medium">
-                                                                    {template.name}
-                                                                </div>
-                                                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                                    <span>
-                                                                        {t("Author")}:{" "}
-                                                                        {template.author}
-                                                                    </span>
-                                                                    {!template.is_official ? (
-                                                                        <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs">
-                                                                            {t("Community")}
-                                                                        </span>
-                                                                    ) : (
-                                                                        <span className="px-1.5 py-0.5 rounded-md bg-blue-100 text-blue-800 text-xs">
-                                                                            {t("Official")}
-                                                                        </span>
-                                                                    )}
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        </section>
+                        <section data-settings-section data-settings-span="full">
+                            <header data-settings-section-header>
+                                <h2>{t("Theme")}</h2>
+                            </header>
+                            <div data-settings-grid>
+                                <FormField
+                                    control={form.control}
+                                    name="user_template"
+                                    render={({ field }) => (
+                                        <FormItem data-settings-span="full">
+                                            <FormLabel>{t("Theme")}</FormLabel>
+                                            <FormControl>
+                                                <Select
+                                                    value={field.value}
+                                                    onValueChange={(value) => {
+                                                        const template =
+                                                            config?.frontend_templates?.find(
+                                                                (t) => t.path === value,
+                                                            )
+                                                        if (template) {
+                                                            form.setValue(
+                                                                "user_template",
+                                                                template!.path!,
+                                                            )
+                                                        }
+                                                    }}
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger className="py-8">
+                                                            <SelectValue
+                                                                placeholder={t("SelectTheme")}
+                                                            />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        {(
+                                                            config?.frontend_templates?.filter(
+                                                                (t) => !t.is_admin,
+                                                            ) || []
+                                                        ).map((template) => (
+                                                            <div key={template.path}>
+                                                                <SelectItem value={template.path!}>
+                                                                    <div className="flex flex-col items-start gap-1">
+                                                                        <div className="font-medium">
+                                                                            {template.name}
+                                                                        </div>
+                                                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                                            <span>
+                                                                                {t("Author")}:{" "}
+                                                                                {template.author}
+                                                                            </span>
+                                                                            {!template.is_official ? (
+                                                                                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs">
+                                                                                    {t("Community")}
+                                                                                </span>
+                                                                            ) : (
+                                                                                <span className="px-1.5 py-0.5 rounded-md bg-blue-100 text-blue-800 text-xs">
+                                                                                    {t("Official")}
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                </SelectItem>
+                                                                <div className="px-8 py-1">
+                                                                    <a
+                                                                        href={template.repository}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+                                                                    >
+                                                                        {template.repository}
+                                                                    </a>
                                                                 </div>
                                                             </div>
-                                                        </SelectItem>
-                                                        <div className="px-8 py-1">
-                                                            <a
-                                                                href={template.repository}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
-                                                            >
-                                                                {template.repository}
-                                                            </a>
-                                                        </div>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormControl>
+                                            <FormMessage />
+                                            {!config?.frontend_templates?.find(
+                                                (t) => t.path === field.value,
+                                            )?.is_official && (
+                                                <div className="mt-2 text-sm text-yellow-700 dark:text-yellow-200 bg-yellow-100 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-md p-2">
+                                                    <div className="font-medium text-lg mb-1">
+                                                        {t("CommunityThemeWarning")}
                                                     </div>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                    {!config?.frontend_templates?.find(
-                                        (t) => t.path === field.value,
-                                    )?.is_official && (
-                                        <div className="mt-2 text-sm text-yellow-700 dark:text-yellow-200 bg-yellow-100 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-md p-2">
-                                            <div className="font-medium text-lg mb-1">
-                                                {t("CommunityThemeWarning")}
-                                            </div>
-                                            <div className="text-yellow-700 dark:text-yellow-200">
-                                                {t("CommunityThemeDescription")}
-                                            </div>
-                                        </div>
+                                                    <div className="text-yellow-700 dark:text-yellow-200">
+                                                        {t("CommunityThemeDescription")}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </FormItem>
                                     )}
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="custom_code"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t("CustomCodes")}</FormLabel>
-                                    <FormControl>
-                                        <Textarea className="resize-y min-h-48" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="custom_code_dashboard"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t("CustomCodesDashboard")}</FormLabel>
-                                    <FormControl>
-                                        <Textarea className="resize-y min-h-48" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="install_host"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t("DashboardOriginalHost")}</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="tls"
-                            render={({ field }) => (
-                                <FormItem className="flex items-center space-x-2">
-                                    <FormControl>
-                                        <div className="flex items-center gap-2">
-                                            <Checkbox
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                            <Label className="text-sm">{t("ConfigTLS")}</Label>
-                                        </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="dns_servers"
-                            render={({ field }) => (
-                                <FormItem data-settings-span="full">
-                                    <FormLabel>
-                                        {t("CustomPublicDNSNameserversforDDNS") +
-                                            " " +
-                                            t("SeparateWithComma")}
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="web_real_ip_header"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t("WebRealIPHeader")}</FormLabel>
-                                    <FormControl>
-                                        <div className="flex items-center">
-                                            <Input
-                                                disabled={field.value == "NZ::Use-Peer-IP"}
-                                                className="w-1/2"
-                                                placeholder="CF-Connecting-IP"
-                                                {...field}
-                                            />
-                                            <Checkbox
-                                                checked={field.value == "NZ::Use-Peer-IP"}
-                                                className="ml-2"
-                                                onCheckedChange={(checked) => {
-                                                    if (checked) {
-                                                        field.disabled = true
-                                                        form.setValue(
-                                                            "web_real_ip_header",
-                                                            "NZ::Use-Peer-IP",
-                                                        )
-                                                    } else {
-                                                        field.disabled = false
-                                                        form.setValue("web_real_ip_header", "")
-                                                    }
-                                                }}
-                                            />
-                                            <FormLabel className="font-normal ml-2">
-                                                {t("UseDirectConnectingIP")}
+                                />
+                            </div>
+                        </section>
+                        <section data-settings-section data-settings-span="full">
+                            <header data-settings-section-header>
+                                <h2>{t("CustomCodes")}</h2>
+                            </header>
+                            <div data-settings-grid>
+                                <FormField
+                                    control={form.control}
+                                    name="custom_code"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{t("CustomCodes")}</FormLabel>
+                                            <FormControl>
+                                                <Textarea
+                                                    className="resize-y min-h-48"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="custom_code_dashboard"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{t("CustomCodesDashboard")}</FormLabel>
+                                            <FormControl>
+                                                <Textarea
+                                                    className="resize-y min-h-48"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        </section>
+                        <section data-settings-section data-settings-span="full">
+                            <header data-settings-section-header>
+                                <h2>{t("Navigation.Connectivity")}</h2>
+                            </header>
+                            <div data-settings-grid>
+                                <FormField
+                                    control={form.control}
+                                    name="install_host"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{t("DashboardOriginalHost")}</FormLabel>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="tls"
+                                    render={({ field }) => (
+                                        <FormItem className="flex items-center space-x-2">
+                                            <FormControl>
+                                                <div className="flex items-center gap-2">
+                                                    <Checkbox
+                                                        checked={field.value}
+                                                        onCheckedChange={field.onChange}
+                                                    />
+                                                    <Label className="text-sm">
+                                                        {t("ConfigTLS")}
+                                                    </Label>
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="dns_servers"
+                                    render={({ field }) => (
+                                        <FormItem data-settings-span="full">
+                                            <FormLabel>
+                                                {t("CustomPublicDNSNameserversforDDNS") +
+                                                    " " +
+                                                    t("SeparateWithComma")}
                                             </FormLabel>
-                                        </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="agent_real_ip_header"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t("AgentRealIPHeader")}</FormLabel>
-                                    <FormControl>
-                                        <div className="flex items-center">
-                                            <Input
-                                                disabled={field.value == "NZ::Use-Peer-IP"}
-                                                className="w-1/2"
-                                                placeholder="CF-Connecting-IP"
-                                                {...field}
-                                            />
-                                            <Checkbox
-                                                checked={field.value == "NZ::Use-Peer-IP"}
-                                                className="ml-2"
-                                                onCheckedChange={(checked) => {
-                                                    if (checked) {
-                                                        field.disabled = true
-                                                        form.setValue(
-                                                            "agent_real_ip_header",
-                                                            "NZ::Use-Peer-IP",
-                                                        )
-                                                    } else {
-                                                        field.disabled = false
-                                                        form.setValue("agent_real_ip_header", "")
-                                                    }
-                                                }}
-                                            />
-                                            <FormLabel className="font-normal ml-2">
-                                                {t("UseDirectConnectingIP")}
-                                            </FormLabel>
-                                        </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormItem data-settings-span="full">
-                            <FormLabel>{t("IPChangeNotification")}</FormLabel>
-                            <Card className="w-full">
-                                <CardContent>
-                                    <div className="flex flex-col space-y-4 mt-4">
-                                        <FormField
-                                            control={form.control}
-                                            name="cover"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>{t("Coverage")}</FormLabel>
-                                                    <Select
-                                                        onValueChange={field.onChange}
-                                                        value={`${field.value}`}
-                                                    >
-                                                        <FormControl>
-                                                            <SelectTrigger>
-                                                                <SelectValue />
-                                                            </SelectTrigger>
-                                                        </FormControl>
-                                                        <SelectContent>
-                                                            {Object.entries(
-                                                                settingCoverageTypes,
-                                                            ).map(([k, v]) => (
-                                                                <SelectItem key={k} value={k}>
-                                                                    {v}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name="ignored_ip_notification"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>
-                                                        {t("SpecificServers") +
-                                                            " " +
-                                                            t("SeparateWithComma")}
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="web_real_ip_header"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{t("WebRealIPHeader")}</FormLabel>
+                                            <FormControl>
+                                                <div className="flex items-center">
+                                                    <Input
+                                                        disabled={field.value == "NZ::Use-Peer-IP"}
+                                                        className="w-1/2"
+                                                        placeholder="CF-Connecting-IP"
+                                                        {...field}
+                                                    />
+                                                    <Checkbox
+                                                        checked={field.value == "NZ::Use-Peer-IP"}
+                                                        className="ml-2"
+                                                        onCheckedChange={(checked) => {
+                                                            if (checked) {
+                                                                field.disabled = true
+                                                                form.setValue(
+                                                                    "web_real_ip_header",
+                                                                    "NZ::Use-Peer-IP",
+                                                                )
+                                                            } else {
+                                                                field.disabled = false
+                                                                form.setValue(
+                                                                    "web_real_ip_header",
+                                                                    "",
+                                                                )
+                                                            }
+                                                        }}
+                                                    />
+                                                    <FormLabel className="font-normal ml-2">
+                                                        {t("UseDirectConnectingIP")}
                                                     </FormLabel>
-                                                    <FormControl>
-                                                        <Input placeholder="1,2,3" {...field} />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name="ip_change_notification_group_id"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>{t("NotifierGroupID")}</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            placeholder="0"
-                                                            type="number"
-                                                            {...field}
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name="enable_ip_change_notification"
-                                            render={({ field }) => (
-                                                <FormItem className="flex items-center space-x-2">
-                                                    <FormControl>
-                                                        <div className="flex items-center gap-2">
-                                                            <Checkbox
-                                                                checked={field.value}
-                                                                onCheckedChange={field.onChange}
-                                                            />
-                                                            <Label className="text-sm">
-                                                                {t("Enable")}
-                                                            </Label>
-                                                        </div>
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </FormItem>
-                        <FormField
-                            control={form.control}
-                            name="enable_plain_ip_in_notification"
-                            render={({ field }) => (
-                                <FormItem
-                                    data-settings-span="full"
-                                    className="flex items-center space-x-2"
-                                >
-                                    <FormControl>
-                                        <div className="flex items-center gap-2">
-                                            <Checkbox
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                            <Label className="text-sm">
-                                                {t("FullIPNotification")}
-                                            </Label>
-                                        </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <Button
-                            type="submit"
-                            data-settings-span="full"
-                            className="justify-self-start"
-                        >
-                            {t("Confirm")}
-                        </Button>
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="agent_real_ip_header"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{t("AgentRealIPHeader")}</FormLabel>
+                                            <FormControl>
+                                                <div className="flex items-center">
+                                                    <Input
+                                                        disabled={field.value == "NZ::Use-Peer-IP"}
+                                                        className="w-1/2"
+                                                        placeholder="CF-Connecting-IP"
+                                                        {...field}
+                                                    />
+                                                    <Checkbox
+                                                        checked={field.value == "NZ::Use-Peer-IP"}
+                                                        className="ml-2"
+                                                        onCheckedChange={(checked) => {
+                                                            if (checked) {
+                                                                field.disabled = true
+                                                                form.setValue(
+                                                                    "agent_real_ip_header",
+                                                                    "NZ::Use-Peer-IP",
+                                                                )
+                                                            } else {
+                                                                field.disabled = false
+                                                                form.setValue(
+                                                                    "agent_real_ip_header",
+                                                                    "",
+                                                                )
+                                                            }
+                                                        }}
+                                                    />
+                                                    <FormLabel className="font-normal ml-2">
+                                                        {t("UseDirectConnectingIP")}
+                                                    </FormLabel>
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        </section>
+                        <section data-settings-section data-settings-span="full">
+                            <header data-settings-section-header>
+                                <h2>{t("IPChangeNotification")}</h2>
+                            </header>
+                            <div data-settings-grid>
+                                <FormField
+                                    control={form.control}
+                                    name="cover"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{t("Coverage")}</FormLabel>
+                                            <Select
+                                                onValueChange={field.onChange}
+                                                value={`${field.value}`}
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {Object.entries(settingCoverageTypes).map(
+                                                        ([k, v]) => (
+                                                            <SelectItem key={k} value={k}>
+                                                                {v}
+                                                            </SelectItem>
+                                                        ),
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="ignored_ip_notification"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                {t("SpecificServers") +
+                                                    " " +
+                                                    t("SeparateWithComma")}
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="1,2,3" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="ip_change_notification_group_id"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>{t("NotifierGroupID")}</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="0" type="number" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="enable_ip_change_notification"
+                                    render={({ field }) => (
+                                        <FormItem className="flex items-center space-x-2">
+                                            <FormControl>
+                                                <div className="flex items-center gap-2">
+                                                    <Checkbox
+                                                        checked={field.value}
+                                                        onCheckedChange={field.onChange}
+                                                    />
+                                                    <Label className="text-sm">{t("Enable")}</Label>
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        </section>
+                        <div data-settings-footer data-settings-span="full">
+                            <FormField
+                                control={form.control}
+                                name="enable_plain_ip_in_notification"
+                                render={({ field }) => (
+                                    <FormItem
+                                        data-settings-span="full"
+                                        className="flex items-center space-x-2"
+                                    >
+                                        <FormControl>
+                                            <div className="flex items-center gap-2">
+                                                <Checkbox
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                />
+                                                <Label className="text-sm">
+                                                    {t("FullIPNotification")}
+                                                </Label>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <Button
+                                type="submit"
+                                data-settings-span="full"
+                                className="justify-self-start"
+                            >
+                                {t("Confirm")}
+                            </Button>
+                        </div>
                     </form>
                 </Form>
             </div>

@@ -200,7 +200,9 @@ export default function Header({ sidebarCollapsed, onToggleSidebar }: HeaderProp
                                     >
                                         <Icon className="admin-navigation__icon" />
                                         <span>{item.label}</span>
-                                        {active ? <ChevronRight className="admin-navigation__arrow" /> : null}
+                                        {active ? (
+                                            <ChevronRight className="admin-navigation__arrow" />
+                                        ) : null}
                                     </Link>
                                 )
                             })}
@@ -210,7 +212,7 @@ export default function Header({ sidebarCollapsed, onToggleSidebar }: HeaderProp
 
                 <div className="admin-sidebar__account">
                     <Avatar>
-                        <AvatarFallback className="bg-primary text-[10px] font-semibold text-primary-foreground">
+                        <AvatarFallback className="bg-primary text-[0.625rem] font-semibold text-primary-foreground">
                             {profile.username.slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                     </Avatar>
@@ -271,7 +273,7 @@ export default function Header({ sidebarCollapsed, onToggleSidebar }: HeaderProp
                         <DropdownMenuTrigger asChild>
                             <button type="button" className="admin-profile-trigger">
                                 <Avatar>
-                                    <AvatarFallback className="bg-primary text-[10px] font-semibold text-primary-foreground">
+                                    <AvatarFallback className="bg-primary text-[0.625rem] font-semibold text-primary-foreground">
                                         {profile.username.slice(0, 2).toUpperCase()}
                                     </AvatarFallback>
                                 </Avatar>

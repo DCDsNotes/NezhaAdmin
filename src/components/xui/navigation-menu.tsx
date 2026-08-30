@@ -25,7 +25,7 @@ export const NzNavigationMenuLink = (
             {props.active && (
                 <motion.div
                     layoutId="tab-underline"
-                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-black dark:bg-white"
+                    className="absolute bottom-0 left-0 right-0 h-[0.125rem] bg-black dark:bg-white"
                 />
             )}
         </div>

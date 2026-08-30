@@ -22,7 +22,7 @@ export function TablePageHeader<E, U>({
     return (
         <div className="flex items-end justify-between w-full gap-3 mt-6 mb-4">
             <div className="min-w-0">
-                <p className="mb-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted-foreground/60">
+                <p className="mb-1 text-[0.625rem] font-extrabold uppercase tracking-[0.14em] text-muted-foreground/60">
                     {t("Navigation.ControlCenter")}
                 </p>
                 <h1 className="text-3xl font-bold tracking-tight">{title}</h1>

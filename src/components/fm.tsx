@@ -422,7 +422,7 @@ export const FMCard = ({ id }: { id?: string }) => {
     const [fm, setFM] = useState<ModelCreateFMResponse | null>(null)
     const [init, setInit] = useState(false)
 
-    const isDesktop = useMediaQuery("(min-width: 640px)")
+    const isDesktop = useMediaQuery("(min-width: 40rem)")
 
     const fetchFM = async () => {
         if (id) {

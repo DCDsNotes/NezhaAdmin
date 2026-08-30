@@ -446,18 +446,20 @@ export const ServerCard: React.FC<ServerCardProps> = ({ data, mutate }) => {
                                                                     {publicNoteObj.billingDataMod
                                                                         ?.startDate
                                                                         ? new Date(
-                                                                              publicNoteObj.billingDataMod!.startDate!,
+                                                                              publicNoteObj
+                                                                                  .billingDataMod!
+                                                                                  .startDate!,
                                                                           ).toLocaleDateString()
                                                                         : "YYYY-MM-DD"}
                                                                 </Button>
                                                             </PopoverTrigger>
                                                             <PopoverContent
-                                                                className="p-0 w-[300px] max-h-[60dvh] overflow-hidden"
+                                                                className="p-0 w-[18.75rem] max-h-[60dvh] overflow-hidden"
                                                                 align="start"
                                                             >
-                                                                <div className="max-h-[500px] overflow-y-auto">
+                                                                <div className="max-h-[31.25rem] overflow-y-auto">
                                                                     <Calendar
-                                                                        className="w-full min-h-[320px]"
+                                                                        className="w-full min-h-[20rem]"
                                                                         mode="single"
                                                                         captionLayout="dropdown"
                                                                         startMonth={
@@ -471,7 +473,9 @@ export const ServerCard: React.FC<ServerCardProps> = ({ data, mutate }) => {
                                                                                 .billingDataMod
                                                                                 ?.startDate
                                                                                 ? new Date(
-                                                                                      publicNoteObj.billingDataMod!.startDate!,
+                                                                                      publicNoteObj
+                                                                                          .billingDataMod!
+                                                                                          .startDate!,
                                                                                   )
                                                                                 : undefined
                                                                         }
@@ -554,12 +558,12 @@ export const ServerCard: React.FC<ServerCardProps> = ({ data, mutate }) => {
                                                                 </Button>
                                                             </PopoverTrigger>
                                                             <PopoverContent
-                                                                className="p-0 w-[300px] max-h-[60dvh] overflow-hidden"
+                                                                className="p-0 w-[18.75rem] max-h-[60dvh] overflow-hidden"
                                                                 align="start"
                                                             >
-                                                                <div className="max-h-[500px] overflow-y-auto">
+                                                                <div className="max-h-[31.25rem] overflow-y-auto">
                                                                     <Calendar
-                                                                        className="w-full min-h-[320px]"
+                                                                        className="w-full min-h-[20rem]"
                                                                         mode="single"
                                                                         captionLayout="dropdown"
                                                                         startMonth={
