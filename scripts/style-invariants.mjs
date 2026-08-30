@@ -54,9 +54,9 @@ for (const token of TOKENS_DARK) {
 // ---------- RM-2 布局层 ----------
 check("RM-2 布局", "侧栏宽度保留 216px", css.includes("--admin-sidebar-width: 216px"));
 check("RM-2 布局", "顶栏高度保留 82px", css.includes("--admin-topbar-height: 82px"));
-check("RM-2 布局", "外壳浅色背景 #f1f3f5", css.includes("background: #f1f3f5"));
-check("RM-2 布局", "顶栏毛玻璃 blur(22px)", /\.admin-topbar\b[\s\S]{0,900}?backdrop-filter: blur\(22px\)/.test(css));
-check("RM-2 布局", "侧栏毛玻璃", /\.admin-sidebar\b[\s\S]{0,900}?backdrop-filter: blur\(/.test(css));
+check("RM-2 布局", "外壳浅色背景 #f5f7f9", css.includes("background: #f5f7f9"));
+check("RM-2 布局", "顶栏实色背景", /\.admin-topbar\b[^\n]*background: #fff/.test(css) && !/\.admin-topbar\b[^\n]*backdrop-filter/.test(css));
+check("RM-2 布局", "侧栏实色背景", /\.admin-sidebar\s*\{[\s\S]{0,500}?background: #fff/.test(css) && !/\.admin-sidebar\s*\{[\s\S]{0,500}?backdrop-filter/.test(css));
 
 // ---------- RM-3 内容基元 ----------
 check("RM-3 基元", "卡片玻璃(blur 22px)", /\[data-slot="card"\]\s*\{[\s\S]{0,700}?backdrop-filter: blur\(22px\)/.test(css));
