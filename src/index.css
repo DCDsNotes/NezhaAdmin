@@ -775,6 +775,11 @@
         padding: 1.5rem;
     }
 
+    .admin-content [data-settings-grid] > [data-settings-control-row] {
+        min-height: 2.75rem;
+        align-self: end;
+    }
+
     .admin-content [data-slot="table-frame"] {
         width: 100%;
         margin: 1rem 0 1.25rem;
@@ -1078,7 +1083,7 @@
 
     .admin-content [data-slot="table"] tbody tr[data-table-has-actions] td[data-table-select] {
         position: absolute;
-        bottom: 1.1875rem;
+        bottom: 1.4375rem;
         left: 1.5625rem;
         z-index: 2;
         display: flex;

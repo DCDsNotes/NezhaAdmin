@@ -327,7 +327,10 @@ export default function SettingsPage() {
                                     control={form.control}
                                     name="tls"
                                     render={({ field }) => (
-                                        <FormItem className="flex items-center space-x-2">
+                                        <FormItem
+                                            data-settings-control-row
+                                            className="flex items-center space-x-2"
+                                        >
                                             <FormControl>
                                                 <div className="flex items-center gap-2">
                                                     <Checkbox
@@ -514,7 +517,10 @@ export default function SettingsPage() {
                                     control={form.control}
                                     name="enable_ip_change_notification"
                                     render={({ field }) => (
-                                        <FormItem className="flex items-center space-x-2">
+                                        <FormItem
+                                            data-settings-control-row
+                                            className="flex items-center space-x-2"
+                                        >
                                             <FormControl>
                                                 <div className="flex items-center gap-2">
                                                     <Checkbox

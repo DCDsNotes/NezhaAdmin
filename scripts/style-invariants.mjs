@@ -41,7 +41,11 @@ check(
 check(
     "RM-3 settings",
     "settings sections use the 0.9375rem section radius",
-    /\[data-settings-section\]\s*\{[\s\S]{0,180}?border-radius: 0\.9375rem/.test(css),
+    /\[data-settings-section\]\s*\{[\s\S]{0,180}?border-radius: 0\.9375rem/.test(css) &&
+        settings.match(/data-settings-control-row/g)?.length === 2 &&
+        /\[data-settings-grid\] > \[data-settings-control-row\]\s*\{[\s\S]{0,120}?min-height: 2\.75rem;[\s\S]{0,80}?align-self: end/.test(
+            css,
+        ),
 )
 check(
     "RM-5A mobile table",
@@ -49,6 +53,9 @@ check(
     /tr\[data-table-has-actions\] td\[data-table-select\]\s*\{[\s\S]{0,500}?background: #eef2f5/.test(
         css,
     ) &&
+        /tr\[data-table-has-actions\] td\[data-table-select\]\s*\{[\s\S]{0,120}?bottom: 1\.4375rem/.test(
+            css,
+        ) &&
         /td\[data-table-select\] button\[role="checkbox"\]\s*\{[\s\S]{0,300}?width: 1\.125rem/.test(
             css,
         ) &&
