@@ -46,7 +46,7 @@ export interface IconButtonProps extends ButtonProps {
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>((props, ref) => {
     return (
         <Button
-            className="rounded-2xl shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)]"
+            className="rounded-[var(--radius-control)] shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)]"
             {...props}
             ref={ref}
             size="icon"

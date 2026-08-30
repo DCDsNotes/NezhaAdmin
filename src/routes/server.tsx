@@ -214,9 +214,9 @@ export default function ServerPage() {
                 <BatchMoveServerIcon serverIds={selectedRows.map((r) => r.original.id)} />
                 <ServerConfigCardBatch
                     sid={selectedRows.map((r) => r.original.id)}
-                    className="shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)] bg-slate-700 text-white hover:bg-slate-800 dark:hover:bg-slate-600 rounded-lg"
+                    className="rounded-[var(--radius-control)] shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)] bg-slate-700 text-white hover:bg-slate-800 dark:hover:bg-slate-600"
                 />
-                <InstallCommandsMenu className="shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)] bg-indigo-600 text-white hover:bg-indigo-700 dark:hover:bg-indigo-500 rounded-lg" />
+                <InstallCommandsMenu className="rounded-[var(--radius-control)] shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)] bg-indigo-600 text-white hover:bg-indigo-700 dark:hover:bg-indigo-500" />
             </TablePageHeader>
             <DataTable
                 table={table}

@@ -446,7 +446,7 @@
 .admin-topbar__actions > button {
     width: 2.25rem;
     height: 2.25rem;
-    border-radius: 0.6875rem;
+    border-radius: var(--admin-control-radius);
     color: #6e7680;
 }
 .admin-topbar__actions > .inline-flex:hover,
@@ -459,7 +459,7 @@
     flex: 0 0 auto;
     width: 2.375rem;
     height: 2.375rem;
-    border-radius: 0.6875rem;
+    border-radius: var(--admin-control-radius);
     color: #747c85;
 }
 .admin-sidebar-toggle:hover {
@@ -474,7 +474,7 @@
     margin-left: 0.3125rem;
     padding: 0.1875rem 0.5rem 0.1875rem 0.1875rem;
     border: 0.0625rem solid #e8eaed;
-    border-radius: 0.6875rem;
+    border-radius: var(--admin-control-radius);
     background: #fff;
     color: #30363d;
     cursor: pointer;
@@ -712,7 +712,7 @@
 .admin-content [data-settings-section] {
     overflow: hidden;
     border: 0.0625rem solid #d8dee4;
-    border-radius: 1.125rem;
+    border-radius: 0.9375rem;
     background: #fff;
     box-shadow: var(--card-shadow-sm);
 }
@@ -1089,28 +1089,42 @@
         align-items: center;
         justify-content: center;
         padding: 0;
-        border: 0;
-        background: transparent;
+        border: 0.0625rem solid #d8dee4;
+        border-radius: var(--admin-control-radius);
+        background: #eef2f5;
+        box-shadow: 0 0.375rem 1rem rgb(33 38 45 / 6%);
+        transition:
+            border-color 150ms ease,
+            background-color 150ms ease;
+    }
+
+    .admin-content
+        [data-slot="table"]
+        tbody
+        tr[data-table-has-actions]
+        td[data-table-select]:has(button[role="checkbox"]:hover) {
+        border-color: #b9c2ca;
+        background: #e4e9ee;
     }
 
     .admin-content [data-slot="table"] tbody td[data-table-select] button[role="checkbox"] {
         display: inline-flex;
-        width: 2.625rem;
-        min-width: 2.625rem;
-        height: 2.625rem;
-        min-height: 2.625rem;
+        width: 1.125rem;
+        min-width: 1.125rem;
+        height: 1.125rem;
+        min-height: 1.125rem;
+        flex: 0 0 1.125rem;
         align-items: center;
         justify-content: center;
-        border: 0.0625rem solid #d8dee4;
-        border-radius: var(--admin-control-radius);
-        background: #fff;
-        color: #3f4750;
-        box-shadow: 0 0.375rem 1rem rgb(33 38 45 / 6%);
+        border: 0.0625rem solid var(--primary);
+        border-radius: 0.3125rem;
+        background: transparent;
+        color: var(--primary-foreground);
+        box-shadow: none;
     }
 
     .admin-content [data-slot="table"] tbody td[data-table-select] button[role="checkbox"]:hover {
-        border-color: #b9c2ca;
-        background: #eef2f5;
+        background: #fff;
     }
 
     .admin-content
@@ -1118,9 +1132,9 @@
         tbody
         td[data-table-select]
         button[role="checkbox"][data-state="checked"] {
-        border-color: var(--primary);
-        background: var(--primary);
-        color: var(--primary-foreground);
+        border-color: #181a1d;
+        background: #181a1d;
+        color: #fff;
     }
 
     .admin-content [data-slot="table"] tbody td[data-table-primary] {
@@ -1206,10 +1220,29 @@
         color: #b0b8c2;
     }
 
-    .dark .admin-content [data-slot="table"] tbody td[data-table-select] button[role="checkbox"] {
+    .dark
+        .admin-content
+        [data-slot="table"]
+        tbody
+        tr[data-table-has-actions]
+        td[data-table-select] {
         border-color: #3a4149;
-        background: #202429;
-        color: #e7ebef;
+        background: #282d33;
+    }
+
+    .dark
+        .admin-content
+        [data-slot="table"]
+        tbody
+        tr[data-table-has-actions]
+        td[data-table-select]:has(button[role="checkbox"]:hover) {
+        border-color: #59616b;
+        background: #303740;
+    }
+
+    .dark .admin-content [data-slot="table"] tbody td[data-table-select] button[role="checkbox"] {
+        border-color: #181a1d;
+        background: transparent;
     }
 
     .dark
@@ -1218,8 +1251,18 @@
         tbody
         td[data-table-select]
         button[role="checkbox"]:hover {
-        border-color: #59616b;
-        background: #303740;
+        background: #fff;
+    }
+
+    .dark
+        .admin-content
+        [data-slot="table"]
+        tbody
+        td[data-table-select]
+        button[role="checkbox"][data-state="checked"] {
+        border-color: #181a1d;
+        background: #181a1d;
+        color: #fff;
     }
 }
 

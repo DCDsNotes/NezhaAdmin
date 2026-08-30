@@ -24,11 +24,38 @@ const header = read("src/components/table-page-header.tsx")
 const table = read("src/components/ui/table.tsx")
 const tabs = read("src/components/ui/tabs.tsx")
 const settings = read("src/routes/settings.tsx")
+const formPrimitives = ["button.tsx", "input.tsx", "textarea.tsx", "select.tsx"].map((file) =>
+    read(`src/components/ui/${file}`),
+)
 
 const results = []
 const check = (group, name, ok, detail = "") => {
     results.push({ group, name, ok, detail })
 }
+
+check(
+    "RM-3 controls",
+    "shared inputs and buttons use the 0.75rem control-radius token",
+    formPrimitives.every((source) => source.includes("rounded-[var(--radius-control)]")),
+)
+check(
+    "RM-3 settings",
+    "settings sections use the 0.9375rem section radius",
+    /\[data-settings-section\]\s*\{[\s\S]{0,180}?border-radius: 0\.9375rem/.test(css),
+)
+check(
+    "RM-5A mobile table",
+    "mobile table selection uses a cool-gray action shell and compact checkbox",
+    /tr\[data-table-has-actions\] td\[data-table-select\]\s*\{[\s\S]{0,500}?background: #eef2f5/.test(
+        css,
+    ) &&
+        /td\[data-table-select\] button\[role="checkbox"\]\s*\{[\s\S]{0,300}?width: 1\.125rem/.test(
+            css,
+        ) &&
+        /button\[role="checkbox"\]\[data-state="checked"\]\s*\{[\s\S]{0,180}?background: #181a1d/.test(
+            css,
+        ),
+)
 
 // ---------- RM-1 令牌层 ----------
 const TOKENS_LIGHT = [
