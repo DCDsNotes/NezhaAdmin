@@ -24,6 +24,10 @@ const header = read("src/components/table-page-header.tsx")
 const table = read("src/components/ui/table.tsx")
 const tabs = read("src/components/ui/tabs.tsx")
 const settings = read("src/routes/settings.tsx")
+const rootRoute = read("src/routes/root.tsx")
+const adminHeader = read("src/components/header.tsx")
+const siteName = read("src/lib/site-name.ts")
+const indexHtml = read("index.html")
 const formPrimitives = ["button.tsx", "input.tsx", "textarea.tsx", "select.tsx"].map((file) =>
     read(`src/components/ui/${file}`),
 )
@@ -62,6 +66,24 @@ check(
         /button\[role="checkbox"\]\[data-state="checked"\]\s*\{[\s\S]{0,180}?background: #181a1d/.test(
             css,
         ),
+)
+check(
+    "RM-5A mobile table",
+    "mobile action buttons stay right-aligned opposite the selection control",
+    /td\[data-table-actions\] > \*\s*\{[\s\S]{0,180}?width: fit-content;[\s\S]{0,100}?margin-left: auto;/.test(
+        css,
+    ),
+)
+check(
+    "RM-2 branding",
+    "document title and admin brand share the configured site-name fallback",
+    siteName.includes('DEFAULT_SITE_NAME = "节点监控"') &&
+        siteName.includes("siteName?.trim() || DEFAULT_SITE_NAME") &&
+        rootRoute.includes("const siteName = resolveSiteName(settingData?.config?.site_name)") &&
+        rootRoute.includes("document.title = siteName") &&
+        rootRoute.includes("siteName={siteName}") &&
+        adminHeader.includes("<strong>{siteName}</strong>") &&
+        indexHtml.includes("<title>节点监控</title>"),
 )
 
 // ---------- RM-1 令牌层 ----------

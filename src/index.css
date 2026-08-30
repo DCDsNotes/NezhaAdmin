@@ -1164,7 +1164,9 @@
     }
 
     .admin-content [data-slot="table"] tbody td[data-table-actions] > * {
+        width: fit-content;
         min-width: 0;
+        margin-left: auto;
         flex-wrap: wrap;
         justify-content: flex-end;
     }

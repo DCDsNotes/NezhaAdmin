@@ -5,6 +5,7 @@ import { useMainStore } from "@/hooks/useMainStore"
 import useSetting from "@/hooks/useSetting"
 import i18n from "@/lib/i18n"
 import { InjectContext } from "@/lib/inject"
+import { resolveSiteName } from "@/lib/site-name"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Outlet } from "react-router-dom"
@@ -23,14 +24,15 @@ export default function Root() {
     const { data: settingData, error } = useSetting()
     const profile = useMainStore((store) => store.profile)
     const [sidebarCollapsed, setSidebarCollapsed] = useState(readSidebarCollapsed)
+    const siteName = resolveSiteName(settingData?.config?.site_name)
 
     useEffect(() => {
         localStorage.setItem("nezha-admin-sidebar-collapsed", String(sidebarCollapsed))
     }, [sidebarCollapsed])
 
     useEffect(() => {
-        document.title = settingData?.config?.site_name || "哪吒监控"
-    }, [settingData?.config?.site_name])
+        document.title = siteName
+    }, [siteName])
 
     useEffect(() => {
         if (settingData?.config?.custom_code_dashboard) {
@@ -58,6 +60,7 @@ export default function Root() {
                 <Header
                     sidebarCollapsed={sidebarCollapsed}
                     onToggleSidebar={() => setSidebarCollapsed((collapsed) => !collapsed)}
+                    siteName={siteName}
                 />
                 <div className="admin-workspace">
                     <main className="admin-content">

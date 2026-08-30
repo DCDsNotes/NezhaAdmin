@@ -82,9 +82,10 @@ function Overview() {
 type HeaderProps = {
     sidebarCollapsed: boolean
     onToggleSidebar: () => void
+    siteName: string
 }
 
-export default function Header({ sidebarCollapsed, onToggleSidebar }: HeaderProps) {
+export default function Header({ sidebarCollapsed, onToggleSidebar, siteName }: HeaderProps) {
     const { t } = useTranslation()
     const { logout } = useAuth()
     const profile = useMainStore((store) => store.profile)
@@ -150,7 +151,7 @@ export default function Header({ sidebarCollapsed, onToggleSidebar }: HeaderProp
             <header className="admin-topbar admin-topbar--guest">
                 <Link to="/dashboard/login" className="admin-mobile-brand">
                     <img src="/dashboard/logo.png" alt="" />
-                    <span>{t("nezha")}</span>
+                    <span>{siteName}</span>
                 </Link>
                 <div className="admin-topbar__actions">
                     <Button variant="ghost" size="icon" asChild title={t("BackToHome")}>
@@ -178,7 +179,7 @@ export default function Header({ sidebarCollapsed, onToggleSidebar }: HeaderProp
                 <Link to="/dashboard" className="admin-brand">
                     <img src="/dashboard/logo.png" alt="" />
                     <span>
-                        <strong>{t("nezha")}</strong>
+                        <strong>{siteName}</strong>
                         <small>{t("Navigation.ControlCenter")}</small>
                     </span>
                 </Link>
