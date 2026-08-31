@@ -21,7 +21,15 @@ export enum FetcherMethod {
     DELETE = "DELETE",
 }
 
+export const AUTH_EXPIRED_EVENT = "nezha:auth-expired"
+
 let lastestRefreshTokenAt = 0
+
+function notifyAuthExpired() {
+    if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT))
+    }
+}
 
 function readCookie(name: string): string | undefined {
     if (typeof document === "undefined") return undefined
@@ -53,10 +61,12 @@ export async function fetcher<T>(method: FetcherMethod, path: string, data?: any
         })
     }
     if (!response.ok) {
+        if (response.status === 401) notifyAuthExpired()
         throw new Error(response.statusText)
     }
     const responseData: CommonResponse<T> = await response.json()
     if (!responseData.success) {
+        if (responseData.error?.startsWith("ApiErrorUnauthorized")) notifyAuthExpired()
         throw new Error(responseData.error)
     }
 
@@ -73,5 +83,9 @@ export async function fetcher<T>(method: FetcherMethod, path: string, data?: any
 }
 
 export async function swrFetcher<T>(input: string | URL | globalThis.Request, init?: RequestInit) {
-    return fetcher<T>((init?.method as FetcherMethod) || FetcherMethod.GET, input.toString(), init?.body)
+    return fetcher<T>(
+        (init?.method as FetcherMethod) || FetcherMethod.GET,
+        input.toString(),
+        init?.body,
+    )
 }

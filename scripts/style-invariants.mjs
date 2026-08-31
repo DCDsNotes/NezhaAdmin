@@ -28,6 +28,9 @@ const rootRoute = read("src/routes/root.tsx")
 const adminHeader = read("src/components/header.tsx")
 const siteName = read("src/lib/site-name.ts")
 const indexHtml = read("index.html")
+const api = read("src/api/api.ts")
+const auth = read("src/hooks/useAuth.tsx")
+const login = read("src/routes/login.tsx")
 const formPrimitives = ["button.tsx", "input.tsx", "textarea.tsx", "select.tsx"].map((file) =>
     read(`src/components/ui/${file}`),
 )
@@ -84,6 +87,32 @@ check(
         rootRoute.includes("siteName={siteName}") &&
         adminHeader.includes("<strong>{siteName}</strong>") &&
         indexHtml.includes("<title>节点监控</title>"),
+)
+check(
+    "RM-9 auth",
+    "expired sessions clear the profile and replace the route with the login page",
+    api.includes('AUTH_EXPIRED_EVENT = "nezha:auth-expired"') &&
+        api.includes("response.status === 401") &&
+        api.includes('responseData.error?.startsWith("ApiErrorUnauthorized")') &&
+        api.includes("window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT))") &&
+        auth.includes("window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired)") &&
+        auth.includes("setProfile(undefined)") &&
+        auth.includes('navigate("/dashboard/login", { replace: true })') &&
+        auth.includes("window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired)"),
+)
+check(
+    "RM-9 login",
+    "login credentials start empty without admin placeholders",
+    login.includes('username: ""') &&
+        login.includes('password: ""') &&
+        !login.includes('placeholder="admin"'),
+)
+check(
+    "RM-5A settings",
+    "settings footer keeps the option and submit button on one centered row",
+    /\[data-settings-footer\]\s*\{[\s\S]{0,160}?align-items: center;[\s\S]{0,100}?flex-wrap: nowrap;/.test(
+        css,
+    ) && !/\[data-settings-footer\]\s*\{[\s\S]{0,100}?flex-direction: column;/.test(css),
 )
 
 // ---------- RM-1 令牌层 ----------

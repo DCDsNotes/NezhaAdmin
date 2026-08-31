@@ -1,3 +1,4 @@
+import { AUTH_EXPIRED_EVENT } from "@/api/api"
 import { getProfile, login as loginRequest } from "@/api/user"
 import { AuthContextProps } from "@/types"
 import { createContext, useContext, useEffect, useMemo } from "react"
@@ -18,6 +19,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const profile = useMainStore((store) => store.profile)
     const setProfile = useMainStore((store) => store.setProfile)
     const { t } = useTranslation()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const handleAuthExpired = () => {
+            setProfile(undefined)
+            if (window.location.pathname !== "/dashboard/login") {
+                navigate("/dashboard/login", { replace: true })
+            }
+        }
+
+        window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired)
+        return () => window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired)
+    }, [navigate, setProfile])
 
     useEffect(() => {
         ;(async () => {
@@ -25,13 +39,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 const user = await getProfile()
                 user.role = user.role || 0
                 setProfile(user)
-            } catch (error: any) {
+            } catch {
                 setProfile(undefined)
             }
         })()
-    }, [])
-
-    const navigate = useNavigate()
+    }, [setProfile])
 
     const login = async (username: string, password: string) => {
         try {

@@ -75,7 +75,7 @@ function Login() {
                             <FormItem>
                                 <FormLabel>{t("Username")}</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="admin" autoComplete="username" {...field} />
+                                    <Input autoComplete="username" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -90,7 +90,6 @@ function Login() {
                                 <FormControl>
                                     <Input
                                         type="password"
-                                        placeholder="admin"
                                         autoComplete="current-password"
                                         {...field}
                                     />

@@ -758,8 +758,17 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: nowrap;
     gap: 1rem;
     padding: 0.25rem 0.125rem 0;
+}
+
+.admin-content [data-settings-footer] > [data-settings-span="full"] {
+    min-width: 0;
+}
+
+.admin-content [data-settings-footer] > button {
+    flex: 0 0 auto;
 }
 
 @media (min-width: 56.25rem) {
@@ -985,11 +994,6 @@
 
     .admin-content [data-settings-grid] {
         padding: 1rem;
-    }
-
-    .admin-content [data-settings-footer] {
-        align-items: flex-start;
-        flex-direction: column;
     }
 
     .admin-content [data-slot="table-frame"] {
