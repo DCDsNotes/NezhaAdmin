@@ -83,9 +83,15 @@ type HeaderProps = {
     sidebarCollapsed: boolean
     onToggleSidebar: () => void
     siteName: string
+    forceGuest?: boolean
 }
 
-export default function Header({ sidebarCollapsed, onToggleSidebar, siteName }: HeaderProps) {
+export default function Header({
+    sidebarCollapsed,
+    onToggleSidebar,
+    siteName,
+    forceGuest = false,
+}: HeaderProps) {
     const { t } = useTranslation()
     const { logout } = useAuth()
     const profile = useMainStore((store) => store.profile)
@@ -146,7 +152,7 @@ export default function Header({ sidebarCollapsed, onToggleSidebar, siteName }: 
         location.pathname === item.href || Boolean(item.matches?.includes(location.pathname))
     const currentItem = allItems.find(isItemActive)
 
-    if (!profile) {
+    if (forceGuest || !profile) {
         return (
             <header className="admin-topbar admin-topbar--guest">
                 <Link to="/dashboard/login" className="admin-mobile-brand">

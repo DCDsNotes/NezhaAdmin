@@ -19,12 +19,17 @@ function readSidebarCollapsed() {
     }
 }
 
-export default function Root() {
+type RootProps = {
+    forceGuest?: boolean
+}
+
+export default function Root({ forceGuest = false }: RootProps) {
     const { t } = useTranslation()
     const { data: settingData, error } = useSetting()
     const profile = useMainStore((store) => store.profile)
     const [sidebarCollapsed, setSidebarCollapsed] = useState(readSidebarCollapsed)
     const siteName = resolveSiteName(settingData?.config?.site_name)
+    const guestLayout = forceGuest || !profile
 
     useEffect(() => {
         localStorage.setItem("nezha-admin-sidebar-collapsed", String(sidebarCollapsed))
@@ -55,12 +60,13 @@ export default function Root() {
     return (
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <section
-                className={`admin-shell ${profile ? "admin-shell--authenticated" : "admin-shell--guest"} ${sidebarCollapsed ? "admin-shell--collapsed" : ""}`}
+                className={`admin-shell ${guestLayout ? "admin-shell--guest" : "admin-shell--authenticated"} ${sidebarCollapsed ? "admin-shell--collapsed" : ""}`}
             >
                 <Header
                     sidebarCollapsed={sidebarCollapsed}
                     onToggleSidebar={() => setSidebarCollapsed((collapsed) => !collapsed)}
                     siteName={siteName}
+                    forceGuest={forceGuest}
                 />
                 <div className="admin-workspace">
                     <main className="admin-content">

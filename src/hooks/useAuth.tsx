@@ -1,7 +1,7 @@
 import { AUTH_EXPIRED_EVENT } from "@/api/api"
 import { getProfile, login as loginRequest } from "@/api/user"
 import { AuthContextProps } from "@/types"
-import { createContext, useContext, useEffect, useMemo } from "react"
+import { createContext, useCallback, useContext, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
@@ -45,24 +45,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         })()
     }, [setProfile])
 
-    const login = async (username: string, password: string) => {
-        try {
-            await loginRequest(username, password)
-            const user = await getProfile()
-            user.role = user.role || 0
-            setProfile(user)
-            navigate("/dashboard")
-        } catch (error: any) {
-            const msg = error?.message
-            if (msg === "ApiErrorUnauthorized" || msg === "Unauthorized") {
-                toast(t("InvalidUsernameOrPassword"))
-            } else {
-                toast(msg || t("NetworkError"))
+    const login = useCallback(
+        async (username: string, password: string) => {
+            try {
+                await loginRequest(username, password)
+                const user = await getProfile()
+                user.role = user.role || 0
+                setProfile(user)
+                navigate("/dashboard")
+            } catch (error: any) {
+                const msg = error?.message
+                if (msg === "ApiErrorUnauthorized" || msg === "Unauthorized") {
+                    toast(t("InvalidUsernameOrPassword"))
+                } else {
+                    toast(msg || t("NetworkError"))
+                }
             }
-        }
-    }
+        },
+        [navigate, setProfile, t],
+    )
 
-    const loginOauth2 = async () => {
+    const loginOauth2 = useCallback(async () => {
         try {
             const user = await getProfile()
             user.role = user.role || 0
@@ -73,9 +76,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         } finally {
             window.history.replaceState({}, document.title, window.location.pathname)
         }
-    }
+    }, [navigate, setProfile])
 
-    const logout = () => {
+    const logout = useCallback(() => {
         document.cookie.split(";").forEach(function (c) {
             document.cookie = c
                 .replace(/^ +/, "")
@@ -83,7 +86,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         })
         setProfile(undefined)
         navigate("/dashboard/login", { replace: true })
-    }
+    }, [navigate, setProfile])
 
     const value = useMemo(
         () => ({
@@ -92,7 +95,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             loginOauth2,
             logout,
         }),
-        [profile],
+        [login, loginOauth2, logout, profile],
     )
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

@@ -31,6 +31,8 @@ const indexHtml = read("index.html")
 const api = read("src/api/api.ts")
 const auth = read("src/hooks/useAuth.tsx")
 const login = read("src/routes/login.tsx")
+const routes = read("src/main.tsx")
+const protectedRoute = read("src/routes/protect.tsx")
 const formPrimitives = ["button.tsx", "input.tsx", "textarea.tsx", "select.tsx"].map((file) =>
     read(`src/components/ui/${file}`),
 )
@@ -106,6 +108,17 @@ check(
     login.includes('username: ""') &&
         login.includes('password: ""') &&
         !login.includes('placeholder="admin"'),
+)
+check(
+    "RM-9 login",
+    "login route owns a forced guest shell outside the protected dashboard tree",
+    routes.indexOf('path: "/dashboard/login"') < routes.indexOf('path: "/dashboard"') &&
+        routes.includes("<Root forceGuest />") &&
+        rootRoute.includes("const guestLayout = forceGuest || !profile") &&
+        rootRoute.includes("forceGuest={forceGuest}") &&
+        adminHeader.includes("if (forceGuest || !profile)") &&
+        !/<Navigate[\s\S]{0,120}\{children\}/.test(protectedRoute) &&
+        protectedRoute.includes('<Navigate to="/dashboard/login" replace />'),
 )
 check(
     "RM-5A settings",
