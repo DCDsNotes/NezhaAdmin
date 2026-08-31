@@ -29,8 +29,13 @@ const adminHeader = read("src/components/header.tsx")
 const siteName = read("src/lib/site-name.ts")
 const indexHtml = read("index.html")
 const api = read("src/api/api.ts")
+const oauth = read("src/api/oauth2.ts")
 const auth = read("src/hooks/useAuth.tsx")
 const login = read("src/routes/login.tsx")
+const safeRedirect = read("src/lib/safe-redirect.ts")
+const profileRoute = read("src/routes/profile.tsx")
+const profileForm = read("src/components/profile.tsx")
+const userForm = read("src/components/user.tsx")
 const routes = read("src/main.tsx")
 const protectedRoute = read("src/routes/protect.tsx")
 const formPrimitives = ["button.tsx", "input.tsx", "textarea.tsx", "select.tsx"].map((file) =>
@@ -111,14 +116,43 @@ check(
 )
 check(
     "RM-9 login",
-    "login route owns a forced guest shell outside the protected dashboard tree",
-    routes.indexOf('path: "/dashboard/login"') < routes.indexOf('path: "/dashboard"') &&
+    "login and protected routes share one authentication provider with explicit pending states",
+    routes.match(/<AuthProvider>/g)?.length === 1 &&
+        routes.includes("<Outlet />") &&
+        routes.includes('path: "login"') &&
+        routes.includes("<GuestRoute>") &&
         routes.includes("<Root forceGuest />") &&
         rootRoute.includes("const guestLayout = forceGuest || !profile") &&
         rootRoute.includes("forceGuest={forceGuest}") &&
         adminHeader.includes("if (forceGuest || !profile)") &&
-        !/<Navigate[\s\S]{0,120}\{children\}/.test(protectedRoute) &&
+        protectedRoute.includes('status === "checking"') &&
+        protectedRoute.includes("export const GuestRoute") &&
         protectedRoute.includes('<Navigate to="/dashboard/login" replace />'),
+)
+check(
+    "RM-9 auth",
+    "authentication transitions reject stale checks and default unknown roles to least privilege",
+    auth.includes("const validationVersion = useRef(0)") &&
+        auth.includes("validationVersion.current !== version") &&
+        auth.includes("role: user.role === 0 ? 0 : 1") &&
+        auth.includes('["nz-jwt", "nz-csrf"]') &&
+        !auth.includes('document.cookie.split(";")'),
+)
+check(
+    "RM-9 security",
+    "session refresh and OAuth boundaries use CSRF, POST, encoded paths, and safe redirect schemes",
+    api.includes("method: FetcherMethod.POST") &&
+        api.includes('headers["X-CSRF-Token"] = csrfToken') &&
+        api.includes('readCookie("nz-jwt")') &&
+        api.includes('pathname !== "/api/v1/login"') &&
+        oauth.match(/encodeURIComponent\(provider\)/g)?.length === 2 &&
+        login.includes("getSafeHttpRedirect(redirectUrl.redirect)") &&
+        profileRoute.includes("getSafeHttpRedirect(redirectUrl.redirect)") &&
+        safeRedirect.includes('url.protocol !== "https:"') &&
+        safeRedirect.includes('url.protocol !== "http:"') &&
+        profileForm.match(/type="password"/g)?.length === 2 &&
+        /name="username"[\s\S]{0,500}?autoComplete="username"/.test(userForm) &&
+        /name="password"[\s\S]{0,500}?type="password"/.test(userForm),
 )
 check(
     "RM-5A settings",

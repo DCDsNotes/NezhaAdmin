@@ -8,6 +8,7 @@ import { useMainStore } from "@/hooks/useMainStore"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { useServer } from "@/hooks/useServer"
 import useSetting from "@/hooks/useSetting"
+import { getSafeHttpRedirect } from "@/lib/safe-redirect"
 import { Boxes, Server } from "lucide-react"
 import { useEffect } from "react"
 import { toast } from "sonner"
@@ -17,21 +18,28 @@ export default function ProfilePage() {
     const { servers, serverGroups } = useServer()
     const { data: settingData } = useSetting()
     const isDesktop = useMediaQuery("(min-width: 55.625rem)")
+    const oauth2Callback = new URLSearchParams(window.location.search).get("oauth2")
 
     useEffect(() => {
-        const oauth2 = new URLSearchParams(window.location.search).get("oauth2")
-        if (oauth2) {
-            getProfile().then((profile) => {
-                setProfile(profile)
+        if (!oauth2Callback) return
+
+        let active = true
+        window.history.replaceState({}, document.title, window.location.pathname)
+        getProfile()
+            .then((profile) => {
+                if (active) setProfile({ ...profile, role: profile.role === 0 ? 0 : 1 })
             })
-            window.history.replaceState({}, document.title, window.location.pathname)
+            .catch((error: Error) => toast.error(error.message))
+
+        return () => {
+            active = false
         }
-    }, [window.location.search])
+    }, [oauth2Callback, setProfile])
 
     const bindO2 = async (provider: string) => {
         try {
             const redirectUrl = await getOauth2RedirectURL(provider, Oauth2RequestType.BIND)
-            window.location.href = redirectUrl.redirect!
+            window.location.assign(getSafeHttpRedirect(redirectUrl.redirect))
         } catch (error: any) {
             toast.error(error.message)
         }
@@ -41,7 +49,7 @@ export default function ProfilePage() {
         try {
             await unbindOauth2(provider)
             const profile = await getProfile()
-            setProfile(profile)
+            setProfile({ ...profile, role: profile.role === 0 ? 0 : 1 })
         } catch (error: any) {
             toast.error(error.message)
         }

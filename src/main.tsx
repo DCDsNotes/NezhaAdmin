@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client"
-import { RouterProvider, createBrowserRouter } from "react-router-dom"
+import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom"
 
 import { TerminalPage } from "./components/terminal"
 import ErrorPage from "./error-page"
@@ -17,7 +17,7 @@ import NotificationPage from "./routes/notification"
 import NotificationGroupPage from "./routes/notification-group"
 import OnlineUserPage from "./routes/online-user"
 import ProfilePage from "./routes/profile"
-import ProtectedRoute from "./routes/protect"
+import ProtectedRoute, { GuestRoute } from "./routes/protect"
 import Root from "./routes/root"
 import ServerPage from "./routes/server"
 import ServerGroupPage from "./routes/server-group"
@@ -28,126 +28,132 @@ import WAFPage from "./routes/waf"
 
 const router = createBrowserRouter([
     {
-        path: "/dashboard/login",
-        element: (
-            <AuthProvider>
-                <Root forceGuest />
-            </AuthProvider>
-        ),
-        errorElement: <ErrorPage />,
-        children: [
-            {
-                index: true,
-                element: <LoginPage />,
-            },
-        ],
-    },
-    {
         path: "/dashboard",
         element: (
             <AuthProvider>
-                <ProtectedRoute>
-                    <Root />
-                </ProtectedRoute>
+                <Outlet />
             </AuthProvider>
         ),
         errorElement: <ErrorPage />,
         children: [
             {
-                path: "/dashboard",
+                path: "login",
                 element: (
-                    <ServerProvider withServerGroup>
-                        <ServerPage />
-                    </ServerProvider>
+                    <GuestRoute>
+                        <Root forceGuest />
+                    </GuestRoute>
                 ),
+                children: [
+                    {
+                        index: true,
+                        element: <LoginPage />,
+                    },
+                ],
             },
             {
-                path: "/dashboard/service",
                 element: (
-                    <ServerProvider withServer>
-                        <NotificationProvider withNotifierGroup>
-                            <ServicePage />
-                        </NotificationProvider>
-                    </ServerProvider>
+                    <ProtectedRoute>
+                        <Root />
+                    </ProtectedRoute>
                 ),
-            },
-            {
-                path: "/dashboard/cron",
-                element: (
-                    <ServerProvider withServer>
-                        <NotificationProvider withNotifierGroup>
-                            <CronPage />
-                        </NotificationProvider>
-                    </ServerProvider>
-                ),
-            },
-            {
-                path: "/dashboard/alert-rule",
-                element: (
-                    <NotificationProvider withNotifierGroup>
-                        <AlertRulePage />
-                    </NotificationProvider>
-                ),
-            },
-            {
-                path: "/dashboard/ddns",
-                element: <DDNSPage />,
-            },
-            {
-                path: "/dashboard/nat",
-                element: <NATPage />,
-            },
-            {
-                path: "/dashboard/server-group",
-                element: (
-                    <ServerProvider withServer>
-                        <ServerGroupPage />
-                    </ServerProvider>
-                ),
-            },
-            {
-                path: "/dashboard/notification-group",
-                element: (
-                    <NotificationProvider withNotifier>
-                        <NotificationGroupPage />
-                    </NotificationProvider>
-                ),
-            },
-            {
-                path: "/dashboard/terminal/:id",
-                element: <TerminalPage />,
-            },
-            {
-                path: "/dashboard/notification",
-                element: (
-                    <NotificationProvider withNotifierGroup>
-                        <NotificationPage />
-                    </NotificationProvider>
-                ),
-            },
-            {
-                path: "/dashboard/profile",
-                element: (
-                    <ServerProvider withServer withServerGroup>
-                        <ProfilePage />
-                    </ServerProvider>
-                ),
-            },
-            {
-                path: "/dashboard/settings",
-                element: <SettingsPage />,
-            },
-            {
-                path: "/dashboard/settings/user",
-                element: <UserPage />,
-            },
-            {
-                path: "/dashboard/settings/waf",
-                element: <WAFPage />,
-            },
-            {
-                path: "/dashboard/settings/online-user",
-                element: <OnlineUserPage />,
+                children: [
+                    {
+                        index: true,
+                        element: (
+                            <ServerProvider withServerGroup>
+                                <ServerPage />
+                            </ServerProvider>
+                        ),
+                    },
+                    {
+                        path: "service",
+                        element: (
+                            <ServerProvider withServer>
+                                <NotificationProvider withNotifierGroup>
+                                    <ServicePage />
+                                </NotificationProvider>
+                            </ServerProvider>
+                        ),
+                    },
+                    {
+                        path: "cron",
+                        element: (
+                            <ServerProvider withServer>
+                                <NotificationProvider withNotifierGroup>
+                                    <CronPage />
+                                </NotificationProvider>
+                            </ServerProvider>
+                        ),
+                    },
+                    {
+                        path: "alert-rule",
+                        element: (
+                            <NotificationProvider withNotifierGroup>
+                                <AlertRulePage />
+                            </NotificationProvider>
+                        ),
+                    },
+                    {
+                        path: "ddns",
+                        element: <DDNSPage />,
+                    },
+                    {
+                        path: "nat",
+                        element: <NATPage />,
+                    },
+                    {
+                        path: "server-group",
+                        element: (
+                            <ServerProvider withServer>
+                                <ServerGroupPage />
+                            </ServerProvider>
+                        ),
+                    },
+                    {
+                        path: "notification-group",
+                        element: (
+                            <NotificationProvider withNotifier>
+                                <NotificationGroupPage />
+                            </NotificationProvider>
+                        ),
+                    },
+                    {
+                        path: "terminal/:id",
+                        element: <TerminalPage />,
+                    },
+                    {
+                        path: "notification",
+                        element: (
+                            <NotificationProvider withNotifierGroup>
+                                <NotificationPage />
+                            </NotificationProvider>
+                        ),
+                    },
+                    {
+                        path: "profile",
+                        element: (
+                            <ServerProvider withServer withServerGroup>
+                                <ProfilePage />
+                            </ServerProvider>
+                        ),
+                    },
+                    {
+                        path: "settings",
+                        element: <SettingsPage />,
+                    },
+                    {
+                        path: "settings/user",
+                        element: <UserPage />,
+                    },
+                    {
+                        path: "settings/waf",
+                        element: <WAFPage />,
+                    },
+                    {
+                        path: "settings/online-user",
+                        element: <OnlineUserPage />,
+                    },
+                ],
             },
         ],
     },

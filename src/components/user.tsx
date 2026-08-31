@@ -99,7 +99,7 @@ export const UserCard: React.FC<UserCardProps> = ({ mutate }) => {
                                         <FormItem>
                                             <FormLabel>{t("Username")}</FormLabel>
                                             <FormControl>
-                                                <Input {...field} />
+                                                <Input autoComplete="username" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -112,7 +112,11 @@ export const UserCard: React.FC<UserCardProps> = ({ mutate }) => {
                                         <FormItem>
                                             <FormLabel>{t("Password")}</FormLabel>
                                             <FormControl>
-                                                <Input {...field} />
+                                                <Input
+                                                    type="password"
+                                                    autoComplete="new-password"
+                                                    {...field}
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>

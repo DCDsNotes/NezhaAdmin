@@ -109,7 +109,11 @@ export const ProfileCard = ({ className }: { className: string }) => {
                                         <FormItem>
                                             <FormLabel>{t("OriginalPassword")}</FormLabel>
                                             <FormControl>
-                                                <Input autoComplete="current-password" {...field} />
+                                                <Input
+                                                    type="password"
+                                                    autoComplete="current-password"
+                                                    {...field}
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -122,7 +126,11 @@ export const ProfileCard = ({ className }: { className: string }) => {
                                         <FormItem>
                                             <FormLabel>{t("NewPassword")}</FormLabel>
                                             <FormControl>
-                                                <Input {...field} />
+                                                <Input
+                                                    type="password"
+                                                    autoComplete="new-password"
+                                                    {...field}
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>

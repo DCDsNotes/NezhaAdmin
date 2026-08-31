@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/hooks/useAuth"
 import useSetting from "@/hooks/useSetting"
+import { getSafeHttpRedirect } from "@/lib/safe-redirect"
 import { zodResolver } from "@hookform/resolvers/zod"
 import i18next from "i18next"
 import { useEffect } from "react"
@@ -57,7 +58,7 @@ function Login() {
     async function loginWith(provider: string) {
         try {
             const redirectUrl = await getOauth2RedirectURL(provider, Oauth2RequestType.LOGIN)
-            window.location.assign(redirectUrl.redirect!)
+            window.location.assign(getSafeHttpRedirect(redirectUrl.redirect))
         } catch (error: any) {
             toast.error(error.message)
         }

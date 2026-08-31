@@ -23,7 +23,7 @@ export enum FetcherMethod {
 
 export const AUTH_EXPIRED_EVENT = "nezha:auth-expired"
 
-let lastestRefreshTokenAt = 0
+let latestRefreshTokenAt = 0
 
 function notifyAuthExpired() {
     if (typeof window !== "undefined") {
@@ -38,7 +38,40 @@ function readCookie(name: string): string | undefined {
         .split(";")
         .map((part) => part.trim())
         .find((part) => part.startsWith(prefix))
-    return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : undefined
+    if (!cookie) return undefined
+    try {
+        return decodeURIComponent(cookie.slice(prefix.length))
+    } catch {
+        return undefined
+    }
+}
+
+function shouldNotifyAuthExpired(path: string) {
+    return new URL(path, window.location.origin).pathname !== "/api/v1/login"
+}
+
+async function refreshSession() {
+    const csrfToken = readCookie("nz-csrf")
+    const headers: Record<string, string> = {}
+    if (csrfToken) headers["X-CSRF-Token"] = csrfToken
+
+    try {
+        const response = await fetch("/api/v1/refresh-token", {
+            method: FetcherMethod.POST,
+            headers,
+        })
+        if (response.status === 401) {
+            notifyAuthExpired()
+            return
+        }
+
+        const responseData = (await response.json()) as CommonResponse<unknown>
+        if (!responseData.success && responseData.error?.startsWith("ApiErrorUnauthorized")) {
+            notifyAuthExpired()
+        }
+    } catch {
+        latestRefreshTokenAt = 0
+    }
 }
 
 export async function fetcher<T>(method: FetcherMethod, path: string, data?: any): Promise<T> {
@@ -61,22 +94,27 @@ export async function fetcher<T>(method: FetcherMethod, path: string, data?: any
         })
     }
     if (!response.ok) {
-        if (response.status === 401) notifyAuthExpired()
+        if (response.status === 401 && shouldNotifyAuthExpired(path)) notifyAuthExpired()
         throw new Error(response.statusText)
     }
     const responseData: CommonResponse<T> = await response.json()
     if (!responseData.success) {
-        if (responseData.error?.startsWith("ApiErrorUnauthorized")) notifyAuthExpired()
+        if (
+            responseData.error?.startsWith("ApiErrorUnauthorized") &&
+            shouldNotifyAuthExpired(path)
+        ) {
+            notifyAuthExpired()
+        }
         throw new Error(responseData.error)
     }
 
     // auto refresh token
     if (
-        document.cookie &&
-        (!lastestRefreshTokenAt || Date.now() - lastestRefreshTokenAt > 1000 * 60 * 60)
+        readCookie("nz-jwt") &&
+        (!latestRefreshTokenAt || Date.now() - latestRefreshTokenAt > 1000 * 60 * 60)
     ) {
-        lastestRefreshTokenAt = Date.now()
-        fetch("/api/v1/refresh-token")
+        latestRefreshTokenAt = Date.now()
+        void refreshSession()
     }
 
     return responseData.data
