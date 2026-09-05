@@ -23,6 +23,7 @@ const css = read("src/index.css")
 const header = read("src/components/table-page-header.tsx")
 const table = read("src/components/ui/table.tsx")
 const tabs = read("src/components/ui/tabs.tsx")
+const dialog = read("src/components/ui/dialog.tsx")
 const settings = read("src/routes/settings.tsx")
 const rootRoute = read("src/routes/root.tsx")
 const adminHeader = read("src/components/header.tsx")
@@ -36,6 +37,7 @@ const safeRedirect = read("src/lib/safe-redirect.ts")
 const profileRoute = read("src/routes/profile.tsx")
 const profileForm = read("src/components/profile.tsx")
 const userForm = read("src/components/user.tsx")
+const serverForm = read("src/components/server.tsx")
 const routes = read("src/main.tsx")
 const protectedRoute = read("src/routes/protect.tsx")
 const formPrimitives = ["button.tsx", "input.tsx", "textarea.tsx", "select.tsx"].map((file) =>
@@ -76,6 +78,25 @@ check(
         /button\[role="checkbox"\]\[data-state="checked"\]\s*\{[\s\S]{0,180}?background: #181a1d/.test(
             css,
         ),
+)
+check(
+    "RM-5A server dialog",
+    "server editor uses one bounded scroll container at short viewport heights",
+    serverForm.includes("data-server-dialog") &&
+        serverForm.includes("data-server-dialog-scroll") &&
+        serverForm.includes('scrollMode="contained"') &&
+        serverForm.includes('className="max-h-[calc(100dvh-5rem)] p-3"') &&
+        dialog.includes('scrollMode?: "contained" | "dialog"') &&
+        dialog.includes('scrollMode === "dialog"') &&
+        dialog.includes(': "overflow-hidden"'),
+)
+check(
+    "RM-5A server dialog",
+    "public-note field actions wrap without squeezing their labels",
+    serverForm.includes("data-public-note-field-header") &&
+        serverForm.includes("shrink-0 whitespace-nowrap text-xs") &&
+        serverForm.includes("flex min-w-0 flex-wrap items-center justify-end gap-2") &&
+        serverForm.includes("grid min-w-0 gap-3 sm:grid-cols-2"),
 )
 check(
     "RM-5A mobile table",

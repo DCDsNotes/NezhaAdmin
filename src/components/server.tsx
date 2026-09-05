@@ -50,7 +50,7 @@ import { asOptionalField } from "@/lib/utils"
 import { ModelServer } from "@/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { HelpCircle } from "lucide-react"
-import { useState } from "react"
+import { type ReactNode, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
@@ -61,6 +61,17 @@ interface ServerCardProps {
     data: ModelServer
     mutate: KeyedMutator<ModelServer[]>
 }
+
+const PublicNoteFieldHeader = ({ children, label }: { children?: ReactNode; label: ReactNode }) => (
+    <div data-public-note-field-header className="flex min-h-7 flex-wrap items-center gap-2">
+        <Label className="shrink-0 whitespace-nowrap text-xs">{label}</Label>
+        {children && (
+            <div className="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-2">
+                {children}
+            </div>
+        )}
+    </div>
+)
 
 const serverFormSchema = z.object({
     name: z.string().min(1),
@@ -93,7 +104,7 @@ const serverFormSchema = z.object({
                 try {
                     JSON.parse(val)
                     return true
-                } catch (e) {
+                } catch {
                     return false
                 }
             },
@@ -220,11 +231,13 @@ export const ServerCard: React.FC<ServerCardProps> = ({ data, mutate }) => {
                 <IconButton variant="outline" icon="edit" />
             </DialogTrigger>
             <DialogContent
-                className="sm:max-w-xl"
+                data-server-dialog
+                scrollMode="contained"
+                className="sm:max-w-xl min-[56.25rem]:!max-w-xl"
                 onInteractOutside={(e) => e.preventDefault()}
                 onEscapeKeyDown={(e) => e.preventDefault()}
             >
-                <ScrollArea className="max-h-[calc(100dvh-5rem)] p-3">
+                <ScrollArea data-server-dialog-scroll className="max-h-[calc(100dvh-5rem)] p-3">
                     <div className="items-center mx-1">
                         <DialogHeader>
                             <DialogTitle>{t("EditServer")}</DialogTitle>
@@ -418,25 +431,26 @@ export const ServerCard: React.FC<ServerCardProps> = ({ data, mutate }) => {
                                                 <div className="text-sm font-medium opacity-80">
                                                     {t("PublicNote.Billing")}
                                                 </div>
-                                                <div className="grid gap-3 sm:grid-cols-2">
-                                                    <div className="space-y-1">
-                                                        <Label className="text-xs">
-                                                            {t("PublicNote.StartDate")}
-                                                        </Label>
-                                                        {/* Add 'Clear' button to allow removing the date */}
-                                                        <Button
-                                                            type="button"
-                                                            variant="outline"
-                                                            className="text-xs px-2 py-0 h-auto bg-gray-200 dark:bg-gray-700 ml-2"
-                                                            onClick={() =>
-                                                                patchPublicNote(
-                                                                    "billingDataMod.startDate",
-                                                                    undefined,
-                                                                )
-                                                            }
+                                                <div className="grid min-w-0 gap-3 sm:grid-cols-2">
+                                                    <div className="min-w-0 space-y-1">
+                                                        <PublicNoteFieldHeader
+                                                            label={t("PublicNote.StartDate")}
                                                         >
-                                                            {t("PublicNote.ClearDate") ?? "Clear"}
-                                                        </Button>
+                                                            <Button
+                                                                type="button"
+                                                                variant="outline"
+                                                                className="h-auto bg-gray-200 px-2 py-0 text-xs dark:bg-gray-700"
+                                                                onClick={() =>
+                                                                    patchPublicNote(
+                                                                        "billingDataMod.startDate",
+                                                                        undefined,
+                                                                    )
+                                                                }
+                                                            >
+                                                                {t("PublicNote.ClearDate") ??
+                                                                    "Clear"}
+                                                            </Button>
+                                                        </PublicNoteFieldHeader>
                                                         <Popover>
                                                             <PopoverTrigger asChild>
                                                                 <Button
@@ -501,15 +515,14 @@ export const ServerCard: React.FC<ServerCardProps> = ({ data, mutate }) => {
                                                             </p>
                                                         )}
                                                     </div>
-                                                    <div className="space-y-1">
-                                                        <div className="flex items-center gap-2">
-                                                            <Label className="text-xs">
-                                                                {t("PublicNote.EndDate")}
-                                                            </Label>
+                                                    <div className="min-w-0 space-y-1">
+                                                        <PublicNoteFieldHeader
+                                                            label={t("PublicNote.EndDate")}
+                                                        >
                                                             <Button
                                                                 type="button"
                                                                 variant="outline"
-                                                                className="text-xs px-2 py-0 h-auto bg-gray-200 dark:bg-gray-700"
+                                                                className="h-auto bg-gray-200 px-2 py-0 text-xs dark:bg-gray-700"
                                                                 onClick={toggleEndNoExpiryLocal}
                                                             >
                                                                 {publicNoteObj.billingDataMod
@@ -522,7 +535,7 @@ export const ServerCard: React.FC<ServerCardProps> = ({ data, mutate }) => {
                                                             <Button
                                                                 type="button"
                                                                 variant="outline"
-                                                                className="text-xs px-2 py-0 h-auto bg-gray-200 dark:bg-gray-700"
+                                                                className="h-auto bg-gray-200 px-2 py-0 text-xs dark:bg-gray-700"
                                                                 onClick={() =>
                                                                     patchPublicNote(
                                                                         "billingDataMod.endDate",
@@ -533,7 +546,7 @@ export const ServerCard: React.FC<ServerCardProps> = ({ data, mutate }) => {
                                                                 {t("PublicNote.ClearDate") ??
                                                                     "Clear"}
                                                             </Button>
-                                                        </div>
+                                                        </PublicNoteFieldHeader>
                                                         <Popover>
                                                             <PopoverTrigger asChild>
                                                                 <Button
