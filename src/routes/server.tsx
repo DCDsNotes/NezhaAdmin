@@ -20,13 +20,26 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { IconButton } from "@/components/xui/icon-button"
 import { useServer } from "@/hooks/useServer"
-import { joinIP } from "@/lib/utils"
 import { ModelServerTaskResponse, ModelServer as Server } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import useSWR from "swr"
+
+const SERVER_COLUMN_WIDTHS = {
+    select: "3.5rem",
+    id: "6rem",
+    name: "9rem",
+    groups: "5rem",
+    ip: "17.5rem",
+    host_version: "5rem",
+    enableDDNS: "5.5rem",
+    hideForGuest: "6.5rem",
+    note: "5rem",
+    uuid: "5rem",
+    actions: "11rem",
+} as const
 
 export default function ServerPage() {
     const { t } = useTranslation()
@@ -75,10 +88,15 @@ export default function ServerPage() {
             id: "ip",
             header: "IP",
             cell: ({ row }) => {
-                const s = row.original
+                const ip = row.original.geoip?.ip
+                const addresses = [ip?.ipv4_addr, ip?.ipv6_addr].filter(
+                    (address): address is string => Boolean(address),
+                )
                 return (
-                    <div className="max-w-24 whitespace-normal break-words">
-                        {joinIP(s.geoip?.ip)}
+                    <div data-server-ip-list className="flex flex-col gap-1 whitespace-nowrap">
+                        {addresses.map((address) => (
+                            <span key={address}>{address}</span>
+                        ))}
                     </div>
                 )
             },
@@ -221,8 +239,9 @@ export default function ServerPage() {
             <DataTable
                 table={table}
                 isLoading={isLoading}
-                className="min-w-[60rem]"
+                className="min-w-[79rem]"
                 headerClassName="sticky top-0 bg-background z-10"
+                columnWidths={SERVER_COLUMN_WIDTHS}
             />
         </div>
     )

@@ -22,6 +22,7 @@ const read = (rel) => readFileSync(join(root, rel), "utf8")
 const css = read("src/index.css")
 const header = read("src/components/table-page-header.tsx")
 const table = read("src/components/ui/table.tsx")
+const dataTable = read("src/components/data-table.tsx")
 const tabs = read("src/components/ui/tabs.tsx")
 const dialog = read("src/components/ui/dialog.tsx")
 const settings = read("src/routes/settings.tsx")
@@ -38,6 +39,7 @@ const profileRoute = read("src/routes/profile.tsx")
 const profileForm = read("src/components/profile.tsx")
 const userForm = read("src/components/user.tsx")
 const serverForm = read("src/components/server.tsx")
+const serverRoute = read("src/routes/server.tsx")
 const routes = read("src/main.tsx")
 const protectedRoute = read("src/routes/protect.tsx")
 const formPrimitives = ["button.tsx", "input.tsx", "textarea.tsx", "select.tsx"].map((file) =>
@@ -115,6 +117,30 @@ check(
         /@media \(max-width: 56\.1875rem\)\s*\{[\s\S]*?tbody tr\s*\{[\s\S]{0,180}?display: grid/.test(
             css,
         ),
+)
+check(
+    "RM-5A desktop table",
+    "action columns align right and server columns use an explicit width budget",
+    dataTable.includes("columnWidths?: Readonly<Record<string, string>>") &&
+        dataTable.includes("data-column-id={header.column.id}") &&
+        dataTable.includes("data-column-id={cell.column.id}") &&
+        dataTable.includes("<col key={column.id} style={{ width: columnWidths[column.id] }} />") &&
+        /\[data-column-id="actions"\]\s*\{[\s\S]{0,60}?text-align: right/.test(css) &&
+        /td\[data-column-id="actions"\] > \*\s*\{[\s\S]{0,140}?margin-left: auto;[\s\S]{0,80}?justify-content: flex-end/.test(
+            css,
+        ) &&
+        serverRoute.includes('className="min-w-[79rem]"') &&
+        serverRoute.includes("columnWidths={SERVER_COLUMN_WIDTHS}"),
+)
+check(
+    "RM-5A desktop table",
+    "server IPv4 and IPv6 addresses render as separate non-wrapping desktop lines",
+    serverRoute.includes("const addresses = [ip?.ipv4_addr, ip?.ipv6_addr].filter(") &&
+        serverRoute.includes("(address): address is string => Boolean(address)") &&
+        serverRoute.includes("data-server-ip-list") &&
+        serverRoute.includes("flex flex-col gap-1 whitespace-nowrap") &&
+        serverRoute.includes("addresses.map((address)") &&
+        serverRoute.includes('ip: "17.5rem"'),
 )
 check(
     "RM-2 branding",
