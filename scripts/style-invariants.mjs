@@ -106,6 +106,17 @@ check(
     ),
 )
 check(
+    "RM-5A desktop table",
+    "desktop data rows share one stable height without changing mobile cards",
+    css.includes("--admin-table-row-height: 6rem") &&
+        /@media \(min-width: 56\.25rem\)\s*\{[\s\S]*?tbody tr,\s*[\s\S]*?tbody td\s*\{[\s\S]{0,100}?height: var\(--admin-table-row-height\)/.test(
+            css,
+        ) &&
+        /@media \(max-width: 56\.1875rem\)\s*\{[\s\S]*?tbody tr\s*\{[\s\S]{0,180}?display: grid/.test(
+            css,
+        ),
+)
+check(
     "RM-2 branding",
     "document title and admin brand share the configured site-name fallback",
     siteName.includes('DEFAULT_SITE_NAME = "节点监控"') &&

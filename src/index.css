@@ -86,6 +86,7 @@
     --radius-card: 1.5rem;
     --radius-auth: 1.75rem;
     --radius-control: 0.75rem;
+    --admin-table-row-height: 6rem;
     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     --dur-in: 320ms;
     --green: #147a55;
@@ -800,6 +801,11 @@
 
     .admin-content [data-slot="table"] td {
         padding: 1.125rem;
+    }
+
+    .admin-content [data-slot="table"] tbody tr,
+    .admin-content [data-slot="table"] tbody td {
+        height: var(--admin-table-row-height);
     }
 
     .admin-content [data-slot="table"] th:first-child,
