@@ -21,6 +21,7 @@ const button = read("src/components/ui/button.tsx")
 const input = read("src/components/ui/input.tsx")
 const dialog = read("src/components/ui/dialog.tsx")
 const settings = read("src/routes/settings.tsx")
+const settingsSection = read("src/components/settings-section.tsx")
 const serverRoute = read("src/routes/server.tsx")
 const serverForm = read("src/components/server.tsx")
 const api = read("src/api/api.ts")
@@ -57,9 +58,12 @@ check(
 )
 check(
     "architecture",
-    "desktop shell follows the monitor max-width and compact side navigation",
-    /\.admin-topbar__inner\s*\{[\s\S]{0,180}?max-width: 80rem/.test(css) &&
-        /\.admin-page\s*\{[\s\S]{0,180}?max-width: 80rem/.test(css) &&
+    "desktop shell follows the expanded monitor width and compact side navigation",
+    css.includes("--admin-page-max-width: 100rem") &&
+        /\.admin-topbar__inner\s*\{[\s\S]{0,180}?max-width: var\(--admin-page-max-width\)/.test(
+            css,
+        ) &&
+        /\.admin-page\s*\{[\s\S]{0,180}?max-width: var\(--admin-page-max-width\)/.test(css) &&
         /\.admin-layout\s*\{[\s\S]{0,180}?display: flex/.test(css) &&
         css.includes("--admin-navigation-width: 11rem") &&
         /\.admin-navigation\s*\{[\s\S]{0,260}?width: var\(--admin-navigation-width\)/.test(css),
@@ -87,18 +91,18 @@ check(
 )
 check(
     "primitives",
-    "cards, inputs and buttons share compact monitor geometry",
-    card.includes("gap-6 rounded-xl border bg-card py-6") &&
+    "cards, inputs and buttons share compact framework geometry",
+    card.includes("gap-6 rounded-lg border bg-card py-6") &&
         input.includes("h-9 w-full min-w-0 rounded-md") &&
         button.includes("rounded-md text-sm font-medium") &&
         button.includes('default: "h-9 px-4 py-2"'),
 )
 check(
     "primitives",
-    "tables use a rounded frame and compact headers and cells",
-    table.includes("overflow-hidden rounded-xl border bg-card shadow-sm") &&
-        table.includes('"h-10 px-2 text-left') &&
-        table.includes('"p-2 align-middle') &&
+    "tables use a framework radius and roomier horizontal cells",
+    table.includes("overflow-hidden rounded-lg border bg-card shadow-sm") &&
+        table.includes('"h-10 px-3 text-left') &&
+        table.includes('"px-3 py-2 align-middle') &&
         table.includes('normalizedLabel === "操作"') &&
         table.includes('label.endsWith("名称")'),
 )
@@ -108,6 +112,14 @@ check(
     dialog.includes("max-h-[calc(100dvh-2rem)]") &&
         dialog.includes("max-w-[calc(100%-2rem)]") &&
         dialog.includes('scrollMode?: "contained" | "dialog"'),
+)
+check(
+    "tables",
+    "desktop tables fit the page without horizontal scrolling",
+    table.includes('className="relative w-full overflow-x-clip"') &&
+        /\[data-slot="table-scroll"\]\s*\{[\s\S]{0,80}?overflow-x: clip/.test(css) &&
+        /\[data-slot="table"\]\s*\{[\s\S]{0,140}?table-layout: fixed/.test(css) &&
+        !serverRoute.includes("min-w-[79rem]"),
 )
 check(
     "tables",
@@ -139,12 +151,22 @@ check(
 )
 check(
     "settings",
-    "settings are grouped into reusable card and grid sections",
-    settings.match(/data-settings-section/g)?.length === 10 &&
-        settings.match(/data-settings-grid/g)?.length === 5 &&
+    "settings use reusable themed card and grid sections",
+    settings.match(/<SettingsSection/g)?.length === 5 &&
+        settingsSection.includes("data-settings-section") &&
+        settingsSection.includes("data-settings-section-icon") &&
         settings.includes("data-settings-footer") &&
+        settings.includes("data-settings-inline-control") &&
+        settings.includes("data-settings-alert") &&
         css.includes(".admin-content [data-settings-section]") &&
         css.includes(".admin-content [data-settings-grid]"),
+)
+check(
+    "navigation",
+    "sticky navigation has a stable flex size and isolated paint",
+    /\.admin-navigation\s*\{[\s\S]{0,500}?height: max-content;[\s\S]{0,180}?align-self: flex-start;[\s\S]{0,240}?contain: layout paint/.test(
+        css,
+    ),
 )
 check(
     "dialogs",

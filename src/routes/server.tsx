@@ -28,17 +28,17 @@ import { toast } from "sonner"
 import useSWR from "swr"
 
 const SERVER_COLUMN_WIDTHS = {
-    select: "3.5rem",
-    id: "6rem",
-    name: "9rem",
-    groups: "5rem",
-    ip: "17.5rem",
-    host_version: "5rem",
-    enableDDNS: "5.5rem",
-    hideForGuest: "6.5rem",
-    note: "5rem",
-    uuid: "5rem",
-    actions: "11rem",
+    select: "3%",
+    id: "7%",
+    name: "14%",
+    groups: "8%",
+    ip: "20%",
+    host_version: "7%",
+    enableDDNS: "8%",
+    hideForGuest: "9%",
+    note: "5%",
+    uuid: "5%",
+    actions: "14%",
 } as const
 
 export default function ServerPage() {
@@ -239,7 +239,6 @@ export default function ServerPage() {
             <DataTable
                 table={table}
                 isLoading={isLoading}
-                className="min-w-[79rem]"
                 headerClassName="sticky top-0 bg-background z-10"
                 columnWidths={SERVER_COLUMN_WIDTHS}
             />

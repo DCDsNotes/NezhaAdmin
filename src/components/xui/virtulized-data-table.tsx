@@ -117,6 +117,10 @@ export function DataTable<TData, TValue>({
         table.getHeaderGroups().map((headerGroup) => (
             <TableRow className="bg-card hover:bg-muted" key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
+                    const canSort = header.column.getCanSort()
+                    const sortStyle = canSort
+                        ? ({ cursor: "pointer", userSelect: "none" } as const)
+                        : undefined
                     return (
                         <TableHead
                             key={header.id}
@@ -128,15 +132,12 @@ export function DataTable<TData, TValue>({
                             {header.isPlaceholder ? null : (
                                 <div
                                     className="flex items-center"
-                                    {...{
-                                        style: header.column.getCanSort()
-                                            ? {
-                                                  cursor: "pointer",
-                                                  userSelect: "none",
-                                              }
-                                            : {},
-                                        onClick: header.column.getToggleSortingHandler(),
-                                    }}
+                                    style={sortStyle}
+                                    onClick={
+                                        canSort
+                                            ? header.column.getToggleSortingHandler()
+                                            : undefined
+                                    }
                                 >
                                     {flexRender(
                                         header.column.columnDef.header,
@@ -199,7 +200,7 @@ export function DataTable<TData, TValue>({
     return (
         <div
             data-slot="table-frame"
-            className="overflow-hidden rounded-[0.9375rem] border bg-card"
+            className="overflow-hidden rounded-lg border bg-card"
             ref={ref}
             style={{ height: heightState }}
         >

@@ -70,6 +70,7 @@
     --warn: oklch(0.75 0.17 70);
     --admin-header-height: 3.75rem;
     --admin-navigation-width: 11rem;
+    --admin-page-max-width: 100rem;
     --admin-table-row-height: 4.5rem;
 }
 
@@ -171,7 +172,7 @@
 .admin-topbar__inner {
     display: flex;
     width: 100%;
-    max-width: 80rem;
+    max-width: var(--admin-page-max-width);
     min-height: var(--admin-header-height);
     align-items: center;
     gap: 0.75rem;
@@ -253,7 +254,7 @@
 
 .admin-page {
     width: 100%;
-    max-width: 80rem;
+    max-width: var(--admin-page-max-width);
     margin: 0 auto;
     padding: 1.5rem 1rem 0;
 }
@@ -266,12 +267,20 @@
 
 .admin-navigation {
     position: sticky;
-    top: calc(var(--admin-header-height) + 1.5rem);
+    top: calc(var(--admin-header-height) + 1.5625rem);
     display: flex;
     width: var(--admin-navigation-width);
+    height: max-content;
+    max-height: calc(100dvh - var(--admin-header-height) - 3rem);
     flex: 0 0 var(--admin-navigation-width);
+    align-self: flex-start;
     flex-direction: column;
     gap: 0.25rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    contain: layout paint;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 .admin-navigation__item {
@@ -352,7 +361,7 @@
     margin: clamp(4rem, 16vh, 10rem) auto 0 !important;
     padding: 1.5rem !important;
     border: 0.0625rem solid var(--border);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
     background: var(--card);
     box-shadow: 0 1rem 3rem -2rem color-mix(in oklab, var(--foreground) 24%, transparent);
 }
@@ -383,8 +392,35 @@
 }
 
 .admin-content [data-slot="table-frame"] {
+    border-radius: var(--radius-lg);
     border-color: var(--border);
     box-shadow: 0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent);
+}
+
+.admin-content [data-slot="table-scroll"] {
+    overflow-x: clip;
+}
+
+.admin-content [data-slot="table"] {
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+}
+
+.admin-content [data-slot="table"] th,
+.admin-content [data-slot="table"] td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+}
+
+.admin-content [data-slot="table"] th {
+    white-space: normal;
+}
+
+.admin-content [data-slot="table"] tbody td:not([data-table-actions]) > div {
+    max-height: 2.5rem;
+    overflow: hidden;
 }
 
 .admin-content [data-slot="table-header"] {
@@ -424,21 +460,27 @@
 
 .admin-content [data-slot="settings-form"] {
     display: grid;
-    gap: 1rem;
+    gap: 1.25rem;
 }
 
 .admin-content [data-settings-section] {
     overflow: hidden;
     border: 0.0625rem solid var(--border);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
     background: var(--card);
-    box-shadow: 0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent);
+    box-shadow:
+        0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent),
+        0 0.5rem 1.5rem -1.5rem color-mix(in oklab, var(--foreground) 18%, transparent);
 }
 
 .admin-content [data-settings-section-header] {
-    padding: 0.875rem 1.25rem;
+    display: flex;
+    min-height: 3.25rem;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
     border-bottom: 0.0625rem solid var(--border);
-    background: color-mix(in oklab, var(--muted) 42%, transparent);
+    background: color-mix(in oklab, var(--muted) 48%, var(--card));
 }
 
 .admin-content [data-settings-section-header] h2 {
@@ -446,11 +488,29 @@
     font-weight: 600;
 }
 
+.admin-content [data-settings-section-icon] {
+    display: inline-flex;
+    width: 1.875rem;
+    height: 1.875rem;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border: 0.0625rem solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--background);
+    color: var(--muted-foreground);
+}
+
+.admin-content [data-settings-section-icon] svg {
+    width: 0.9375rem;
+    height: 0.9375rem;
+}
+
 .admin-content [data-settings-grid] {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem 1.25rem;
-    padding: 1.25rem;
+    gap: 1.125rem 1.5rem;
+    padding: 1.25rem 1.5rem 1.5rem;
 }
 
 .admin-content [data-settings-grid] > [data-settings-span="full"] {
@@ -461,6 +521,36 @@
     gap: 0.625rem;
 }
 
+.admin-content [data-settings-grid] > * {
+    min-width: 0;
+}
+
+.admin-content [data-settings-grid] [data-settings-control-row] {
+    min-height: 3.75rem;
+    align-self: end;
+    padding: 0.75rem;
+    border: 0.0625rem solid var(--border);
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--muted) 30%, var(--card));
+}
+
+.admin-content [data-settings-inline-control] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.admin-content [data-settings-alert] {
+    margin-top: 0.75rem;
+    padding: 0.75rem 0.875rem;
+    border: 0.0625rem solid color-mix(in oklab, var(--warn) 45%, var(--border));
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--warn) 11%, var(--card));
+    color: color-mix(in oklab, var(--warn) 74%, var(--foreground));
+    font-size: 0.8125rem;
+}
+
 .admin-content [data-settings-grid] input.w-1\/2 {
     width: auto;
     min-width: 0;
@@ -469,10 +559,15 @@
 
 .admin-content [data-settings-footer] {
     display: flex;
+    min-height: 3.75rem;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 0.25rem 0;
+    padding: 0.75rem 1rem;
+    border: 0.0625rem solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--card);
+    box-shadow: 0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent);
 }
 
 .admin-content [data-settings-footer] > [data-settings-span="full"] {
@@ -516,10 +611,16 @@
     .admin-navigation {
         position: static;
         width: 100%;
+        height: auto;
+        max-height: none;
         flex: 0 0 auto;
+        align-self: stretch;
         flex-direction: row;
         overflow-x: auto;
+        overflow-y: hidden;
         padding-bottom: 0.1875rem;
+        contain: none;
+        transform: none;
         scrollbar-width: none;
     }
 
@@ -608,7 +709,7 @@
         padding: 0.75rem;
         overflow: hidden;
         border: 0.0625rem solid var(--border) !important;
-        border-radius: var(--radius-xl);
+        border-radius: var(--radius-lg);
         background: var(--card);
         box-shadow: 0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent);
     }
