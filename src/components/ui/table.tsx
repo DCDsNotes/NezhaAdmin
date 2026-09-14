@@ -19,24 +19,29 @@ function updateForwardedRef<T>(ref: ForwardedRef<T>, value: T | null) {
 }
 
 function annotateResponsiveCells(table: HTMLTableElement) {
-    const labels = Array.from(table.querySelectorAll("thead th"), (header) =>
-        (header.textContent ?? "").replace(/\s+/g, " ").trim(),
+    const columns = Array.from(
+        table.querySelectorAll<HTMLTableCellElement>("thead th"),
+        (header) => ({
+            id: header.dataset.columnId ?? "",
+            label: (header.textContent ?? "").replace(/\s+/g, " ").trim(),
+        }),
     )
 
     table.querySelectorAll<HTMLTableRowElement>("tbody tr").forEach((row) => {
         Array.from(row.cells).forEach((cell, index) => {
-            const label = labels[index] ?? ""
+            const { id, label } = columns[index] ?? { id: "", label: "" }
             const normalizedLabel = label.toLocaleLowerCase()
 
             cell.dataset.label = label
             cell.toggleAttribute("data-table-message", cell.colSpan > 1)
             cell.toggleAttribute(
                 "data-table-select",
-                !label && cell.querySelector('[role="checkbox"]') !== null,
+                id === "select" || (!label && cell.querySelector('[role="checkbox"]') !== null),
             )
             cell.toggleAttribute(
                 "data-table-actions",
-                normalizedLabel === "action" ||
+                id === "actions" ||
+                    normalizedLabel === "action" ||
                     normalizedLabel === "actions" ||
                     normalizedLabel === "操作" ||
                     (index === row.cells.length - 1 &&
@@ -44,7 +49,7 @@ function annotateResponsiveCells(table: HTMLTableElement) {
             )
             cell.toggleAttribute(
                 "data-table-primary",
-                normalizedLabel === "name" || label.endsWith("名称"),
+                id === "name" || normalizedLabel === "name" || label.endsWith("名称"),
             )
         })
 

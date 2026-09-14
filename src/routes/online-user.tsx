@@ -7,6 +7,7 @@ import { HeaderBlockButtonGroup } from "@/components/header-button-group"
 import { createSelectionColumn } from "@/components/selection-column"
 import { SettingsTab } from "@/components/settings-tab"
 import { useAuth } from "@/hooks/useAuth"
+import { tableColumnWidths } from "@/lib/table-layout"
 import { ModelOnlineUser, ModelOnlineUserApi } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo } from "react"
@@ -48,12 +49,12 @@ export default function OnlineUserPage() {
             accessorFn: (row) => row.ip ?? "",
         },
         {
-            header: t("UserId"),
+            header: t("TableHeaders.UserId"),
             accessorKey: "user_id",
             accessorFn: (row) => row.user_id || "",
         },
         {
-            header: t("ConnectedAt"),
+            header: t("TableHeaders.ConnectedAt"),
             accessorKey: "connected_at",
             accessorFn: (row) => row.connected_at,
             cell: ({ row }) => {
@@ -64,7 +65,7 @@ export default function OnlineUserPage() {
         },
         {
             id: "actions",
-            header: "Actions",
+            header: t("TableHeaders.Actions"),
             cell: ({ row }) => {
                 const s = row.original
                 return (
@@ -135,7 +136,11 @@ export default function OnlineUserPage() {
                     </HeaderBlockButtonGroup>
                 )}
             </div>
-            <DataTable table={table} isLoading={isLoading} />
+            <DataTable
+                table={table}
+                isLoading={isLoading}
+                columnWidths={tableColumnWidths.onlineUser}
+            />
             {renderPagination()}
         </div>
     )

@@ -7,6 +7,7 @@ import { DataTable } from "@/components/data-table"
 import { createSelectionColumn } from "@/components/selection-column"
 import { TablePageHeader } from "@/components/table-page-header"
 import { IconButton } from "@/components/xui/icon-button"
+import { tableColumnWidths } from "@/lib/table-layout"
 import { ModelCron } from "@/types"
 import { cronTypes } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
@@ -37,7 +38,7 @@ export default function CronPage() {
             accessorFn: (row) => row.id,
         },
         {
-            header: t("Name"),
+            header: t("TableHeaders.Name"),
             accessorKey: "name",
             cell: ({ row }) => {
                 const s = row.original
@@ -45,17 +46,17 @@ export default function CronPage() {
             },
         },
         {
-            header: t("Type"),
+            header: t("TableHeaders.Type"),
             accessorKey: "taskType",
             accessorFn: (row) => cronTypes[row.task_type] || "",
         },
         {
-            header: t("CronExpression"),
+            header: t("TableHeaders.Schedule"),
             accessorKey: "scheduler",
             accessorFn: (row) => row.scheduler,
         },
         {
-            header: t("Command"),
+            header: t("TableHeaders.Command"),
             accessorKey: "command",
             cell: ({ row }) => {
                 const s = row.original
@@ -63,42 +64,31 @@ export default function CronPage() {
             },
         },
         {
-            header: t("NotifierGroup"),
+            header: t("TableHeaders.NotifyGroup"),
             accessorKey: "ngroup",
             accessorFn: (row) => row.notification_group_id,
         },
         {
-            header: t("SendSuccessNotification"),
+            header: t("TableHeaders.SuccessNotice"),
             accessorKey: "pushSuccessful",
             accessorFn: (row) => row.push_successful ?? false,
         },
         {
-            header: t("Coverage"),
+            header: t("TableHeaders.Scope"),
             accessorKey: "cover",
             accessorFn: (row) => row.cover,
             cell: ({ row }) => {
                 const s = row.original
+                const coverageLabel = [t("IgnoreAll"), t("CoverAll"), t("OnAlert")][s.cover]
                 return (
                     <div className="max-w-48 whitespace-normal break-words">
-                        {(() => {
-                            switch (s.cover) {
-                                case 0: {
-                                    return <span>{t("IgnoreAll")}</span>
-                                }
-                                case 1: {
-                                    return <span>{t("CoverAll")}</span>
-                                }
-                                case 2: {
-                                    return <span>{t("OnAlert")}</span>
-                                }
-                            }
-                        })()}
+                        <span>{coverageLabel}</span>
                     </div>
                 )
             },
         },
         {
-            header: t("SpecificServers"),
+            header: t("TableHeaders.Nodes"),
             accessorKey: "servers",
             accessorFn: (row) => row.servers,
             cell: ({ row }) => {
@@ -111,7 +101,7 @@ export default function CronPage() {
             },
         },
         {
-            header: t("LastExecution"),
+            header: t("TableHeaders.LastRun"),
             accessorKey: "lastExecution",
             accessorFn: (row) => row.last_executed_at,
             cell: ({ row }) => {
@@ -124,13 +114,13 @@ export default function CronPage() {
             },
         },
         {
-            header: t("Result"),
+            header: t("TableHeaders.Result"),
             accessorKey: "lastResult",
             accessorFn: (row) => row.last_result ?? false,
         },
         {
             id: "actions",
-            header: t("Actions"),
+            header: t("TableHeaders.Actions"),
             cell: ({ row }) => {
                 const s = row.original
                 return (
@@ -192,7 +182,7 @@ export default function CronPage() {
                 <CronCard mutate={mutate} />
             </TablePageHeader>
 
-            <DataTable table={table} isLoading={isLoading} />
+            <DataTable table={table} isLoading={isLoading} columnWidths={tableColumnWidths.cron} />
         </div>
     )
 }

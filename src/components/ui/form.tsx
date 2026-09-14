@@ -34,9 +34,7 @@ const FormFieldContext = createContext<FormFieldContextValue>({} as FormFieldCon
 const FormField = <
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->({
-    ...props
-}: ControllerProps<TFieldValues, TName>) => {
+>(props: ControllerProps<TFieldValues, TName>) => {
     return (
         <FormFieldContext.Provider value={{ name: props.name }}>
             <Controller {...props} />
@@ -79,7 +77,12 @@ const FormItem = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 
         return (
             <FormItemContext.Provider value={{ id }}>
-                <div ref={ref} className={cn("space-y-2", className)} {...props} />
+                <div
+                    ref={ref}
+                    data-slot="form-item"
+                    className={cn("space-y-2", className)}
+                    {...props}
+                />
             </FormItemContext.Provider>
         )
     },
@@ -95,6 +98,7 @@ const FormLabel = forwardRef<
     return (
         <Label
             ref={ref}
+            data-slot="form-label"
             className={cn(error && "text-destructive", className)}
             htmlFor={formItemId}
             {...props}
@@ -110,6 +114,7 @@ const FormControl = forwardRef<ComponentRef<typeof Slot>, ComponentPropsWithoutR
         return (
             <Slot
                 ref={ref}
+                data-form-control=""
                 id={formItemId}
                 aria-describedby={
                     !error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`
@@ -130,6 +135,7 @@ const FormDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLPara
             <p
                 ref={ref}
                 id={formDescriptionId}
+                data-slot="form-description"
                 className={cn("text-sm text-muted-foreground", className)}
                 {...props}
             />
@@ -151,6 +157,7 @@ const FormMessage = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagrap
             <p
                 ref={ref}
                 id={formMessageId}
+                data-slot="form-message"
                 className={cn("text-sm font-medium text-destructive", className)}
                 {...props}
             >

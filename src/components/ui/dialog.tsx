@@ -17,8 +17,9 @@ const DialogOverlay = forwardRef<
 >(({ className, ...props }, ref) => (
     <DialogPrimitive.Overlay
         ref={ref}
+        data-slot="dialog-overlay"
         className={cn(
-            "fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+            "fixed inset-0 z-50 bg-black/45 backdrop-blur-[0.125rem] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
             className,
         )}
         {...props}
@@ -36,8 +37,9 @@ const DialogContent = forwardRef<ComponentRef<typeof DialogPrimitive.Content>, D
             <DialogOverlay />
             <DialogPrimitive.Content
                 ref={ref}
+                data-slot="dialog-content"
                 className={cn(
-                    "fixed top-[50%] left-[50%] z-50 grid max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 sm:max-w-lg",
+                    "fixed inset-0 z-50 grid max-h-dvh w-screen max-w-none gap-4 rounded-none border-0 bg-card p-4 shadow-2xl duration-200 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-h-[calc(100dvh-2rem)] sm:w-full sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-lg sm:border sm:p-6",
                     scrollMode === "dialog"
                         ? "max-h-[calc(100dvh-2rem)] overflow-y-auto"
                         : "overflow-hidden",
@@ -46,7 +48,7 @@ const DialogContent = forwardRef<ComponentRef<typeof DialogPrimitive.Content>, D
                 {...props}
             >
                 {children}
-                <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-[0.1875rem] focus:ring-ring/50 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                <DialogPrimitive.Close className="absolute right-4 top-4 inline-flex size-8 items-center justify-center rounded-md border bg-background/90 text-muted-foreground shadow-xs transition-colors hover:bg-accent hover:text-foreground focus:outline-none focus:ring-[0.1875rem] focus:ring-ring/50 disabled:pointer-events-none">
                     <X className="h-4 w-4" />
                     <span className="sr-only">Close</span>
                 </DialogPrimitive.Close>
@@ -57,13 +59,21 @@ const DialogContent = forwardRef<ComponentRef<typeof DialogPrimitive.Content>, D
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
 const DialogHeader = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn("flex flex-col gap-2 text-center sm:text-left", className)} {...props} />
+    <div
+        data-slot="dialog-header"
+        className={cn("flex flex-col gap-2 pr-10 text-left", className)}
+        {...props}
+    />
 )
 DialogHeader.displayName = "DialogHeader"
 
 const DialogFooter = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
     <div
-        className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
+        data-slot="dialog-footer"
+        className={cn(
+            "flex flex-col-reverse gap-2 border-t pt-4 sm:flex-row sm:justify-end",
+            className,
+        )}
         {...props}
     />
 )
@@ -75,6 +85,7 @@ const DialogTitle = forwardRef<
 >(({ className, ...props }, ref) => (
     <DialogPrimitive.Title
         ref={ref}
+        data-slot="dialog-title"
         className={cn("text-lg font-semibold leading-none tracking-tight", className)}
         {...props}
     />
@@ -87,6 +98,7 @@ const DialogDescription = forwardRef<
 >(({ className, ...props }, ref) => (
     <DialogPrimitive.Description
         ref={ref}
+        data-slot="dialog-description"
         className={cn("text-sm text-muted-foreground", className)}
         {...props}
     />

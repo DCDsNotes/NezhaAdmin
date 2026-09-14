@@ -3,11 +3,12 @@ import { deleteNotification } from "@/api/notification"
 import { ActionButtonGroup } from "@/components/action-button-group"
 import { CopyButton } from "@/components/copy-button"
 import { DataTable } from "@/components/data-table"
-import { HeaderButtonGroup } from "@/components/header-button-group"
 import { NotificationTab } from "@/components/notification-tab"
 import { NotifierCard } from "@/components/notifier"
 import { createSelectionColumn } from "@/components/selection-column"
+import { TablePageToolbar } from "@/components/table-page-header"
 import { useNotification } from "@/hooks/useNotfication"
+import { tableColumnWidths } from "@/lib/table-layout"
 import { ModelNotification } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo } from "react"
@@ -41,7 +42,7 @@ export default function NotificationPage() {
             accessorFn: (row) => row.id,
         },
         {
-            header: t("Name"),
+            header: t("TableHeaders.Name"),
             accessorKey: "name",
             accessorFn: (row) => row.name,
             cell: ({ row }) => {
@@ -50,7 +51,7 @@ export default function NotificationPage() {
             },
         },
         {
-            header: t("Group"),
+            header: t("TableHeaders.Group"),
             accessorKey: "groups",
             accessorFn: (row) => {
                 return (
@@ -70,13 +71,13 @@ export default function NotificationPage() {
             },
         },
         {
-            header: t("VerifyTLS"),
+            header: t("TableHeaders.TLS"),
             accessorKey: "verify_tls",
             accessorFn: (row) => row.verify_tls,
         },
         {
             id: "actions",
-            header: t("Actions"),
+            header: t("TableHeaders.Actions"),
             cell: ({ row }) => {
                 const s = row.original
                 return (
@@ -109,21 +110,22 @@ export default function NotificationPage() {
 
     return (
         <div data-admin-page className="px-3">
-            <div data-admin-page-header className="flex mt-6 mb-4">
-                <NotificationTab className="flex-1 mr-4 sm:max-w-[40%]" />
-                <HeaderButtonGroup
-                    className="flex ml-auto self-end sm:self-auto gap-2 flex-wrap shrink-0"
-                    delete={{
-                        fn: deleteNotification,
-                        id: selectedRows.map((r) => r.original.id),
-                        mutate: mutate,
-                    }}
-                >
-                    <NotifierCard mutate={mutate} />
-                </HeaderButtonGroup>
-            </div>
+            <TablePageToolbar
+                leading={<NotificationTab />}
+                deleteAction={{
+                    fn: deleteNotification,
+                    id: selectedRows.map((r) => r.original.id),
+                    mutate: mutate,
+                }}
+            >
+                <NotifierCard mutate={mutate} />
+            </TablePageToolbar>
 
-            <DataTable table={table} isLoading={isLoading} />
+            <DataTable
+                table={table}
+                isLoading={isLoading}
+                columnWidths={tableColumnWidths.notification}
+            />
         </div>
     )
 }

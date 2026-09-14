@@ -3,8 +3,9 @@ import { deleteDDNSProfiles, getDDNSProviders } from "@/api/ddns"
 import { ActionButtonGroup } from "@/components/action-button-group"
 import { DataTable } from "@/components/data-table"
 import { DDNSCard } from "@/components/ddns"
-import { HeaderButtonGroup } from "@/components/header-button-group"
 import { createSelectionColumn } from "@/components/selection-column"
+import { TablePageHeader } from "@/components/table-page-header"
+import { tableColumnWidths } from "@/lib/table-layout"
 import { ModelDDNSProfile } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo, useState } from "react"
@@ -46,7 +47,7 @@ export default function DDNSPage() {
             accessorFn: (row) => row.id,
         },
         {
-            header: t("Name"),
+            header: t("TableHeaders.Name"),
             accessorKey: "name",
             accessorFn: (row) => row.name,
             cell: ({ row }) => {
@@ -65,12 +66,12 @@ export default function DDNSPage() {
             accessorFn: (row) => row.enable_ipv6 ?? false,
         },
         {
-            header: t("Provider"),
+            header: t("TableHeaders.Provider"),
             accessorKey: "provider",
             accessorFn: (row) => row.provider,
         },
         {
-            header: t("Domains"),
+            header: t("TableHeaders.Domains"),
             accessorKey: "domains",
             accessorFn: (row) => row.domains,
             cell: ({ row }) => {
@@ -79,13 +80,13 @@ export default function DDNSPage() {
             },
         },
         {
-            header: t("MaximumRetryAttempts"),
+            header: t("TableHeaders.Retries"),
             accessorKey: "maxRetries",
             accessorFn: (row) => row.max_retries,
         },
         {
             id: "actions",
-            header: t("Actions"),
+            header: t("TableHeaders.Actions"),
             cell: ({ row }) => {
                 const s = row.original
                 return (
@@ -118,21 +119,18 @@ export default function DDNSPage() {
 
     return (
         <div data-admin-page className="px-3">
-            <div data-admin-page-header className="flex mt-6 mb-4">
-                <h1 className="flex-1 text-3xl font-bold tracking-tight">{t("DDNS")}</h1>
-                <HeaderButtonGroup
-                    className="flex ml-auto self-end sm:self-auto gap-2 flex-wrap shrink-0"
-                    delete={{
-                        fn: deleteDDNSProfiles,
-                        id: selectedRows.map((r) => r.original.id),
-                        mutate: mutate,
-                    }}
-                >
-                    <DDNSCard mutate={mutate} providers={providers} />
-                </HeaderButtonGroup>
-            </div>
+            <TablePageHeader
+                title={t("DDNS")}
+                deleteAction={{
+                    fn: deleteDDNSProfiles,
+                    id: selectedRows.map((r) => r.original.id),
+                    mutate: mutate,
+                }}
+            >
+                <DDNSCard mutate={mutate} providers={providers} />
+            </TablePageHeader>
 
-            <DataTable table={table} isLoading={isLoading} />
+            <DataTable table={table} isLoading={isLoading} columnWidths={tableColumnWidths.ddns} />
         </div>
     )
 }

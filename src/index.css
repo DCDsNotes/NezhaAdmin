@@ -328,6 +328,10 @@
     flex: 1;
 }
 
+.admin-content [data-admin-page] {
+    padding-bottom: 0.5rem;
+}
+
 .admin-content > * {
     width: 100%;
     max-width: none !important;
@@ -384,17 +388,37 @@
 
 [data-admin-page-header] {
     min-height: 2.25rem;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+[data-admin-page-leading] > [data-slot="tabs"] {
+    width: min(100%, 32rem);
+    margin-inline: auto;
+}
+
+[data-admin-page-leading] > [data-slot="tabs"] [data-slot="tabs-list"] {
+    width: 100%;
 }
 
 .admin-content [data-slot="card"] {
+    overflow: hidden;
     border-color: var(--border);
-    box-shadow: 0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent);
+    background: var(--card);
+    box-shadow:
+        0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent),
+        0 0.75rem 2rem -2rem color-mix(in oklab, var(--foreground) 20%, transparent);
 }
 
 .admin-content [data-slot="table-frame"] {
+    overflow: hidden;
     border-radius: var(--radius-lg);
     border-color: var(--border);
-    box-shadow: 0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent);
+    background: var(--card);
+    box-shadow:
+        0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent),
+        0 0.75rem 2rem -2rem color-mix(in oklab, var(--foreground) 18%, transparent);
 }
 
 .admin-content [data-slot="table-scroll"] {
@@ -414,7 +438,21 @@
     overflow-wrap: anywhere;
 }
 
+.admin-content [data-slot="table"] th:first-child,
+.admin-content [data-slot="table"] td:first-child {
+    padding-left: 1rem;
+}
+
+.admin-content [data-slot="table"] th:last-child,
+.admin-content [data-slot="table"] td:last-child {
+    padding-right: 1rem;
+}
+
 .admin-content [data-slot="table"] th {
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-weight: 650;
+    letter-spacing: 0.01em;
     white-space: normal;
 }
 
@@ -424,12 +462,16 @@
 }
 
 .admin-content [data-slot="table-header"] {
-    background: color-mix(in oklab, var(--muted) 56%, transparent);
+    background: color-mix(in oklab, var(--muted) 64%, var(--card));
 }
 
 .admin-content [data-slot="table"] tbody tr,
 .admin-content [data-slot="table"] tbody td {
     height: var(--admin-table-row-height);
+}
+
+.admin-content [data-slot="table"] tbody tr {
+    transition: background-color 150ms ease;
 }
 
 .admin-content [data-slot="table"] [data-column-id="actions"] {
@@ -446,8 +488,53 @@
     margin-bottom: 1rem;
 }
 
-.admin-content [data-slot="tabs"] [role="tablist"] {
+[data-admin-page-header] [data-slot="tabs"] {
+    margin-bottom: 0;
+}
+
+.admin-content [data-slot="tabs-list"] {
     width: 100%;
+    border-color: color-mix(in oklab, var(--border) 88%, var(--foreground));
+    background: color-mix(in oklab, var(--muted) 72%, var(--card));
+    box-shadow:
+        inset 0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent),
+        0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 4%, transparent);
+}
+
+.admin-content [data-slot="tabs-trigger"] {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    width: 100%;
+}
+
+.admin-content [data-slot="tabs-trigger"][data-state="active"] {
+    border-color: var(--border);
+    background: var(--card);
+    box-shadow:
+        0 0.0625rem 0.1875rem color-mix(in oklab, var(--foreground) 8%, transparent),
+        0 0 0 0.0625rem color-mix(in oklab, var(--background) 65%, transparent);
+}
+
+.admin-content [data-slot="tabs-trigger"]::after {
+    position: absolute;
+    right: 28%;
+    bottom: 0.125rem;
+    left: 28%;
+    height: 0.125rem;
+    border-radius: 999rem;
+    background: var(--primary);
+    content: "";
+    opacity: 0;
+    transform: scaleX(0.55);
+    transition:
+        opacity 150ms ease,
+        transform 150ms ease;
+}
+
+.admin-content [data-slot="tabs-trigger"][data-state="active"]::after {
+    opacity: 1;
+    transform: scaleX(1);
 }
 
 .admin-content textarea,
@@ -458,12 +545,72 @@
     box-shadow: 0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 4%, transparent);
 }
 
+.admin-content [data-slot="input"],
+.admin-content [data-slot="textarea"],
+.admin-content [data-slot="select-trigger"] {
+    background: color-mix(in oklab, var(--background) 88%, var(--muted));
+}
+
+[data-slot="dialog-content"],
+[data-slot="alert-dialog-content"],
+[data-slot="drawer-content"],
+[data-slot="sheet-content"],
+[data-slot="popover-content"],
+[data-slot="dropdown-content"],
+[data-slot="dropdown-sub-content"],
+[data-slot="select-content"] {
+    border-color: color-mix(in oklab, var(--border) 88%, var(--foreground));
+}
+
+[data-slot="dialog-content"],
+[data-slot="alert-dialog-content"] {
+    box-shadow:
+        0 1.5rem 4rem -1.5rem color-mix(in oklab, black 45%, transparent),
+        0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 8%, transparent);
+}
+
+[data-slot="dialog-header"],
+[data-slot="alert-dialog-header"] {
+    padding-bottom: 0.75rem;
+    border-bottom: 0.0625rem solid var(--border);
+}
+
+[data-slot="dialog-title"],
+[data-slot="alert-dialog-title"] {
+    letter-spacing: -0.015em;
+}
+
+[data-slot="dialog-content"] [data-slot="form-item"] {
+    min-width: 0;
+}
+
+[data-slot="dialog-content"] [data-slot="form-label"] {
+    color: color-mix(in oklab, var(--foreground) 84%, var(--muted-foreground));
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+[data-slot="dialog-content"] [data-slot="input"],
+[data-slot="dialog-content"] [data-slot="textarea"],
+[data-slot="dialog-content"] [data-slot="select-trigger"] {
+    background: color-mix(in oklab, var(--background) 90%, var(--muted));
+}
+
+[data-slot="dialog-content"] form > [data-slot="form-item"] + [data-slot="form-item"] {
+    margin-top: 0.875rem;
+}
+
+[data-slot="dropdown-item"] {
+    min-height: 2.125rem;
+}
+
 .admin-content [data-slot="settings-form"] {
     display: grid;
     gap: 1.25rem;
 }
 
 .admin-content [data-settings-section] {
+    position: relative;
     overflow: hidden;
     border: 0.0625rem solid var(--border);
     border-radius: var(--radius-lg);
@@ -471,6 +618,18 @@
     box-shadow:
         0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent),
         0 0.5rem 1.5rem -1.5rem color-mix(in oklab, var(--foreground) 18%, transparent);
+}
+
+.admin-content [data-settings-section]::before {
+    position: absolute;
+    z-index: 1;
+    top: 0.75rem;
+    bottom: 0.75rem;
+    left: 0;
+    width: 0.125rem;
+    border-radius: 0 999rem 999rem 0;
+    background: color-mix(in oklab, var(--primary) 72%, transparent);
+    content: "";
 }
 
 .admin-content [data-settings-section-header] {
@@ -645,6 +804,25 @@
         gap: 0.75rem;
     }
 
+    [data-admin-page-header] > [data-slot="tabs"] {
+        width: 100%;
+        flex: 1 0 100%;
+        margin-right: 0 !important;
+        margin-bottom: 0;
+    }
+
+    .admin-content [data-slot="tabs-list"] {
+        min-height: 2.75rem;
+        padding: 0.1875rem;
+    }
+
+    .admin-content [data-slot="tabs-trigger"] {
+        min-height: 2.25rem;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+        font-size: 0.75rem;
+    }
+
     .admin-content [data-slot="settings-form"] {
         gap: 0.75rem;
     }
@@ -731,6 +909,14 @@
         background: color-mix(in oklab, var(--muted) 28%, var(--card));
         white-space: normal;
         overflow-wrap: anywhere;
+    }
+
+    .admin-content [data-slot="table"] tbody td:first-child {
+        padding-left: 0.625rem;
+    }
+
+    .admin-content [data-slot="table"] tbody td:last-child {
+        padding-right: 0.625rem;
     }
 
     .admin-content [data-slot="table"] tbody td::before {
@@ -829,6 +1015,21 @@
     .admin-login {
         margin-top: clamp(2rem, 10vh, 5rem) !important;
     }
+
+    [data-slot="dialog-content"] {
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    [data-slot="dialog-content"] [data-slot="dialog-footer"] {
+        position: sticky;
+        z-index: 2;
+        bottom: 0;
+        margin-top: 1rem;
+        padding-bottom: 0.25rem;
+        background: color-mix(in oklab, var(--card) 94%, transparent);
+        backdrop-filter: blur(0.5rem);
+    }
 }
 
 @media (max-width: 24rem) {
@@ -838,14 +1039,6 @@
 
     .admin-topbar__actions {
         gap: 0;
-    }
-
-    .admin-content [data-slot="table"] tbody tr {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .admin-content [data-slot="table"] tbody td {
-        grid-column: 1 / -1;
     }
 }
 

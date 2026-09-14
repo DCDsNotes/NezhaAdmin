@@ -20,26 +20,13 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { IconButton } from "@/components/xui/icon-button"
 import { useServer } from "@/hooks/useServer"
+import { tableColumnWidths } from "@/lib/table-layout"
 import { ModelServerTaskResponse, ModelServer as Server } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import useSWR from "swr"
-
-const SERVER_COLUMN_WIDTHS = {
-    select: "3%",
-    id: "7%",
-    name: "14%",
-    groups: "8%",
-    ip: "20%",
-    host_version: "7%",
-    enableDDNS: "8%",
-    hideForGuest: "9%",
-    note: "5%",
-    uuid: "5%",
-    actions: "14%",
-} as const
 
 export default function ServerPage() {
     const { t } = useTranslation()
@@ -65,7 +52,7 @@ export default function ServerPage() {
             accessorFn: (row) => `${row.id}(${row.display_index})`,
         },
         {
-            header: t("Name"),
+            header: t("TableHeaders.Name"),
             accessorKey: "name",
             accessorFn: (row) => row.name,
             cell: ({ row }) => {
@@ -74,7 +61,7 @@ export default function ServerPage() {
             },
         },
         {
-            header: t("Group"),
+            header: t("TableHeaders.Group"),
             accessorKey: "groups",
             accessorFn: (row) => {
                 return (
@@ -102,23 +89,23 @@ export default function ServerPage() {
             },
         },
         {
-            header: t("Version"),
+            header: t("TableHeaders.Version"),
             accessorKey: "host.version",
             accessorFn: (row) => row.host.version || t("Unknown"),
         },
         {
-            header: t("EnableDDNS"),
+            header: t("TableHeaders.DDNS"),
             accessorKey: "enableDDNS",
             accessorFn: (row) => row.enable_ddns ?? false,
         },
         {
-            header: t("HideForGuest"),
+            header: t("TableHeaders.Guest"),
             accessorKey: "hideForGuest",
             accessorFn: (row) => row.hide_for_guest ?? false,
         },
         {
             id: "note",
-            header: t("Note"),
+            header: t("TableHeaders.Note"),
             cell: ({ row }) => {
                 const s = row.original
                 return <NoteMenu note={{ private: s.note, public: s.public_note }} />
@@ -134,7 +121,7 @@ export default function ServerPage() {
         },
         {
             id: "actions",
-            header: t("Actions"),
+            header: t("TableHeaders.Actions"),
             cell: ({ row }) => {
                 const s = row.original
                 return (
@@ -240,7 +227,7 @@ export default function ServerPage() {
                 table={table}
                 isLoading={isLoading}
                 headerClassName="sticky top-0 bg-background z-10"
-                columnWidths={SERVER_COLUMN_WIDTHS}
+                columnWidths={tableColumnWidths.server}
             />
         </div>
     )

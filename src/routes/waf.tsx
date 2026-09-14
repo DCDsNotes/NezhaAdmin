@@ -7,6 +7,7 @@ import { HeaderButtonGroup } from "@/components/header-button-group"
 import { createSelectionColumn } from "@/components/selection-column"
 import { SettingsTab } from "@/components/settings-tab"
 import { useAuth } from "@/hooks/useAuth"
+import { tableColumnWidths } from "@/lib/table-layout"
 import {
     GithubComNezhahqNezhaModelValueArrayModelWAFApiMock,
     ModelWAFApiMock,
@@ -54,25 +55,25 @@ export default function WAFPage() {
             accessorFn: (row) => row.ip,
         },
         {
-            header: t("Count"),
+            header: t("TableHeaders.Count"),
             accessorKey: "count",
             accessorFn: (row) => row.count,
         },
         {
-            header: t("LastBlockReason"),
+            header: t("TableHeaders.BlockReason"),
             accessorKey: "lastBlockReason",
             accessorFn: (row) => row.block_reason,
             cell: ({ row }) => <span>{wafBlockReasons[row.original.block_reason] || ""}</span>,
         },
         {
-            header: t("BlockIdentifier"),
-            accessorKey: "BlockIdentifier",
+            header: t("TableHeaders.BlockId"),
+            accessorKey: "blockIdentifier",
             accessorFn: (row) => {
                 return wafBlockIdentifiers[row.block_identifier] || row.block_identifier
             },
         },
         {
-            header: t("LastBlockTime"),
+            header: t("TableHeaders.BlockTime"),
             accessorKey: "lastBlockTime",
             accessorFn: (row) => row.block_timestamp,
             cell: ({ row }) => {
@@ -83,7 +84,7 @@ export default function WAFPage() {
         },
         {
             id: "actions",
-            header: "Actions",
+            header: t("TableHeaders.Actions"),
             cell: ({ row }) => {
                 const s = row.original
                 return (
@@ -154,7 +155,7 @@ export default function WAFPage() {
                     </HeaderButtonGroup>
                 )}
             </div>
-            <DataTable table={table} isLoading={isLoading} />
+            <DataTable table={table} isLoading={isLoading} columnWidths={tableColumnWidths.waf} />
             {renderPagination()}
         </div>
     )

@@ -16,6 +16,11 @@ const navigation = read("src/components/admin-navigation.tsx")
 const navigationModel = read("src/hooks/useAdminNavigation.ts")
 const table = read("src/components/ui/table.tsx")
 const dataTable = read("src/components/data-table.tsx")
+const tableLayout = read("src/lib/table-layout.ts")
+const routeTabs = read("src/components/route-tabs.tsx")
+const settingsTab = read("src/components/settings-tab.tsx")
+const notificationTab = read("src/components/notification-tab.tsx")
+const groupTab = read("src/components/group-tab.tsx")
 const card = read("src/components/ui/card.tsx")
 const button = read("src/components/ui/button.tsx")
 const input = read("src/components/ui/input.tsx")
@@ -39,6 +44,16 @@ const results = []
 const check = (group, name, condition, detail = "") => {
     results.push({ group, name, condition: Boolean(condition), detail })
 }
+
+const tableLayouts = [...tableLayout.matchAll(/^    (\w+): \{([\s\S]*?)^    \},/gm)].map(
+    ([, name, body]) => ({
+        name,
+        total: [...body.matchAll(/: "(\d+)%"/g)].reduce(
+            (total, [, width]) => total + Number(width),
+            0,
+        ),
+    }),
+)
 
 check(
     "architecture",
@@ -103,14 +118,15 @@ check(
     table.includes("overflow-hidden rounded-lg border bg-card shadow-sm") &&
         table.includes('"h-10 px-3 text-left') &&
         table.includes('"px-3 py-2 align-middle') &&
-        table.includes('normalizedLabel === "操作"') &&
-        table.includes('label.endsWith("名称")'),
+        table.includes('id === "actions"') &&
+        table.includes('id === "name"'),
 )
 check(
     "primitives",
-    "dialogs remain centered and bounded to the viewport",
-    dialog.includes("max-h-[calc(100dvh-2rem)]") &&
-        dialog.includes("max-w-[calc(100%-2rem)]") &&
+    "dialogs fill mobile viewports and remain bounded on desktop",
+    dialog.includes("max-h-dvh w-screen max-w-none") &&
+        dialog.includes("sm:max-h-[calc(100dvh-2rem)]") &&
+        dialog.includes("sm:left-1/2 sm:top-1/2") &&
         dialog.includes('scrollMode?: "contained" | "dialog"'),
 )
 check(
@@ -133,19 +149,57 @@ check(
 check(
     "tables",
     "column widths and separate IPv4/IPv6 lines are retained",
-    dataTable.includes("columnWidths?: Readonly<Record<string, string>>") &&
+    dataTable.includes("columnWidths?: TableColumnWidths") &&
         dataTable.includes("<col key={column.id}") &&
-        serverRoute.includes("columnWidths={SERVER_COLUMN_WIDTHS}") &&
+        serverRoute.includes("columnWidths={tableColumnWidths.server}") &&
+        [
+            "server",
+            "service",
+            "cron",
+            "ddns",
+            "nat",
+            "notification",
+            "alertRule",
+            "serverGroup",
+            "notificationGroup",
+            "user",
+            "onlineUser",
+            "waf",
+        ].every((layout) => tableLayout.includes(`${layout}: {`)) &&
         serverRoute.includes("data-server-ip-list") &&
         serverRoute.includes("addresses.map((address)"),
 )
 check(
     "tables",
-    "mobile rows become cards without a horizontal scrollbar",
+    "every table layout allocates exactly one hundred percent",
+    tableLayouts.length === 12 && tableLayouts.every(({ total }) => total === 100),
+    tableLayouts
+        .filter(({ total }) => total !== 100)
+        .map(({ name, total }) => `${name}: ${total}%`)
+        .join(", "),
+)
+check(
+    "tabs",
+    "route tabs share one polished responsive implementation",
+    routeTabs.includes("export function RouteTabs") &&
+        routeTabs.includes("gridTemplateColumns") &&
+        settingsTab.includes("<RouteTabs") &&
+        notificationTab.includes("<RouteTabs") &&
+        groupTab.includes("<RouteTabs") &&
+        css.includes('[data-slot="tabs-trigger"][data-state="active"]'),
+)
+check(
+    "tables",
+    "mobile rows stay two-column cards without a horizontal scrollbar",
     /@media \(max-width: 48rem\)[\s\S]*?\[data-slot="table-scroll"\]\s*\{[\s\S]{0,100}?overflow: visible/.test(
         css,
     ) &&
-        /@media \(max-width: 48rem\)[\s\S]*?tbody tr\s*\{[\s\S]{0,180}?display: grid/.test(css) &&
+        /@media \(max-width: 48rem\)[\s\S]*?tbody tr\s*\{[\s\S]{0,240}?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/.test(
+            css,
+        ) &&
+        !/@media \(max-width: 24rem\)[\s\S]*?tbody tr\s*\{[\s\S]{0,180}?grid-template-columns: minmax\(0, 1fr\)/.test(
+            css,
+        ) &&
         css.includes("td[data-table-actions]") &&
         css.includes("td[data-table-select]"),
 )
@@ -180,7 +234,7 @@ check(
     "quality",
     "obsolete glass-sidebar architecture is absent",
     !css.includes("admin-sidebar") &&
-        !css.includes("backdrop-filter") &&
+        !css.includes("backdrop-filter: blur(1rem)") &&
         !css.includes("stage-in") &&
         !css.includes("--radius-control"),
 )

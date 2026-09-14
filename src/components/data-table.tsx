@@ -6,6 +6,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import type { TableColumnWidths } from "@/lib/table-layout"
 import { cn } from "@/lib/utils"
 import { Table as TanStackTable, flexRender } from "@tanstack/react-table"
 import { useTranslation } from "react-i18next"
@@ -15,7 +16,7 @@ interface DataTableProps<TData> {
     isLoading?: boolean
     className?: string
     headerClassName?: string
-    columnWidths?: Readonly<Record<string, string>>
+    columnWidths?: TableColumnWidths
 }
 
 export function DataTable<TData>({

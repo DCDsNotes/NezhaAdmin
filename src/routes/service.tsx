@@ -5,6 +5,7 @@ import { DataTable } from "@/components/data-table"
 import { createSelectionColumn } from "@/components/selection-column"
 import { ServiceCard } from "@/components/service"
 import { TablePageHeader } from "@/components/table-page-header"
+import { tableColumnWidths } from "@/lib/table-layout"
 import { ModelService as Service } from "@/types"
 import { serviceTypes } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
@@ -35,7 +36,7 @@ export default function ServicePage() {
             accessorFn: (row) => row.id,
         },
         {
-            header: t("Name"),
+            header: t("TableHeaders.Name"),
             accessorFn: (row) => row.name,
             accessorKey: "name",
             cell: ({ row }) => {
@@ -44,7 +45,7 @@ export default function ServicePage() {
             },
         },
         {
-            header: t("Target"),
+            header: t("TableHeaders.Target"),
             accessorFn: (row) => row.target,
             accessorKey: "target",
             cell: ({ row }) => {
@@ -53,29 +54,22 @@ export default function ServicePage() {
             },
         },
         {
-            header: t("Coverage"),
+            header: t("TableHeaders.Scope"),
             accessorKey: "cover",
             accessorFn: (row) => row.cover,
             cell: ({ row }) => {
                 const s = row.original
+                const coverageLabel = [t("CoverAll"), t("IgnoreAll")][s.cover]
                 return (
                     <div className="max-w-48 whitespace-normal break-words">
-                        {(() => {
-                            switch (s.cover) {
-                                case 0: {
-                                    return <span>{t("CoverAll")}</span>
-                                }
-                                case 1: {
-                                    return <span>{t("IgnoreAll")}</span>
-                                }
-                            }
-                        })()}
+                        <span>{coverageLabel}</span>
                     </div>
                 )
             },
         },
         {
-            header: t("SpecificServers"),
+            id: "servers",
+            header: t("TableHeaders.Nodes"),
             cell: ({ row }) => {
                 const s = row.original
                 return (
@@ -86,39 +80,39 @@ export default function ServicePage() {
             },
         },
         {
-            header: t("Type"),
+            header: t("TableHeaders.Type"),
             accessorKey: "type",
             accessorFn: (row) => row.type,
             cell: ({ row }) => serviceTypes[row.original.type] || "",
         },
         {
-            header: t("Interval"),
+            header: t("TableHeaders.Interval"),
             accessorKey: "duration",
             accessorFn: (row) => row.duration,
         },
         {
-            header: t("NotifierGroupID"),
+            header: t("TableHeaders.NotifyGroup"),
             accessorKey: "ngroup",
             accessorFn: (row) => row.notification_group_id,
         },
         {
-            header: t("Trigger"),
+            header: t("TableHeaders.Trigger"),
             accessorKey: "triggerTask",
             accessorFn: (row) => row.enable_trigger_task ?? false,
         },
         {
-            header: t("TasksToTriggerOnAlert"),
+            header: t("TableHeaders.AlertTasks"),
             accessorKey: "failTriggerTasks",
             accessorFn: (row) => row.fail_trigger_tasks,
         },
         {
-            header: t("TasksToTriggerAfterRecovery"),
+            header: t("TableHeaders.RecoveryTasks"),
             accessorKey: "recoverTriggerTasks",
             accessorFn: (row) => row.recover_trigger_tasks,
         },
         {
             id: "actions",
-            header: t("Actions"),
+            header: t("TableHeaders.Actions"),
             cell: ({ row }) => {
                 const s = row.original
                 return (
@@ -158,7 +152,11 @@ export default function ServicePage() {
                 <ServiceCard mutate={mutate} />
             </TablePageHeader>
 
-            <DataTable table={table} isLoading={isLoading} />
+            <DataTable
+                table={table}
+                isLoading={isLoading}
+                columnWidths={tableColumnWidths.service}
+            />
         </div>
     )
 }

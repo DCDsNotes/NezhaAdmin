@@ -2,9 +2,10 @@ import { swrFetcher } from "@/api/api"
 import { deleteNAT } from "@/api/nat"
 import { ActionButtonGroup } from "@/components/action-button-group"
 import { DataTable } from "@/components/data-table"
-import { HeaderButtonGroup } from "@/components/header-button-group"
 import { NATCard } from "@/components/nat"
 import { createSelectionColumn } from "@/components/selection-column"
+import { TablePageHeader } from "@/components/table-page-header"
+import { tableColumnWidths } from "@/lib/table-layout"
 import { ModelNAT } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo } from "react"
@@ -34,12 +35,12 @@ export default function NATPage() {
             accessorFn: (row) => row.id,
         },
         {
-            header: t("Enabled"),
+            header: t("TableHeaders.Enabled"),
             accessorKey: "enabled",
             accessorFn: (row) => row.enabled,
         },
         {
-            header: t("Name"),
+            header: t("TableHeaders.Name"),
             accessorKey: "name",
             accessorFn: (row) => row.name,
             cell: ({ row }) => {
@@ -48,12 +49,12 @@ export default function NATPage() {
             },
         },
         {
-            header: t("Server") + " ID",
+            header: t("TableHeaders.ServerId"),
             accessorKey: "serverID",
             accessorFn: (row) => row.server_id,
         },
         {
-            header: t("LocalService"),
+            header: t("TableHeaders.LocalService"),
             accessorKey: "host",
             accessorFn: (row) => row.host,
             cell: ({ row }) => {
@@ -62,7 +63,7 @@ export default function NATPage() {
             },
         },
         {
-            header: t("BindHostname"),
+            header: t("TableHeaders.BindDomain"),
             accessorKey: "domain",
             accessorFn: (row) => row.domain,
             cell: ({ row }) => {
@@ -72,7 +73,7 @@ export default function NATPage() {
         },
         {
             id: "actions",
-            header: t("Actions"),
+            header: t("TableHeaders.Actions"),
             cell: ({ row }) => {
                 const s = row.original
                 return (
@@ -101,21 +102,18 @@ export default function NATPage() {
 
     return (
         <div data-admin-page className="px-3">
-            <div data-admin-page-header className="flex mt-6 mb-4">
-                <h1 className="flex-1 text-3xl font-bold tracking-tight"> {t("NATT")}</h1>
-                <HeaderButtonGroup
-                    className="flex ml-auto self-end sm:self-auto gap-2 flex-wrap shrink-0"
-                    delete={{
-                        fn: deleteNAT,
-                        id: selectedRows.map((r) => r.original.id),
-                        mutate: mutate,
-                    }}
-                >
-                    <NATCard mutate={mutate} />
-                </HeaderButtonGroup>
-            </div>
+            <TablePageHeader
+                title={t("NATT")}
+                deleteAction={{
+                    fn: deleteNAT,
+                    id: selectedRows.map((r) => r.original.id),
+                    mutate: mutate,
+                }}
+            >
+                <NATCard mutate={mutate} />
+            </TablePageHeader>
 
-            <DataTable table={table} isLoading={isLoading} />
+            <DataTable table={table} isLoading={isLoading} columnWidths={tableColumnWidths.nat} />
         </div>
     )
 }

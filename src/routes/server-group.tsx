@@ -3,9 +3,10 @@ import { deleteServerGroups } from "@/api/server-group"
 import { ActionButtonGroup } from "@/components/action-button-group"
 import { DataTable } from "@/components/data-table"
 import { GroupTab } from "@/components/group-tab"
-import { HeaderButtonGroup } from "@/components/header-button-group"
 import { createSelectionColumn } from "@/components/selection-column"
 import { ServerGroupCard } from "@/components/server-group"
+import { TablePageToolbar } from "@/components/table-page-header"
+import { tableColumnWidths } from "@/lib/table-layout"
 import { ModelServerGroupResponseItem } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo } from "react"
@@ -38,7 +39,7 @@ export default function ServerGroupPage() {
             accessorFn: (row) => row.group.id,
         },
         {
-            header: t("Name"),
+            header: t("TableHeaders.Name"),
             accessorKey: "name",
             accessorFn: (row) => row.group.name,
             cell: ({ row }) => {
@@ -47,7 +48,7 @@ export default function ServerGroupPage() {
             },
         },
         {
-            header: t("Server") + "(ID)",
+            header: t("TableHeaders.Nodes"),
             accessorKey: "servers",
             accessorFn: (row) => row.servers,
             cell: ({ row }) => {
@@ -61,7 +62,7 @@ export default function ServerGroupPage() {
         },
         {
             id: "actions",
-            header: t("Actions"),
+            header: t("TableHeaders.Actions"),
             cell: ({ row }) => {
                 const s = row.original
                 return (
@@ -94,20 +95,21 @@ export default function ServerGroupPage() {
 
     return (
         <div data-admin-page className="px-3">
-            <div data-admin-page-header className="flex mt-6 mb-4">
-                <GroupTab className="flex-1 mr-4 sm:max-w-[40%]" />
-                <HeaderButtonGroup
-                    className="flex ml-auto self-end sm:self-auto gap-2 flex-wrap shrink-0"
-                    delete={{
-                        fn: deleteServerGroups,
-                        id: selectedRows.map((r) => r.original.group.id),
-                        mutate: mutate,
-                    }}
-                >
-                    <ServerGroupCard mutate={mutate} />
-                </HeaderButtonGroup>
-            </div>
-            <DataTable table={table} isLoading={isLoading} />
+            <TablePageToolbar
+                leading={<GroupTab />}
+                deleteAction={{
+                    fn: deleteServerGroups,
+                    id: selectedRows.map((r) => r.original.group.id),
+                    mutate: mutate,
+                }}
+            >
+                <ServerGroupCard mutate={mutate} />
+            </TablePageToolbar>
+            <DataTable
+                table={table}
+                isLoading={isLoading}
+                columnWidths={tableColumnWidths.serverGroup}
+            />
         </div>
     )
 }

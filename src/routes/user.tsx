@@ -6,6 +6,7 @@ import { HeaderButtonGroup } from "@/components/header-button-group"
 import { createSelectionColumn } from "@/components/selection-column"
 import { SettingsTab } from "@/components/settings-tab"
 import { UserCard } from "@/components/user"
+import { tableColumnWidths } from "@/lib/table-layout"
 import { ModelUser } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo } from "react"
@@ -35,26 +36,26 @@ export default function UserPage() {
             accessorFn: (row) => row.id,
         },
         {
-            header: t("Username"),
+            header: t("TableHeaders.Username"),
             accessorKey: "username",
             accessorFn: (row) => row.username,
         },
         {
-            header: t("Role"),
+            header: t("TableHeaders.Role"),
             accessorKey: "role",
             accessorFn: (row) => {
                 return row.role === 1 ? t("User") : t("Admin")
             },
         },
         {
-            header: t("LastLogin"),
+            header: t("TableHeaders.LastLogin"),
             accessorKey: "updated_at",
             accessorFn: (row) =>
                 row.updated_at ? new Date(row.updated_at).toLocaleString() : t("Never"),
         },
         {
             id: "actions",
-            header: t("Actions"),
+            header: t("TableHeaders.Actions"),
             cell: ({ row }) => {
                 const s = row.original
                 return (
@@ -101,7 +102,7 @@ export default function UserPage() {
                 </HeaderButtonGroup>
             </div>
 
-            <DataTable table={table} isLoading={isLoading} />
+            <DataTable table={table} isLoading={isLoading} columnWidths={tableColumnWidths.user} />
         </div>
     )
 }

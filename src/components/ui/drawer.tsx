@@ -28,7 +28,8 @@ const DrawerOverlay = forwardRef<
 >(({ className, ...props }, ref) => (
     <DrawerPrimitive.Overlay
         ref={ref}
-        className={cn("fixed inset-0 z-50 bg-black/80", className)}
+        data-slot="drawer-overlay"
+        className={cn("fixed inset-0 z-50 bg-black/45 backdrop-blur-[0.125rem]", className)}
         {...props}
     />
 ))
@@ -42,13 +43,14 @@ const DrawerContent = forwardRef<
         <DrawerOverlay />
         <DrawerPrimitive.Content
             ref={ref}
+            data-slot="drawer-content"
             className={cn(
-                "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[0.625rem] border bg-background",
+                "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto max-h-[92dvh] flex-col rounded-t-lg border bg-card shadow-2xl",
                 className,
             )}
             {...props}
         >
-            <div className="mx-auto mt-4 h-2 w-[6.25rem] rounded-full bg-muted" />
+            <div className="mx-auto mt-3 h-1 w-12 rounded-full bg-muted-foreground/30" />
             {children}
         </DrawerPrimitive.Content>
     </DrawerPortal>
@@ -56,12 +58,20 @@ const DrawerContent = forwardRef<
 DrawerContent.displayName = "DrawerContent"
 
 const DrawerHeader = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn("grid gap-1.5 p-4 text-center sm:text-left", className)} {...props} />
+    <div
+        data-slot="drawer-header"
+        className={cn("grid gap-1.5 p-4 text-left", className)}
+        {...props}
+    />
 )
 DrawerHeader.displayName = "DrawerHeader"
 
 const DrawerFooter = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn("mt-auto flex flex-col gap-2 p-4", className)} {...props} />
+    <div
+        data-slot="drawer-footer"
+        className={cn("mt-auto flex flex-col gap-2 border-t p-4", className)}
+        {...props}
+    />
 )
 DrawerFooter.displayName = "DrawerFooter"
 
