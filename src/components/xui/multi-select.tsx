@@ -121,7 +121,6 @@ interface MultiSelectProps
      * If true, renders the multi-select component as a child of another component.
      * Optional, defaults to false.
      */
-    asChild?: boolean
 
     /**
      * Additional class names to apply custom styles to the multi-select component.
@@ -141,7 +140,6 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
             animation = 0,
             maxCount = 3,
             modalPopover = false,
-            asChild = false,
             className,
             ...props
         },
@@ -211,7 +209,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
                         {...props}
                         onClick={handleTogglePopover}
                         className={cn(
-                            "flex w-full rounded-[var(--radius-control)] border p-1 min-h-10 h-auto items-center justify-between bg-inherit hover:bg-inherit [&_svg]:pointer-events-auto",
+                            "flex h-auto min-h-9 w-full items-center justify-between rounded-md border bg-inherit p-1 hover:bg-inherit [&_svg]:pointer-events-auto",
                             className,
                         )}
                     >

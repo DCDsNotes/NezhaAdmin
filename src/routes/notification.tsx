@@ -3,10 +3,10 @@ import { deleteNotification } from "@/api/notification"
 import { ActionButtonGroup } from "@/components/action-button-group"
 import { CopyButton } from "@/components/copy-button"
 import { DataTable } from "@/components/data-table"
-import { createSelectionColumn } from "@/components/selection-column"
 import { HeaderButtonGroup } from "@/components/header-button-group"
 import { NotificationTab } from "@/components/notification-tab"
 import { NotifierCard } from "@/components/notifier"
+import { createSelectionColumn } from "@/components/selection-column"
 import { useNotification } from "@/hooks/useNotfication"
 import { ModelNotification } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
@@ -108,8 +108,8 @@ export default function NotificationPage() {
     const selectedRows = table.getSelectedRowModel().rows
 
     return (
-        <div className="px-3">
-            <div className="flex mt-6 mb-4">
+        <div data-admin-page className="px-3">
+            <div data-admin-page-header className="flex mt-6 mb-4">
                 <NotificationTab className="flex-1 mr-4 sm:max-w-[40%]" />
                 <HeaderButtonGroup
                     className="flex ml-auto self-end sm:self-auto gap-2 flex-wrap shrink-0"

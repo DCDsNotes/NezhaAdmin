@@ -27,70 +27,93 @@ interface ButtonBlockGroupProps<E, U> {
     block: { fn: (id: E[]) => Promise<void>; id: E[]; mutate: KeyedMutator<U> }
 }
 
+interface BulkActionGroupProps<E, U> {
+    action: { fn: (id: E[]) => Promise<void>; id: E[]; mutate: KeyedMutator<U> }
+    children?: React.ReactNode
+    className?: string
+    confirmTitle: "ConfirmDeletion" | "ConfirmBlock"
+    icon: "trash" | "ban"
+}
+
+function BulkActionGroup<E, U>({
+    action: { fn, id, mutate },
+    children,
+    className,
+    confirmTitle,
+    icon,
+}: BulkActionGroupProps<E, U>) {
+    const { t } = useTranslation()
+
+    const handleAction = async () => {
+        try {
+            await fn(id)
+        } catch (error) {
+            toast(t("Error"), {
+                description: error instanceof Error ? error.message : String(error),
+            })
+        }
+        await mutate()
+    }
+
+    const actionButton = <IconButton variant="destructive" icon={icon} className="text-white" />
+
+    return (
+        <div className={className}>
+            {id.length < 1 ? (
+                <IconButton
+                    variant="destructive"
+                    icon={icon}
+                    className="text-white"
+                    onClick={() =>
+                        toast(t("Error"), {
+                            description: t("Results.NoRowsAreSelected"),
+                        })
+                    }
+                />
+            ) : (
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>{actionButton}</AlertDialogTrigger>
+                    <AlertDialogContent className="sm:max-w-lg">
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>{t(confirmTitle)}</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                {t("Results.ThisOperationIsUnrecoverable")}
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>{t("Close")}</AlertDialogCancel>
+                            <AlertDialogAction
+                                className={buttonVariants({
+                                    variant: "destructive",
+                                    className: "text-white",
+                                })}
+                                onClick={handleAction}
+                            >
+                                {t("Confirm")}
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
+            {children}
+        </div>
+    )
+}
+
 export function HeaderButtonGroup<E, U>({
     className,
     children,
     delete: { fn, id, mutate },
 }: ButtonGroupProps<E, U>) {
-    const { t } = useTranslation()
-
-    const handleDelete = async () => {
-        try {
-            await fn(id)
-        } catch (error: any) {
-            toast(t("Error"), {
-                description: error.message,
-            })
-        }
-        await mutate()
-    }
     return (
-        <div className={className}>
-            {id.length < 1 ? (
-                <>
-                    <IconButton
-                        variant="destructive"
-                        icon="trash"
-                        className="text-white"
-                        onClick={() => {
-                            toast(t("Error"), {
-                                description: t("Results.NoRowsAreSelected"),
-                            })
-                        }}
-                    />
-                    {children}
-                </>
-            ) : (
-                <>
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <IconButton variant="destructive" icon="trash" className="text-white" />
-                        </AlertDialogTrigger>
-                        <AlertDialogContent className="sm:max-w-lg">
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>{t("ConfirmDeletion")}</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    {t("Results.ThisOperationIsUnrecoverable")}
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>{t("Close")}</AlertDialogCancel>
-                                <AlertDialogAction
-                                    className={buttonVariants({
-                                        variant: "destructive",
-                                        className: "text-white",
-                                    })}
-                                    onClick={handleDelete}
-                                >
-                                    {t("Confirm")}
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                    {children}
-                </>
-            )}
-        </div>
+        <BulkActionGroup
+            action={{ fn, id, mutate }}
+            className={className}
+            confirmTitle="ConfirmDeletion"
+            icon="trash"
+        >
+            {children}
+        </BulkActionGroup>
     )
 }
 
@@ -99,64 +122,14 @@ export function HeaderBlockButtonGroup<E, U>({
     children,
     block: { fn, id, mutate },
 }: ButtonBlockGroupProps<E, U>) {
-    const { t } = useTranslation()
-
-    const handleBlock = async () => {
-        try {
-            await fn(id)
-        } catch (error: any) {
-            toast(t("Error"), {
-                description: error.message,
-            })
-        }
-        await mutate()
-    }
     return (
-        <div className={className}>
-            {id.length < 1 ? (
-                <>
-                    <IconButton
-                        variant="destructive"
-                        icon="ban"
-                        className="text-white"
-                        onClick={() => {
-                            toast(t("Error"), {
-                                description: t("Results.NoRowsAreSelected"),
-                            })
-                        }}
-                    />
-                    {children}
-                </>
-            ) : (
-                <>
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <IconButton variant="destructive" icon="ban" className="text-white" />
-                        </AlertDialogTrigger>
-                        <AlertDialogContent className="sm:max-w-lg">
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>{t("ConfirmBlock")}</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    {t("Results.ThisOperationIsUnrecoverable")}
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>{t("Close")}</AlertDialogCancel>
-                                <AlertDialogAction
-                                    className={buttonVariants({
-                                        variant: "destructive",
-                                        className: "text-white",
-                                    })}
-                                    onClick={handleBlock}
-                                >
-                                    {t("Confirm")}
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                    {children}
-                </>
-            )}
-        </div>
+        <BulkActionGroup
+            action={{ fn, id, mutate }}
+            className={className}
+            confirmTitle="ConfirmBlock"
+            icon="ban"
+        >
+            {children}
+        </BulkActionGroup>
     )
 }

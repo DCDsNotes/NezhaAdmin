@@ -146,7 +146,7 @@ export default function ServicePage() {
     const selectedRows = table.getSelectedRowModel().rows
 
     return (
-        <div className="px-3 max-w-7xl mx-auto">
+        <div data-admin-page className="px-3 max-w-7xl mx-auto">
             <TablePageHeader
                 title={t("Service")}
                 deleteAction={{

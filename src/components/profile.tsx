@@ -38,7 +38,7 @@ const profileFormSchema = z.object({
     reject_password: asOptionalField(z.boolean()),
 })
 
-export const ProfileCard = ({ className }: { className: string }) => {
+export const ProfileCard = ({ className }: { className?: string }) => {
     const { t } = useTranslation()
     const { profile, setProfile } = useMainStore()
 

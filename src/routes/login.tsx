@@ -100,10 +100,7 @@ function Login() {
                             </FormItem>
                         )}
                     />
-                    <Button
-                        type="submit"
-                        className="w-full rounded-[var(--radius-control)] shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)]"
-                    >
+                    <Button type="submit" className="w-full rounded-md">
                         {t("Login")}
                     </Button>
                 </form>
@@ -121,7 +118,7 @@ function Login() {
                 {oauth2Providers.map((p: string) => (
                     <Button
                         key={p}
-                        className="w-full rounded-[var(--radius-control)] shadow-[inset_0_0.0625rem_0_rgba(255,255,255,0.2)] bg-muted text-primary hover:bg-muted/80 hover:text-primary/80"
+                        className="w-full rounded-md bg-muted text-foreground hover:bg-muted/80"
                         onClick={() => loginWith(p)}
                     >
                         {p === "GitHub" && <GitHubIcon className="size-4" />}

@@ -1,3 +1,4 @@
+import { AdminNavigation } from "@/components/admin-navigation"
 import Header from "@/components/header"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
@@ -6,18 +7,9 @@ import useSetting from "@/hooks/useSetting"
 import i18n from "@/lib/i18n"
 import { InjectContext } from "@/lib/inject"
 import { resolveSiteName } from "@/lib/site-name"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { Outlet } from "react-router-dom"
-
-function readSidebarCollapsed() {
-    if (typeof window === "undefined") return false
-    try {
-        return window.localStorage.getItem("nezha-admin-sidebar-collapsed") === "true"
-    } catch {
-        return false
-    }
-}
 
 type RootProps = {
     forceGuest?: boolean
@@ -27,13 +19,8 @@ export default function Root({ forceGuest = false }: RootProps) {
     const { t } = useTranslation()
     const { data: settingData, error } = useSetting()
     const profile = useMainStore((store) => store.profile)
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(readSidebarCollapsed)
     const siteName = resolveSiteName(settingData?.config?.site_name)
     const guestLayout = forceGuest || !profile
-
-    useEffect(() => {
-        localStorage.setItem("nezha-admin-sidebar-collapsed", String(sidebarCollapsed))
-    }, [sidebarCollapsed])
 
     useEffect(() => {
         document.title = siteName
@@ -60,21 +47,21 @@ export default function Root({ forceGuest = false }: RootProps) {
     return (
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <section
-                className={`admin-shell ${guestLayout ? "admin-shell--guest" : "admin-shell--authenticated"} ${sidebarCollapsed ? "admin-shell--collapsed" : ""}`}
+                className={`admin-shell ${guestLayout ? "admin-shell--guest" : "admin-shell--authenticated"}`}
             >
-                <Header
-                    sidebarCollapsed={sidebarCollapsed}
-                    onToggleSidebar={() => setSidebarCollapsed((collapsed) => !collapsed)}
-                    siteName={siteName}
-                    forceGuest={forceGuest}
-                />
-                <div className="admin-workspace">
-                    <main className="admin-content">
-                        <Outlet />
-                    </main>
-                    <footer className="admin-footer">
-                        &copy; 2019-{new Date().getFullYear()} {t("nezha")}
-                    </footer>
+                <Header siteName={siteName} forceGuest={forceGuest} />
+                <div className="admin-page">
+                    <div className="admin-layout">
+                        {!guestLayout && <AdminNavigation />}
+                        <div className="admin-workspace">
+                            <main className="admin-content">
+                                <Outlet />
+                            </main>
+                            <footer className="admin-footer">
+                                &copy; 2019-{new Date().getFullYear()} {t("nezha")}
+                            </footer>
+                        </div>
+                    </div>
                 </div>
             </section>
             <Toaster />

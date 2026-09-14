@@ -3,8 +3,8 @@ import { blockUser } from "@/api/online-user"
 import { BlockButtonGroup } from "@/components/action-button-group"
 import { DataPagination } from "@/components/data-pagination"
 import { DataTable } from "@/components/data-table"
-import { createSelectionColumn } from "@/components/selection-column"
 import { HeaderBlockButtonGroup } from "@/components/header-button-group"
+import { createSelectionColumn } from "@/components/selection-column"
 import { SettingsTab } from "@/components/settings-tab"
 import { useAuth } from "@/hooks/useAuth"
 import { ModelOnlineUser, ModelOnlineUserApi } from "@/types"
@@ -119,7 +119,7 @@ export default function OnlineUserPage() {
     }
 
     return (
-        <div className="px-3">
+        <div data-admin-page className="px-3">
             <SettingsTab className="mt-6 w-full" />
             <div className="flex mt-4 mb-4">
                 {isAdmin && (

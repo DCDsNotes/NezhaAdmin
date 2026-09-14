@@ -2,10 +2,10 @@ import { swrFetcher } from "@/api/api"
 import { deleteNotificationGroups } from "@/api/notification-group"
 import { ActionButtonGroup } from "@/components/action-button-group"
 import { DataTable } from "@/components/data-table"
-import { createSelectionColumn } from "@/components/selection-column"
 import { GroupTab } from "@/components/group-tab"
 import { HeaderButtonGroup } from "@/components/header-button-group"
 import { NotificationGroupCard } from "@/components/notification-group"
+import { createSelectionColumn } from "@/components/selection-column"
 import { ModelNotificationGroupResponseItem } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo } from "react"
@@ -93,8 +93,8 @@ export default function NotificationGroupPage() {
     const selectedRows = table.getSelectedRowModel().rows
 
     return (
-        <div className="px-3">
-            <div className="flex mt-6 mb-4">
+        <div data-admin-page className="px-3">
+            <div data-admin-page-header className="flex mt-6 mb-4">
                 <GroupTab className="flex-1 mr-4 sm:max-w-[40%]" />
                 <HeaderButtonGroup
                     className="flex ml-auto self-end sm:self-auto gap-2 flex-wrap shrink-0"

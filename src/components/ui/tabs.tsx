@@ -2,7 +2,13 @@ import { cn } from "@/lib/utils"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react"
 
-const Tabs = TabsPrimitive.Root
+const Tabs = forwardRef<
+    ComponentRef<typeof TabsPrimitive.Root>,
+    ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
+>(({ className, ...props }, ref) => (
+    <TabsPrimitive.Root ref={ref} data-slot="tabs" className={className} {...props} />
+))
+Tabs.displayName = TabsPrimitive.Root.displayName
 
 const TabsList = forwardRef<
     ComponentRef<typeof TabsPrimitive.List>,
@@ -11,7 +17,7 @@ const TabsList = forwardRef<
     <TabsPrimitive.List
         ref={ref}
         className={cn(
-            "inline-flex h-10 items-center justify-center rounded-[0.75rem] bg-muted p-1 text-muted-foreground",
+            "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
             className,
         )}
         {...props}
@@ -26,7 +32,7 @@ const TabsTrigger = forwardRef<
     <TabsPrimitive.Trigger
         ref={ref}
         className={cn(
-            "inline-flex items-center justify-center whitespace-nowrap rounded-[0.75rem] px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+            "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors outline-none focus-visible:ring-[0.1875rem] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-xs",
             className,
         )}
         {...props}

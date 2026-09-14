@@ -2,9 +2,9 @@ import { swrFetcher } from "@/api/api"
 import { deleteServerGroups } from "@/api/server-group"
 import { ActionButtonGroup } from "@/components/action-button-group"
 import { DataTable } from "@/components/data-table"
-import { createSelectionColumn } from "@/components/selection-column"
 import { GroupTab } from "@/components/group-tab"
 import { HeaderButtonGroup } from "@/components/header-button-group"
+import { createSelectionColumn } from "@/components/selection-column"
 import { ServerGroupCard } from "@/components/server-group"
 import { ModelServerGroupResponseItem } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
@@ -93,8 +93,8 @@ export default function ServerGroupPage() {
     const selectedRows = table.getSelectedRowModel().rows
 
     return (
-        <div className="px-3">
-            <div className="flex mt-6 mb-4">
+        <div data-admin-page className="px-3">
+            <div data-admin-page-header className="flex mt-6 mb-4">
                 <GroupTab className="flex-1 mr-4 sm:max-w-[40%]" />
                 <HeaderButtonGroup
                     className="flex ml-auto self-end sm:self-auto gap-2 flex-wrap shrink-0"

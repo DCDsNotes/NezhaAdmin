@@ -77,9 +77,9 @@ const Table = forwardRef<HTMLTableElement, HTMLAttributes<HTMLTableElement>>(
         return (
             <div
                 data-slot="table-frame"
-                className="relative w-full overflow-hidden rounded-[0.9375rem] border bg-card"
+                className="relative w-full overflow-hidden rounded-xl border bg-card shadow-sm"
             >
-                <div data-slot="table-scroll" className="w-full overflow-auto">
+                <div data-slot="table-scroll" className="relative w-full overflow-x-auto">
                     <table
                         ref={setTableRef}
                         data-slot="table"
@@ -123,7 +123,7 @@ const TableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElem
         <tr
             ref={ref}
             className={cn(
-                "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+                "border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted",
                 className,
             )}
             {...props}
@@ -137,7 +137,7 @@ const TableHead = forwardRef<HTMLTableCellElement, ThHTMLAttributes<HTMLTableCel
         <th
             ref={ref}
             className={cn(
-                "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+                "h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[0.125rem]",
                 className,
             )}
             {...props}
@@ -150,7 +150,10 @@ const TableCell = forwardRef<HTMLTableCellElement, TdHTMLAttributes<HTMLTableCel
     ({ className, ...props }, ref) => (
         <td
             ref={ref}
-            className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
+            className={cn(
+                "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[0.125rem]",
+                className,
+            )}
             {...props}
         />
     ),

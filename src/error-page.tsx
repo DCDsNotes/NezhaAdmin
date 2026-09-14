@@ -15,26 +15,24 @@ export default function ErrorPage() {
     console.error(error)
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center bg-background p-4">
-            <Card className="w-full max-w-md shadow-2xl rounded-2xl">
-                <CardContent className="pt-6 text-center space-y-4">
+        <div className="flex min-h-screen w-full items-center justify-center bg-muted/30 p-4">
+            <Card className="w-full max-w-md">
+                <CardContent className="space-y-4 text-center">
                     <div className="flex justify-center">
                         <AlertCircle className="h-12 w-12 text-destructive" />
                     </div>
-                    <h1 className="text-4xl font-bold tracking-tight">Oops!</h1>
-                    <p className="text-lg text-muted-foreground/80">
+                    <h1 className="text-2xl font-semibold tracking-tight">Oops!</h1>
+                    <p className="text-sm text-muted-foreground">
                         Sorry, an unexpected error has occurred.
                     </p>
-                    <div className="p-4 bg-muted/70 rounded-lg">
-                        <p className="text-sm text-destructive font-semibold italic">
+                    <div className="rounded-md bg-muted p-4">
+                        <p className="text-sm font-medium text-destructive">
                             {error.statusText || error.message}
                         </p>
                     </div>
                 </CardContent>
-                <CardFooter className="flex justify-center pb-6">
-                    <Button variant="default" size="lg" onClick={() => navigate("/dashboard")}>
-                        Back to Dashboard
-                    </Button>
+                <CardFooter className="justify-center">
+                    <Button onClick={() => navigate("/dashboard")}>Back to Dashboard</Button>
                 </CardFooter>
             </Card>
         </div>

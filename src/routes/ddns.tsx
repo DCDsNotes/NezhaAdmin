@@ -2,9 +2,9 @@ import { swrFetcher } from "@/api/api"
 import { deleteDDNSProfiles, getDDNSProviders } from "@/api/ddns"
 import { ActionButtonGroup } from "@/components/action-button-group"
 import { DataTable } from "@/components/data-table"
-import { createSelectionColumn } from "@/components/selection-column"
 import { DDNSCard } from "@/components/ddns"
 import { HeaderButtonGroup } from "@/components/header-button-group"
+import { createSelectionColumn } from "@/components/selection-column"
 import { ModelDDNSProfile } from "@/types"
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useEffect, useMemo, useState } from "react"
@@ -117,8 +117,8 @@ export default function DDNSPage() {
     const selectedRows = table.getSelectedRowModel().rows
 
     return (
-        <div className="px-3">
-            <div className="flex mt-6 mb-4">
+        <div data-admin-page className="px-3">
+            <div data-admin-page-header className="flex mt-6 mb-4">
                 <h1 className="flex-1 text-3xl font-bold tracking-tight">{t("DDNS")}</h1>
                 <HeaderButtonGroup
                     className="flex ml-auto self-end sm:self-auto gap-2 flex-wrap shrink-0"
