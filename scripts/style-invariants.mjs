@@ -189,6 +189,8 @@ check(
         notificationTab.includes("<RouteTabs") &&
         groupTab.includes("<RouteTabs") &&
         tabs.includes("data-[state=active]:bg-background") &&
+        tabs.includes("data-[state=active]:font-semibold") &&
+        tabs.includes("text-muted-foreground") &&
         !css.includes('[data-slot="tabs-trigger"]::after'),
 )
 check(
@@ -230,8 +232,21 @@ check(
 )
 check(
     "settings",
+    "settings sections share one divided panel",
+    css.includes("[data-settings-panel]") &&
+        css.includes("[data-settings-panel] > [data-settings-section] + [data-settings-section]") &&
+        css.includes("[data-settings-panel] [data-settings-footer]"),
+)
+check(
+    "settings",
     "settings cards have no decorative left rail",
     !css.includes("[data-settings-section]::before"),
+)
+check(
+    "settings",
+    "settings inline controls have no outer border",
+    /\[data-settings-control-row\][\s\S]{0,240}?border: 0;/.test(css) &&
+        /\[data-settings-footer\][\s\S]{0,260}?border: 0;/.test(css),
 )
 check(
     "navigation",

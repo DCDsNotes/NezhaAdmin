@@ -118,6 +118,7 @@ export default function SettingsPage() {
                 <Form {...form}>
                     <form
                         data-slot="settings-form"
+                        data-settings-panel
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="my-4 flex flex-col gap-5"
                     >

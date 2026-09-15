@@ -572,6 +572,28 @@
     gap: 1.25rem;
 }
 
+.admin-content [data-settings-panel] {
+    display: block;
+    overflow: hidden;
+    border: 0.0625rem solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--card);
+    box-shadow:
+        0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent),
+        0 0.5rem 1.5rem -1.5rem color-mix(in oklab, var(--foreground) 18%, transparent);
+}
+
+.admin-content [data-settings-panel] > [data-settings-section] {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.admin-content [data-settings-panel] > [data-settings-section] + [data-settings-section] {
+    border-top: 0.0625rem solid var(--border);
+}
+
 .admin-content [data-settings-section] {
     overflow: hidden;
     border: 0.0625rem solid var(--border);
@@ -635,12 +657,14 @@
 }
 
 .admin-content [data-settings-grid] [data-settings-control-row] {
-    min-height: 3.75rem;
+    min-height: 2.25rem;
+    display: flex;
     align-self: end;
-    padding: 0.75rem;
-    border: 0.0625rem solid var(--border);
-    border-radius: var(--radius-md);
-    background: color-mix(in oklab, var(--muted) 30%, var(--card));
+    align-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
 }
 
 .admin-content [data-settings-inline-control] {
@@ -673,10 +697,17 @@
     justify-content: space-between;
     gap: 1rem;
     padding: 0.75rem 1rem;
-    border: 0.0625rem solid var(--border);
-    border-radius: var(--radius-lg);
-    background: var(--card);
-    box-shadow: 0 0.0625rem 0.125rem color-mix(in oklab, var(--foreground) 5%, transparent);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.admin-content [data-settings-panel] [data-settings-footer] {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
 }
 
 .admin-content [data-settings-footer] > [data-settings-span="full"] {
