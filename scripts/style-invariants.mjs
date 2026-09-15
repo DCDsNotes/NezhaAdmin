@@ -182,15 +182,20 @@ check(
 )
 check(
     "tabs",
-    "route tabs share one simple symmetric implementation",
+    "route tabs share one simple left-aligned implementation",
     routeTabs.includes("export function RouteTabs") &&
-        routeTabs.includes("gridTemplateColumns") &&
+        routeTabs.includes("justify-start gap-2.5") &&
+        routeTabs.includes('className="w-auto px-0"') &&
+        !routeTabs.includes("gridTemplateColumns") &&
         settingsTab.includes("<RouteTabs") &&
         notificationTab.includes("<RouteTabs") &&
         groupTab.includes("<RouteTabs") &&
-        tabs.includes("data-[state=active]:bg-background") &&
+        tabs.includes("bg-transparent") &&
+        tabs.includes("text-xl") &&
         tabs.includes("data-[state=active]:font-semibold") &&
         tabs.includes("text-muted-foreground") &&
+        !tabs.includes("data-[state=active]:bg-background") &&
+        !tabs.includes("data-[state=active]:shadow") &&
         !css.includes('[data-slot="tabs-trigger"]::after'),
 )
 check(
@@ -223,7 +228,8 @@ check(
     "settings use reusable themed card and grid sections",
     settings.match(/<SettingsSection/g)?.length === 5 &&
         settingsSection.includes("data-settings-section") &&
-        settingsSection.includes("data-settings-section-icon") &&
+        !settingsSection.includes("data-settings-section-icon") &&
+        !settingsSection.includes("LucideIcon") &&
         settings.includes("data-settings-footer") &&
         settings.includes("data-settings-inline-control") &&
         settings.includes("data-settings-alert") &&
@@ -233,9 +239,11 @@ check(
 check(
     "settings",
     "settings sections share one divided panel",
-    css.includes("[data-settings-panel]") &&
+    settings.includes("<div data-settings-panel>") &&
+        css.includes("[data-settings-panel]") &&
         css.includes("[data-settings-panel] > [data-settings-section] + [data-settings-section]") &&
-        css.includes("[data-settings-panel] [data-settings-footer]"),
+        !css.includes("[data-settings-panel] [data-settings-footer]") &&
+        /<\/SettingsSection>\s*<\/div>\s*<div data-settings-footer/.test(settings),
 )
 check(
     "settings",

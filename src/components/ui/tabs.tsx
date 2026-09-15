@@ -18,7 +18,7 @@ const TabsList = forwardRef<
         ref={ref}
         data-slot="tabs-list"
         className={cn(
-            "inline-flex min-h-10 items-center justify-center rounded-lg bg-muted/70 p-1 text-muted-foreground",
+            "inline-flex min-h-10 items-center justify-center bg-transparent text-muted-foreground",
             className,
         )}
         {...props}
@@ -34,7 +34,7 @@ const TabsTrigger = forwardRef<
         ref={ref}
         data-slot="tabs-trigger"
         className={cn(
-            "inline-flex min-h-8 min-w-0 items-center justify-center truncate whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-[color,background-color,box-shadow] outline-none hover:bg-background/50 focus-visible:ring-[0.1875rem] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:font-semibold data-[state=active]:text-foreground data-[state=active]:shadow-xs",
+            "inline-flex min-h-10 min-w-0 items-center justify-center truncate whitespace-nowrap px-3 py-1.5 text-xl font-medium text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-[0.1875rem] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:font-semibold data-[state=active]:text-foreground",
             className,
         )}
         {...props}

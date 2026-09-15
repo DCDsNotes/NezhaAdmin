@@ -18,12 +18,9 @@ export function RouteTabs({ className, items }: RouteTabsProps) {
 
     return (
         <Tabs value={pathname} className={cn("admin-route-tabs min-w-0", className)}>
-            <TabsList
-                className="grid w-full"
-                style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}
-            >
+            <TabsList className="flex w-full items-center justify-start gap-2.5">
                 {items.map((item) => (
-                    <TabsTrigger key={item.to} value={item.to} asChild>
+                    <TabsTrigger key={item.to} value={item.to} className="w-auto px-0" asChild>
                         <Link to={item.to}>{item.label}</Link>
                     </TabsTrigger>
                 ))}
