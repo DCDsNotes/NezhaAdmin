@@ -18,6 +18,8 @@ const table = read("src/components/ui/table.tsx")
 const dataTable = read("src/components/data-table.tsx")
 const tableLayout = read("src/lib/table-layout.ts")
 const routeTabs = read("src/components/route-tabs.tsx")
+const tabs = read("src/components/ui/tabs.tsx")
+const tablePageHeader = read("src/components/table-page-header.tsx")
 const settingsTab = read("src/components/settings-tab.tsx")
 const notificationTab = read("src/components/notification-tab.tsx")
 const groupTab = read("src/components/group-tab.tsx")
@@ -180,17 +182,18 @@ check(
 )
 check(
     "tabs",
-    "route tabs share one polished responsive implementation",
+    "route tabs share one simple symmetric implementation",
     routeTabs.includes("export function RouteTabs") &&
         routeTabs.includes("gridTemplateColumns") &&
         settingsTab.includes("<RouteTabs") &&
         notificationTab.includes("<RouteTabs") &&
         groupTab.includes("<RouteTabs") &&
-        css.includes('[data-slot="tabs-trigger"][data-state="active"]'),
+        tabs.includes("data-[state=active]:bg-background") &&
+        !css.includes('[data-slot="tabs-trigger"]::after'),
 )
 check(
     "tables",
-    "mobile rows stay two-column cards without a horizontal scrollbar",
+    "mobile rows keep the name first across a two-column card",
     /@media \(max-width: 48rem\)[\s\S]*?\[data-slot="table-scroll"\]\s*\{[\s\S]{0,100}?overflow: visible/.test(
         css,
     ) &&
@@ -200,8 +203,18 @@ check(
         !/@media \(max-width: 24rem\)[\s\S]*?tbody tr\s*\{[\s\S]{0,180}?grid-template-columns: minmax\(0, 1fr\)/.test(
             css,
         ) &&
+        /td\[data-table-primary\]\s*\{[\s\S]{0,100}?order: -1/.test(css) &&
         css.includes("td[data-table-actions]") &&
         css.includes("td[data-table-select]"),
+)
+check(
+    "tables",
+    "mobile selection control matches action geometry and vertical alignment",
+    /td\[data-table-select\]\s*\{[\s\S]{0,320}?width: 2\.25rem;[\s\S]{0,80}?height: 2\.25rem/.test(
+        css,
+    ) &&
+        css.includes('td[data-table-select] > [role="checkbox"]') &&
+        css.includes("transform: none"),
 )
 check(
     "settings",
@@ -214,6 +227,11 @@ check(
         settings.includes("data-settings-alert") &&
         css.includes(".admin-content [data-settings-section]") &&
         css.includes(".admin-content [data-settings-grid]"),
+)
+check(
+    "settings",
+    "settings cards have no decorative left rail",
+    !css.includes("[data-settings-section]::before"),
 )
 check(
     "navigation",
@@ -280,6 +298,14 @@ check(
             existsSync(join(root, relativePath)) && read(relativePath).includes("data-admin-page")
         )
     }),
+)
+check(
+    "quality",
+    "mobile table page headings defer to the action toolbar",
+    tablePageHeader.includes("data-admin-page-title") &&
+        /@media \(max-width: 48rem\)[\s\S]*?\[data-admin-page-title\]\s*\{[\s\S]{0,80}?display: none/.test(
+            css,
+        ),
 )
 check(
     "auth",

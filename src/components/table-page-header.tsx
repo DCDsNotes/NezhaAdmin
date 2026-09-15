@@ -43,7 +43,11 @@ export function TablePageHeader<E, U>({
 }: TablePageHeaderProps<E, U>) {
     return (
         <TablePageToolbar
-            leading={<h1 className="text-xl font-semibold tracking-tight">{title}</h1>}
+            leading={
+                <h1 data-admin-page-title className="text-xl font-semibold tracking-tight">
+                    {title}
+                </h1>
+            }
             deleteAction={deleteAction}
         >
             {children}

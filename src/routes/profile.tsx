@@ -59,7 +59,7 @@ export default function ProfilePage() {
         profile && (
             <div data-admin-page className="space-y-4">
                 <div data-admin-page-header className="flex items-center justify-between gap-3">
-                    <h1>{t("Profile")}</h1>
+                    <h1 data-admin-page-title>{t("Profile")}</h1>
                     <ProfileCard />
                 </div>
 

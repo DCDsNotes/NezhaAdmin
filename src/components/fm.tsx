@@ -371,7 +371,9 @@ const FMComponent: React.FC<FMProps & JSX.IntrinsicElements["div"]> = ({ wsUrl, 
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
-                <h1 className="text-base">{t("FileManager")}</h1>
+                <h1 data-admin-page-title className="text-base">
+                    {t("FileManager")}
+                </h1>
                 <div className="ml-auto">
                     <input
                         ref={fileInputRef}
