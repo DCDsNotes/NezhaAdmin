@@ -184,17 +184,18 @@ check(
     "tabs",
     "route tabs share one simple left-aligned implementation",
     routeTabs.includes("export function RouteTabs") &&
-        routeTabs.includes("justify-start gap-2.5") &&
-        routeTabs.includes('className="w-auto px-0"') &&
+        tabs.includes("w-full items-center justify-start gap-2.5") &&
+        tabs.includes("w-auto items-center") &&
         !routeTabs.includes("gridTemplateColumns") &&
         settingsTab.includes("<RouteTabs") &&
         notificationTab.includes("<RouteTabs") &&
         groupTab.includes("<RouteTabs") &&
         tabs.includes("bg-transparent") &&
         tabs.includes("text-xl") &&
-        tabs.includes("data-[state=active]:font-semibold") &&
+        tabs.includes("font-semibold text-muted-foreground") &&
         tabs.includes("text-muted-foreground") &&
         !tabs.includes("data-[state=active]:bg-background") &&
+        !tabs.includes("data-[state=active]:font-semibold") &&
         !tabs.includes("data-[state=active]:shadow") &&
         !css.includes('[data-slot="tabs-trigger"]::after'),
 )

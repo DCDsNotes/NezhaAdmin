@@ -18,9 +18,9 @@ export function RouteTabs({ className, items }: RouteTabsProps) {
 
     return (
         <Tabs value={pathname} className={cn("admin-route-tabs min-w-0", className)}>
-            <TabsList className="flex w-full items-center justify-start gap-2.5">
+            <TabsList>
                 {items.map((item) => (
-                    <TabsTrigger key={item.to} value={item.to} className="w-auto px-0" asChild>
+                    <TabsTrigger key={item.to} value={item.to} asChild>
                         <Link to={item.to}>{item.label}</Link>
                     </TabsTrigger>
                 ))}
